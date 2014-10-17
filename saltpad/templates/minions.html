@@ -40,7 +40,9 @@
               <ul class="list-group">
                 {% for j in jobs[minion] %}
                   {% if j.status != 'running' %}
-                  {% if j.level == False %}{% set level="danger" %}{% elif j.level == None %}{% set level="warning" %}{% elif j.level == True %}{% set level="success" %}{% endif %}
+                    {% if j.level == False %}{% set level="danger" %}{% elif j.level == None %}{% set level="warning" %}{% elif j.level == True %}{% set level="success" %}{% endif %}
+                  {% else %}
+                    {% set level="" %}
                   {% endif %}
                   <li class="list-group-item {% if level %}list-group-item-{{level}}{% endif %}"><a href="{{ url_for('minions_show_check_status', minion=minion, jid=j.jid) }}">Job status: {{ j.status }}, launched at {{ j['date'] }}</a></li>
                 {% endfor %}

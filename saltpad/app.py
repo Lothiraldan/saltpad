@@ -90,7 +90,7 @@ def minions_status():
         jobs[minion] = process_sync_jobs(client.get_multiple_job_status(minion, "state_hightest_test"))
         versions[minion] = client.cmd(minion, 'test.version')[minion]
     return render_template('minions.html', minions=minions, jobs=jobs,
-        roles=client.minions_roles, versions=versions)
+        roles=client.minions_roles(), versions=versions)
 
 @app.route("/minions/<minion>/check_sync/<jid>")
 def minions_show_check_status(minion, jid):

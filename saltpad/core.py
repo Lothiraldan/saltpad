@@ -107,7 +107,7 @@ class SaltStackClient(object):
 
     def run_job(self, minion, fun, key=None, *args, **kwargs):
         result = self.local.run_job(minion, fun,
-            timeout=99999999999999, ret='mongo_saltpad_return', arg=args, kwarg=kwargs)
+            timeout=99999999999999, ret='mongo_saltpad', arg=args, kwarg=kwargs)
         if key is None:
             key = fun
         self.db[minion].insert({'jid': result['jid'], 'key': key})
