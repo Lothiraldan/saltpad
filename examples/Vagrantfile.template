@@ -1,0 +1,31 @@
+## This Vagrantfile is ready for Vagrant v1.2.2
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "ubuntu_13.04_cloud"
+  config.vm.box_url = "http://cloud-images.ubuntu.com/vagrant/raring/current/raring-server-cloudimg-amd64-vagrant-disk1.box"
+
+  # Create a private network, which allows host-only access to the machine
+  # using a specific IP.
+  config.vm.network :private_network, ip: "33.33.33.10"
+
+  config.vm.hostname = "{{project_name}}"
+
+  config.vm.provider :virtualbox do |vb|
+     # Use VBoxManage to customize the VM. For example to change memory:
+     vb.customize ["modifyvm", :id, "--memory", "{{ram}}"]
+     vb.customize ["modifyvm", :id, "--cpus", "{{cpus}}"]
+     vb.customize ["modifyvm", :id, "--vram", "{{vram}}"]
+  end
+
+  config.vm.provision :salt do |salt|
+
+    salt.minion_config = "minion"
+    salt.verbose = true
+    salt.minion_key = "{{project_name}}.pem"
+    salt.minion_pub = "{{project_name}}.pub"
+
+  end
+
+  config.ssh.forward_agent = false
+
+end

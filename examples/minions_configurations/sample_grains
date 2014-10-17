@@ -1,0 +1,10 @@
+id: sample_grains
+grains:
+  roles:
+    - webserver
+    - memcache
+  deployment: datacenter4
+  cabinet: 13
+  cab_u: 14-15
+
+master: 127.0.0.1

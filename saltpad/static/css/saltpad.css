@@ -1,0 +1,24 @@
+.list-group-item-danger {
+    color: #a94442;
+    background-color: #f2dede;
+}
+
+.list-group-item-warning {
+    background-color: #fcf8e3;
+}
+
+.list-group-item-success {
+    background-color: #dff0d8;
+}
+
+.list-group-item ul.sync-status-hidden {
+    display: none;
+}
+
+h2.hide_control {
+    cursor: pointer;
+}
+
+div.hide_control > div.list-group {
+    display: none;
+}

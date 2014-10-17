@@ -1,0 +1,7 @@
+wheel==0.22.0
+clint
+jinja2
+pyyaml
+python-vagrant>=0.5.0
+plumbum
+flask
