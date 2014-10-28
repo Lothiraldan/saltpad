@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base_logged.html" %}
 {% block page %}
 <div id="page-wrapper">
 
@@ -28,37 +28,25 @@
           </tr>
         </thead>
         <tbody>
-          {% for minion in minions['up'] %}
-          <tr>
+          {% for minion, minion_data in minions|dictsort %}
+          <tr {% if minion_data == 'down' %}class="danger"{% endif %}>
             <td>{{ minion }}</td>
-            <td>YES</td>
-            <td>{{ versions[minion] }}</td>
+            <td>{{ minion_data.state }}</td>
+            <td>{{ minion_data.saltversioninfo|join('.') }}</td>
             <td><ul>
-              {% for role in roles[minion] %}<li>{{role}}</li>{% endfor %}
+              {% for role in minion_data.roles %}<li>{{ role }}</li>{% endfor %}
             </ul></td>
             <td>{% if jobs.get(minion) %}
               <ul class="list-group">
-                {% for j in jobs[minion] %}
-                  {% if j.status != 'running' %}
-                    {% if j.level == False %}{% set level="danger" %}{% elif j.level == None %}{% set level="warning" %}{% elif j.level == True %}{% set level="success" %}{% endif %}
-                  {% else %}
-                    {% set level="" %}
+                {% for jid, job_data in jobs[minion]|dictsort %}
+                  {% if job_data.status != 'running' %}
+                  {% if job_data.level == False %}{% set level="danger" %}{% elif job_data.level == None %}{% set level="warning" %}{% elif job_data.level == True %}{% set level="success" %}{% endif %}
                   {% endif %}
-                  <li class="list-group-item {% if level %}list-group-item-{{level}}{% endif %}"><a href="{{ url_for('minions_show_check_status', minion=minion, jid=j.jid) }}">Job status: {{ j.status }}, launched at {{ j['date'] }}</a></li>
+                  <li class="list-group-item {% if level %}list-group-item-{{level}}{% endif %}"><a href="{{ url_for('minion_job', minion=minion, jid=jid) }}">Job status: {{ job_data.status }}, launched at {{ job_data.details.StartTime }} by {{ job_data.details.User }}</a></li>
                 {% endfor %}
               </ul>
             {% else %}No jobs{% endif %}</td>
             <td><a href="{{ url_for('minions_do_check_sync', minion=minion) }}">Launch a check now</a></td>
-          </tr>
-          {% endfor %}
-          {% for minion in minions['down'] %}
-          <tr class="danger">
-            <td>{{ minion }}</td>
-            <td>NO</td>
-            <td></td>
-            <td></td>
-            <td>{% if jobs.get(minion) %}{% else %}No jobs{% endif %}</td>
-            <td>Couldn't launch a check status jobs while offline</td>
           </tr>
           {% endfor %}
         </tbody>

@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base_logged.html" %}
 
 {% macro format_output(output, name, status, total, default_hide=False) %}
   {% if output %}
@@ -33,23 +33,23 @@
 </div><!-- /.row -->
 
 <div class="row">
-  {% if not status %}
+  {% if not job %}
   <div class="col-lg-12">
     <div class="alert alert-info">
       <h1>Status checking is running on {{ minion }}, please wait !</h1>
     </div>
   </div>
   {% else %}
-    {% set total = status[False] | length + status[None] | length + status[True] | length %}
-    {% if status[False] %}{% set level="danger" %}{% elif status[None] %}{% set level="warning" %}{% else %}{% set level="success" %}{% endif %}
+    {% set total = job[False] | length + job[None] | length + job[True] | length %}
+    {% if job[False] %}{% set level="danger" %}{% elif job[None] %}{% set level="warning" %}{% else %}{% set level="success" %}{% endif %}
     <div class="col-lg-12">
       <div class="alert alert-{{ level }}">
-        <h2>{{ total }} steps: {{ status[False] | length }} in errors, {{ status[None] | length }} in warning and {{ status[True] | length }} in success. </h2>
+        <h2>{{ total }} steps: {{ job[False] | length }} in errors, {{ job[None] | length }} in warning and {{ job[True] | length }} in success. </h2>
       </div>
     </div>
-    {{ format_output(status[False], 'Errors', 'danger', total) }}
-    {{ format_output(status[None], 'Warnings (changes)', 'warning', total) }}
-    {{ format_output(status[True], 'Success', 'success', total, True) }}
+    {{ format_output(job[False], 'Errors', 'danger', total) }}
+    {{ format_output(job[None], 'Warnings (changes)', 'warning', total) }}
+    {{ format_output(job[True], 'Success', 'success', total, True) }}
   {% endif %}
 </div><!-- /.row -->
 {% endblock %}

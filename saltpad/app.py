@@ -1,108 +1,105 @@
-from flask import Flask, redirect, render_template, url_for
+from flask import Flask, redirect, render_template, url_for, session, request, flash
+from core import HTTPSaltStackClient, ExpiredToken
+from functools import wraps
+from utils import login_url, process_job_return
+
+# Init app
+
+class FlaskHTTPSaltStackClient(HTTPSaltStackClient):
+
+    def get_token(self):
+        return session.get('user_token')
+
+
 app = Flask("SaltPad", template_folder="templates")
+app.secret_key = 'MyVerySecretKey'
+client = FlaskHTTPSaltStackClient('http://localhost:8000/')
 
-from core import SaltStackClient
+from flask_wtf import Form
+from wtforms import StringField, PasswordField
+from wtforms.validators import DataRequired
 
-class groupby(dict):
-    def __init__(self, seq, key=lambda x:x):
-        for value in seq:
-            k = key(value)
-            self.setdefault(k, []).append(value)
-    __iter__ = dict.iteritems
-
-client = SaltStackClient()
-statuses = {False: 2, None: 1, True: 0}
-reverse_statues = {v:k for k, v in statuses.items()}
-human_status = {False: 'warning', None: 'warning', True: 'success'}
+class LoginForm(Form):
+    username = StringField('username', validators=[DataRequired()])
+    password = PasswordField('password', validators=[DataRequired()])
 
 
-def parse_step_name(step_name):
-    splitted = step_name.replace('_|', '|').replace('|-', '|').split('|')
-    return "{0}.{3}: \"{2}\"".format(*splitted)
+def login_required(view):
+    @wraps(view)
+    def wrapper(*args, **kwargs):
+        if not session.get('user_token'):
+            return redirect(login_url('login', request.url))
+
+        try:
+            return view(*args, **kwargs)
+        except ExpiredToken:
+            return redirect(login_url('login', request.url))
+
+    return wrapper
+
+@app.route('/', methods=["GET", "POST"])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        user_token = client.login(form['username'].data, form['password'].data)
+        if user_token:
+            session['user_token'] = user_token
+            flash('Hi {}'.format(form['username'].data))
+            return redirect(request.args.get("next") or url_for("index"))
+        flash('Invalid credentials', 'error')
+    return render_template("login.html", form=form)
+
+@app.route('/logout', methods=["GET"])
+def logout():
+    session.clear()
+    return redirect(url_for('login'))
 
 
-def get_job_status(job_result):
-    job_status = 0
-    for state in job_result.values():
-        job_status = max(job_status, statuses[state['result']])
-    job_status = reverse_statues[job_status]
-    return job_status
-
-
-def process_sync_status(status):
-    output = {}
-    if status.get('return'):
-        for k, v in status['return'].items():
-            # Clean v
-            result = v.pop('result')
-            v.pop('__run_num__')
-            v.pop('name')
-            if not v['changes']:
-                v.pop('changes')
-            output.setdefault(result, {})[parse_step_name(k)] = v
-    return output
-
-
-def process_sync_jobs(jobs):
-    result = []
-    for job in jobs:
-        job_result = {'status': 'running'}
-        if job.get('return'):
-            job_result['level'] = get_job_status(job['return'])
-            job_result['status'] = human_status[job_result['level']]
-        job_result['date'] = job['_id'].generation_time
-        job_result['jid'] = job['jid']
-        result.append(job_result)
-    return result
-
-
-def get_latest_job_status(jobs):
-    result = None
-    for job in jobs:
-        if not job.get('return'):
-            continue
-        job_status = get_job_status(job['return'])
-        if job_status == 'running':
-            continue
-        else:
-            return job_status
-
-
-
-@app.route("/")
+@app.route("/dashboard")
+@login_required
 def index():
-    minions = client.minions
-    ok_status = 0
-    for minion in (minions['up'] + minions['down']):
-        status = get_latest_job_status(client.get_multiple_job_status(minion,
-            "state_hightest_test", max=2))
-        if status == 'success':
-            ok_status += 1
-    return render_template('dashboard.html', minions=client.minions,
-        ok_status=ok_status)
+    minions = client.minions_status()
+    sync_status = {}
+    sync_number = 0
+    # for minion in (minions['up'] + minions['down']):
+    #     status = get_latest_job_status(client.get_multiple_job_status(minion,
+    #         "state_hightest_test", max=2))
+    #     if status == 'success':
+    #         ok_status += 1
+    for minion in minions['up']:
+        if sync_status.get(minion) is True:
+            sync_number += 1
+    return render_template('dashboard.html', minions=minions,
+        ok_status=sync_number)
 
 @app.route("/minions")
+@login_required
 def minions_status():
-    minions = client.minions
-    jobs = {}
-    versions = {}
-    for minion in (minions['up']):
-        jobs[minion] = process_sync_jobs(client.get_multiple_job_status(minion, "state_hightest_test"))
-        versions[minion] = client.cmd(minion, 'test.version')[minion]
-    return render_template('minions.html', minions=minions, jobs=jobs,
-        roles=client.minions_roles(), versions=versions)
+    minions = client.minions()
+    minions_status = client.minions_status()
 
-@app.route("/minions/<minion>/check_sync/<jid>")
-def minions_show_check_status(minion, jid):
-    status = client.get_job_status(minion, jid, key="state_hightest_test")
-    if not status:
+    for minion in minions_status['up']:
+        minions[minion]['state'] = 'up'
+
+    for minion in minions_status['down']:
+        minions[minion]['state'] = 'down'
+
+    jobs = client.select_jobs('state.highstate', minions, with_details=True,
+        test=True)
+
+    return render_template('minions.html', minions=minions, jobs=jobs)
+
+@app.route("/minions/<minion>/job/<jid>")
+def minion_job(minion, jid):
+    job = client.job(jid, minion)
+    if not job:
         return "Unknown jid", 404
-    return render_template('sync_status.html', sync_status=status,
-        status=process_sync_status(status), minion=minion)
+    return render_template('sync_status.html', job=process_job_return(job))
 
 @app.route("/minions/<minion>/do_check_sync")
 def minions_do_check_sync(minion):
-    jid = client.run_job(minion, 'state.highstate', "state_hightest_test", True, Test=True)
+    jid = client.run(minion, 'state.highstate', test=True)
+    raise Exception(jid)
     return redirect(url_for('minions_show_check_status', minion=minion, jid=jid))
 
 

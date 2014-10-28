@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block body %}
+
+<div id="wrapper">
+
+  <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+        <span class="sr-only">Toggle navigation</span>
+      </button>
+      <a class="navbar-brand" href="index.html">SaltPad</a>
+    </div>
+  </nav>
+
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-danger" role="alert">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <div id="page-wrapper">
+    <div class="row">
+      <div class="col-lg-12">
+        <form method="POST" action="{{ url_for('login') }}">
+          {{ form.csrf_token }}
+          {{ form.username.label }} {{ form.username }}
+          {{ form.password.label }} {{ form.password }}
+          <input type="submit" value="Login">
+        </form>
+      </div>
+    </div><!-- /.row -->
+  </div>
+</div>
+
+{% endblock %}
