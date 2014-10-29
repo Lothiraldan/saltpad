@@ -3,12 +3,18 @@ import sys
 from flask import Flask, redirect, render_template, url_for, session, request, flash
 from urlparse import urlparse
 from werkzeug.urls import url_decode, url_encode
+from copy import copy
 
 if sys.version < '3':  # pragma: no cover
     from urlparse import urlparse, urlunparse
 else:  # pragma: no cover
     from urllib.parse import urlparse, urlunparse
     unicode = str
+
+
+class NotHighstateOutput(Exception):
+    pass
+
 
 def make_next_param(login_url, current_url):
     '''
@@ -62,7 +68,7 @@ def login_url(login_view, next_url=None, next_field='next'):
 
 statuses = {False: 2, None: 1, True: 0}
 reverse_statues = {v:k for k, v in statuses.items()}
-human_status = {False: 'error', None: 'warning', True: 'success'}
+human_status = {False: 'failure', None: 'warning', True: 'success'}
 
 
 def parse_step_name(step_name):
@@ -81,33 +87,56 @@ def get_job_level(job_result):
 def get_job_human_status(job_level):
     return human_status[job_level]
 
-
-def process_job_return(job):
-    output = {}
-    if job.get('return'):
-        for k, v in job['return'].items():
-            # Clean v
-            result = v.pop('result')
-            v.pop('__run_num__')
-            if not v['changes']:
-                v.pop('changes')
-            output.setdefault(result, {})[parse_step_name(k)] = v
-    return output
-
-
-def process_sync_jobs(jobs):
-    result = []
-    for job in jobs:
-        job_result = {'status': 'running'}
-        if job.get('return'):
-            job_result['level'] = get_job_status(job['return'])
-            job_result['status'] = human_status[job_result['level']]
-        job_result['date'] = job['_id'].generation_time
-        job_result['jid'] = job['jid']
-        result.append(job_result)
-    return result
-
-
 def format_arg(args, kwargs):
     return list(args) + [{'__kwarg__': True, kwarg_k: kwarg_v} for
         (kwarg_k, kwarg_v) in kwargs.items()]
+
+
+def transform_arguments(job_arguments):
+    arguments = [], {}
+
+    for argument in job_arguments:
+        if isinstance(argument, dict):
+            arguments[1].update(argument)
+        else:
+            arguments[0].append(argument)
+
+    return arguments
+
+
+def parse_highstate(job):
+    # Process return
+    new_return = {}
+    highstate = {}
+
+    if job['info']['Function'] != 'state.highstate':
+        raise NotHighstateOutput()
+
+    if job.get('status') != 'running':
+        for minion_name, minion_return in job['return'].iteritems():
+            new_minion_return = {'steps': {}, 'highstate': {}}
+
+            # Minion return level
+            level = 0
+
+            for step_name, step in minion_return.iteritems():
+
+                # Step
+                level = max(level, statuses[step['result']])
+                reversed_level = reverse_statues[level]
+
+                # Filter step
+                step.pop('__run_num__')
+                if not step['changes']:
+                    step.pop('changes')
+
+                new_minion_return['steps'][parse_step_name(step_name)] = step
+                new_minion_return['highstate'].setdefault(step['result'], {})[parse_step_name(step_name)] = step
+
+            new_minion_return['level'] = reversed_level
+            new_minion_return['status'] = get_job_human_status(reversed_level)
+
+            job['return'][minion_name] = new_minion_return
+
+
+    return job

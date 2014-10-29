@@ -29,7 +29,7 @@
         </thead>
         <tbody>
           {% for minion, minion_data in minions|dictsort %}
-          <tr {% if minion_data == 'down' %}class="danger"{% endif %}>
+          <tr {% if minion_data['state'] == 'down' %}class="danger"{% endif %}>
             <td>{{ minion }}</td>
             <td>{{ minion_data.state }}</td>
             <td>{{ minion_data.saltversioninfo|join('.') }}</td>
@@ -38,11 +38,16 @@
             </ul></td>
             <td>{% if jobs.get(minion) %}
               <ul class="list-group">
-                {% for jid, job_data in jobs[minion]|dictsort %}
-                  {% if job_data.status != 'running' %}
-                  {% if job_data.level == False %}{% set level="danger" %}{% elif job_data.level == None %}{% set level="warning" %}{% elif job_data.level == True %}{% set level="success" %}{% endif %}
+                {% for jid, job_data in jobs[minion]|dictsort|reverse %}
+                  {% set level=None %}
+                  {% if job_data.status == 'running' %}
+                    {% set level = "info" %}
+                  {% elif job_data.status == 'error' %}
+                    {% set level = 'error' %}
+                  {% else %}
+                    {% if job_data.level == False %}{% set level="danger" %}{% elif job_data.level == None %}{% set level="warning" %}{% elif job_data.level == True %}{% set level="success" %}{% endif %}
                   {% endif %}
-                  <li class="list-group-item {% if level %}list-group-item-{{level}}{% endif %}"><a href="{{ url_for('minion_job', minion=minion, jid=jid) }}">Job status: {{ job_data.status }}, launched at {{ job_data.details.StartTime }} by {{ job_data.details.User }}</a></li>
+                  <li class="list-group-item {% if level %}list-group-item-{{level}}{% endif %}"><a href="{{ url_for('job_result', jid=jid, renderer='highstate') }}">Job status: {{ job_data.status }}, launched at {{ job_data.info.StartTime }} by {{ job_data.info.User }}</a></li>
                 {% endfor %}
               </ul>
             {% else %}No jobs{% endif %}</td>

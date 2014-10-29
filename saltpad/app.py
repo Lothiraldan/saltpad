@@ -1,7 +1,7 @@
 from flask import Flask, redirect, render_template, url_for, session, request, flash
 from core import HTTPSaltStackClient, ExpiredToken
 from functools import wraps
-from utils import login_url, process_job_return
+from utils import login_url, parse_highstate, NotHighstateOutput
 
 # Init app
 
@@ -43,6 +43,7 @@ def login():
     if form.validate_on_submit():
         user_token = client.login(form['username'].data, form['password'].data)
         if user_token:
+            session['username'] = form['username'].data
             session['user_token'] = user_token
             flash('Hi {}'.format(form['username'].data))
             return redirect(request.args.get("next") or url_for("index"))
@@ -52,6 +53,7 @@ def login():
 @app.route('/logout', methods=["GET"])
 def logout():
     session.clear()
+    flash('Bye!')
     return redirect(url_for('login'))
 
 
@@ -82,30 +84,86 @@ def minions_status():
         minions[minion]['state'] = 'up'
 
     for minion in minions_status['down']:
-        minions[minion]['state'] = 'down'
+        minions.setdefault(minion, {})['state'] = 'down'
 
     jobs = client.select_jobs('state.highstate', minions, with_details=True,
         test=True)
 
     return render_template('minions.html', minions=minions, jobs=jobs)
 
-@app.route("/minions/<minion>/job/<jid>")
-def minion_job(minion, jid):
-    job = client.job(jid, minion)
-    if not job:
-        return "Unknown jid", 404
-    return render_template('sync_status.html', job=process_job_return(job))
+@app.route("/minions_deployments")
+@login_required
+def minions_deployments():
+    minions = client.minions()
+    minions_status = client.minions_status()
+
+    for minion in minions_status['up']:
+        minions[minion]['state'] = 'up'
+
+    for minion in minions_status['down']:
+        minions.setdefault(minion, {})['state'] = 'down'
+
+    jobs = client.select_jobs('state.highstate', minions, with_details=True)
+
+    return render_template('minions.html', minions=minions, jobs=jobs)
 
 @app.route("/minions/<minion>/do_check_sync")
+@login_required
 def minions_do_check_sync(minion):
-    jid = client.run(minion, 'state.highstate', test=True)
-    raise Exception(jid)
-    return redirect(url_for('minions_show_check_status', minion=minion, jid=jid))
+    jid = client.run(minion, 'state.highstate', test=True)['return'][0]['jid']
+    return redirect(url_for('job_result', minion=minion, jid=jid, renderer='highstate'))
+
+@app.route("/jobs")
+@login_required
+def jobs():
+    jobs = client.jobs()
+    return render_template('jobs.html', jobs=jobs)
+
+@app.route("/job_result/<jid>")
+@login_required
+def job_result(jid):
+    minion = request.args.get('minion', None)
+    renderer = request.args.get('renderer', 'raw')
+    job = client.job(jid)
+
+    if renderer == 'highstate':
+        try:
+            job = parse_highstate(job)
+        except NotHighstateOutput:
+            return redirect(url_for('job_result', jid=jid, minion=minion,
+                renderer='raw'))
+
+    if not job:
+        return "Unknown jid", 404
+    return render_template('job_result.html', job=job, minion=minion,
+        renderer=renderer)
 
 
 @app.route("/deployments")
+@login_required
 def deployments():
     return ""
+
+
+from flask_wtf import Form
+from wtforms import StringField
+from wtforms.validators import DataRequired
+
+class RunForm(Form):
+    tgt = StringField('target', validators=[DataRequired()])
+    fun = StringField('function', validators=[DataRequired()])
+    arg = StringField('arg')
+
+
+@app.route('/run', methods=["GET", "POST"])
+@login_required
+def run():
+    form = RunForm()
+    if form.validate_on_submit():
+        jid = client.run(form.tgt.data.strip(), form.fun.data.strip(), form.arg.data.strip())['return'][0]['jid']
+        return redirect(url_for('job_result', jid=jid))
+    return render_template("run.html", form=form)
+
 
 if __name__ == "__main__":
     print "Start ?"

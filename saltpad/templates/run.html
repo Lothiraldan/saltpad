@@ -1,0 +1,16 @@
+{% extends "base_logged.html" %}
+{% block page %}
+<div id="page-wrapper">
+  <div class="row">
+    <div class="col-lg-12">
+      <form method="POST" action="{{ url_for('run') }}">
+        {{ form.csrf_token }}
+        {{ form.tgt.label }} {{ form.tgt }}
+        {{ form.fun.label }} {{ form.fun }}
+        {{ form.arg.label }} {{ form.arg }}
+        <input type="submit" value="Run cmd">
+      </form>
+    </div>
+  </div><!-- /.row -->
+
+{% endblock %}

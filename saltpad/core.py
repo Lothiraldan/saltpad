@@ -5,24 +5,13 @@ import requests
 
 from urlparse import urljoin
 from functools import wraps
+from itertools import chain
 
-from utils import get_job_level, get_job_human_status, format_arg
+from utils import get_job_level, get_job_human_status, format_arg, transform_arguments
 
 
 class ExpiredToken(Exception):
     pass
-
-
-def transform_arguments(job_arguments):
-    arguments = [], {}
-
-    for argument in job_arguments:
-        if isinstance(argument, dict):
-            arguments[1].update(argument)
-        else:
-            arguments[0].append(argument)
-
-    return arguments
 
 
 class SaltStackClient(object):
@@ -168,30 +157,42 @@ class HTTPSaltStackClient(object):
             raise ExpiredToken()
         return r.json()['return'][0]
 
-    def jobs(self):
+    def jobs(self, minion=None):
         token = self.get_token()
         headers = {'accept': 'application/json', 'X-Auth-Token': token}
         r = self.session.get(self.urljoin('jobs'), headers=headers)
-        return r.json()['return'][0]
+        base = r.json()
+
+        return base['return'][0]
 
     def job(self, jid, minion=None):
         token = self.get_token()
         headers = {'accept': 'application/json', 'X-Auth-Token': token}
         r = self.session.get(self.urljoin('jobs', jid), headers=headers)
-        if minion:
-            base = r.json()
-            output = {'return': base['return'][0][minion]}
-            output.update(base['info'][0])
+        base = r.json()
+
+        if 'status' in base and base['return'] == 'Please log in':
+            raise ExpiredToken()
+
+        if not base['return'][0]:
+            output = {'status': 'running', 'info': base['info'][0]}
             return output
-        return r.json()
+
+        # Only filter minion
+        if minion:
+            minion_return = base['return'][0][minion]
+            output = {'return': minion_return, 'info': base['info']}
+
+            return output
+
+        return {'info': base['info'][0], 'return': base['return'][0]}
+
 
     def select_jobs(self, fun, minions=None, with_details=False, **arguments):
         jobs = {}
 
         for jid, job in self.jobs().iteritems():
-            print "Job", job
             if job['Function'] != fun:
-                print "Break fun"
                 continue
 
             job_args_args, job_args_kwargs = transform_arguments(job['Arguments'])
@@ -200,7 +201,6 @@ class HTTPSaltStackClient(object):
             for argument, argument_value in arguments.items():
 
                 if job_args_kwargs.get(argument) != argument_value:
-                    print "Break arg", job_args_kwargs, argument, job_args_kwargs.get(argument), argument_value
                     match = False
                     break
 
@@ -208,16 +208,30 @@ class HTTPSaltStackClient(object):
                 continue
 
             if minions or with_details:
-                job_details = self.job(jid)['return'][0]
+                job_details = self.job(jid)
 
-                # print "Job details", job_details
+                # Running job
+                if job_details.get('status') == 'running':
+                    for minion_name in job_details['Minions']:
+                        minion_data = job_details
+                        jobs.setdefault(minion_name, {})[jid] = minion_data
+                    continue
 
-                for minion_name, minion_return in job_details.iteritems():
+                job_return = job_details['return']
+
+                for minion_name, minion_return in job_return.iteritems():
                     if not minion_name in minions:
                         continue
 
-                    minion_data = {'details': job,
-                        'return': minion_return}
+                    # Error has been detected
+                    if isinstance(minion_return, list):
+
+                        minion_data = {'return': minion_return,
+                            'status': 'error', 'info': job}
+                        jobs.setdefault(minion_name, {})[jid] = minion_data
+                        continue
+
+                    minion_data = {'return': minion_return, 'info': job}
 
                     if with_details and isinstance(minion_return, dict):
                         minion_data['level'] = get_job_level(minion_return)
@@ -242,7 +256,7 @@ class HTTPSaltStackClient(object):
         }]
         headers = {'accept': 'application/json', 'X-Auth-Token': token,
             'content-type': 'application/json'}
-        r = self.session.post(self.endpoint, data=json.dumps(data),
+        r = self.session.post(self.urljoin('minions'), data=json.dumps(data),
             headers=headers)
         if r.json().get('status'):
             raise ExpiredToken()
