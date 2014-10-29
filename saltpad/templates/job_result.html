@@ -79,20 +79,34 @@
   {% elif renderer == 'highstate' %}
 
     {% set minion_job = job.return[minion] %}
-    {% set total = minion_job['steps'] | length %}
 
-    {% if minion_job['level'] == False %}{% set level="danger" %}{% elif minion_job['level'] == None %}{% set level="warning" %}{% else %}{% set level="success" %}{% endif %}
-    <div class="col-lg-12" id="result-{{minion}}">
-      <h3> {{ minion }} result:
-      </h3>
-      <div class="alert alert-{{ level }}">
-        <h3>{{ total }} steps: {{ minion_job['highstate'][False] | length }} in errors, {{ minion_job['highstate'][None] | length }} in warning and {{ minion_job['highstate'][True] | length }} in success. </h3>
+    {% if minion_job.status == 'error' %}
+
+      <div class="col-lg-12" id="result-{{minion}}">
+          <h3> {{ minion }} result:
+          </h3>
+          <div class="alert alert-error">
+              <h3>Job is in error: {{ minion_job.error }}</h3>
+          </div>
       </div>
 
-      {{ format_output(minion_job['highstate'][False], 'Errors', 'danger', total) }}
-      {{ format_output(minion_job['highstate'][None], 'Warnings (changes)', 'warning', total) }}
-      {{ format_output(minion_job['highstate'][True], 'Success', 'success', total, True) }}
-    </div>
+    {% else %}
+
+      {% set total = minion_job['steps'] | length %}
+
+      {% if minion_job['level'] == False %}{% set level="danger" %}{% elif minion_job['level'] == None %}{% set level="warning" %}{% else %}{% set level="success" %}{% endif %}
+      <div class="col-lg-12" id="result-{{minion}}">
+        <h3> {{ minion }} result:
+        </h3>
+        <div class="alert alert-{{ level }}">
+          <h3>{{ total }} steps: {{ minion_job['highstate'][False] | length }} in errors, {{ minion_job['highstate'][None] | length }} in warning and {{ minion_job['highstate'][True] | length }} in success. </h3>
+        </div>
+
+        {{ format_output(minion_job['highstate'][False], 'Errors', 'danger', total) }}
+        {{ format_output(minion_job['highstate'][None], 'Warnings (changes)', 'warning', total) }}
+        {{ format_output(minion_job['highstate'][True], 'Success', 'success', total, True) }}
+      </div>
+    {% endif %}
 
   {% endif %}
   {% endfor %}

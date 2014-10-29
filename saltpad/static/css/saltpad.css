@@ -27,6 +27,14 @@
     display: none;
 }
 
+.alert-error {
+  background-color: #c20000;
+}
+
+.alert-error a {
+    color: black;
+}
+
 h2.hide_control {
     cursor: pointer;
 }

@@ -113,7 +113,15 @@ def parse_highstate(job):
         raise NotHighstateOutput()
 
     if job.get('status') != 'running':
+
         for minion_name, minion_return in job['return'].iteritems():
+
+            # Error detected
+            if isinstance(minion_return, list):
+                job['return'][minion_name] = {'status': 'error',
+                    'error': minion_return[0]}
+                continue
+
             new_minion_return = {'steps': {}, 'highstate': {}}
 
             # Minion return level
