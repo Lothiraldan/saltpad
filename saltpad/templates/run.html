@@ -50,8 +50,9 @@ function template(field_name, default_value, required) {
   '<label class="col-sm-2 control-label" for="' + field_name + '">' + field_name + '</label><div class="col-sm-10 input-group">' +
   (required ? '<div class="input-group-addon">*</div>' : '') +
   '<input class="form-control" id="' + field_name + '" name="' + field_name + '" type="text" ' +
-  (default_value ? 'placeholder="' + default_value + '"' : '') +
-  '"></div></div>';
+  (default_value ? 'placeholder="' + default_value + '" ' : '') +
+  (required ? 'required="required" ' : '') +
+  '></div></div>';
 }
 
 function append_input_field_before(field_id, field_name, default_value, required) {
