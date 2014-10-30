@@ -1,38 +1,54 @@
 {% extends "base.html" %}
 {% block body %}
 
-<div id="wrapper">
+<div class="container">
+    <div id="loginbox" style="margin-top:50px;" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+        <div class="panel panel-info" >
+                <div class="panel-heading">
+                    <div class="panel-title">SaltPad</div>
+                </div>
 
-  <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-        <span class="sr-only">Toggle navigation</span>
-      </button>
-      <a class="navbar-brand" href="index.html">SaltPad</a>
+                <div style="padding-top:30px" class="panel-body" >
+
+                    {% with messages = get_flashed_messages() %}
+                      {% if messages %}
+                        {% for message in messages %}
+                          <div class="alert alert-danger" role="alert">{{ message }}</div>
+                        {% endfor %}
+                      {% endif %}
+                    {% endwith %}
+
+                    <div style="display:none" id="login-alert" class="alert alert-danger col-sm-12"></div>
+
+                    <form id="loginform" class="form-horizontal" role="form" action="{{ url_for('login') }}" method="post">
+
+                        {{ form.csrf_token }}
+
+                        <div style="margin-bottom: 25px" class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-fw fa-user"></i></span>
+                                    <input id="login-username" type="text" class="form-control" name="username" value="" placeholder="username or email">
+                                </div>
+
+                        <div style="margin-bottom: 25px" class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-fw fa-key"></i></span>
+                                    <input id="login-password" type="password" class="form-control" name="password" placeholder="password">
+                                </div>
+
+                            <div style="margin-top:10px" class="form-group">
+                                <!-- Button -->
+
+                                <div class="col-sm-12 controls">
+                                  <input type="submit" value="Login" class="btn btn-success">
+                                </div>
+                            </div>
+                        </form>
+
+
+
+                    </div>
+                </div>
     </div>
-  </nav>
-
-  {% with messages = get_flashed_messages() %}
-    {% if messages %}
-      {% for message in messages %}
-        <div class="alert alert-danger" role="alert">{{ message }}</div>
-      {% endfor %}
-    {% endif %}
-  {% endwith %}
-
-  <div id="page-wrapper">
-    <div class="row">
-      <div class="col-lg-12">
-        <form method="POST" action="{{ url_for('login') }}">
-          {{ form.csrf_token }}
-          {{ form.username.label }} {{ form.username }}
-          {{ form.password.label }} {{ form.password }}
-          <input type="submit" value="Login">
-        </form>
-      </div>
-    </div><!-- /.row -->
-  </div>
 </div>
+
 
 {% endblock %}

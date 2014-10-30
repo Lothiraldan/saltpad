@@ -119,7 +119,7 @@ def parse_highstate(job):
             # Error detected
             if isinstance(minion_return, list):
                 job['return'][minion_name] = {'status': 'error',
-                    'error': minion_return[0]}
+                    'error': minion_return}
                 continue
 
             new_minion_return = {'steps': {}, 'highstate': {}}
@@ -148,3 +148,15 @@ def parse_highstate(job):
 
 
     return job
+
+
+def parse_argspec(argspec):
+    args = argspec.pop('args')
+    defaults = argspec.pop('defaults')
+
+    defaults = defaults if defaults else []
+
+    argspec['required_args'] = args[:-len(defaults)]
+    argspec['default_args'] = dict(zip(args[-len(defaults):], defaults))
+
+    return argspec

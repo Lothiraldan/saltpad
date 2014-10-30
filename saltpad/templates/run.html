@@ -1,16 +1,125 @@
 {% extends "base_logged.html" %}
+
+{% macro render_field(field, label_visible=true) -%}
+     <div class="form-group {% if field.errors %}has-error{% endif %} {{ kwargs.pop('class_', '') }}" id="form-group-{{ field.name }}">
+        {% if field.type != 'HiddenField' and label_visible %}
+            {{ field.label(class_='col-sm-2 control-label') }}
+        {% endif %}
+        <div class="col-sm-10 input-group">
+          {{ field(class_='form-control', **kwargs) }}
+          {% if field.errors %}
+              {% for e in field.errors %}
+                  <span class="help-block">{{ e }}</span>
+              {% endfor %}
+          {% endif %}
+        </div>
+    </div>
+{%- endmacro %}
+
+
 {% block page %}
 <div id="page-wrapper">
   <div class="row">
     <div class="col-lg-12">
-      <form method="POST" action="{{ url_for('run') }}">
+      <form method="POST" class="form-horizontal" role="form" action="{{ url_for('run') }}" id="run_form">
         {{ form.csrf_token }}
-        {{ form.tgt.label }} {{ form.tgt }}
-        {{ form.fun.label }} {{ form.fun }}
-        {{ form.arg.label }} {{ form.arg }}
-        <input type="submit" value="Run cmd">
+        {{ render_field(form.expr_form) }}
+        {{ render_field(form.tgt) }}
+        {{ render_field(form.fun) }}
+
+        <div class="form-group" id="submit">
+          <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-default">Run cmd</button>
+          </div>
+        </div>
       </form>
+    </div>
+    <div class="col-lg-12">
+      <h3>Functions docs</h3>
+      <pre id="doc-placeholder"></pre>
     </div>
   </div><!-- /.row -->
 
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+
+function template(field_name, default_value, required) {
+  return '<div class="form-group" id="form-group-fun">' +
+  '<label class="col-sm-2 control-label" for="' + field_name + '">' + field_name + '</label><div class="col-sm-10 input-group">' +
+  (required ? '<div class="input-group-addon">*</div>' : '') +
+  '<input class="form-control" id="' + field_name + '" name="' + field_name + '" type="text" ' +
+  (default_value ? 'placeholder="' + default_value + '"' : '') +
+  '"></div></div>';
+}
+
+function append_input_field_before(field_id, field_name, default_value, required) {
+  $(field_id).before(template(field_name, default_value, required));
+}
+
+
+$(function() {
+  var timer;
+  var delay = 300; // 0.3 seconds delay after last input
+  $('#fun').on('input', function() {
+    window.clearTimeout(timer);
+    timer = window.setTimeout(function(){
+
+      var exact_fun = $('#fun').val()
+
+      var data = {
+        'expr_form': $('#expr_form').val(),
+        'tgt': $('#tgt').val(),
+        'fun': exact_fun
+      };
+      $.ajax({
+        url: "{{ url_for('doc_search') }}",
+        type: "post",
+        contentType: "application/json",
+        data: JSON.stringify(data),
+        success: function (data, status) {
+
+          // Update doc and update form
+
+          // Clear old inputs
+          $("#form-group-fun").nextAll('div.form-group').not("#submit").remove();
+
+          // New doc content
+          var new_text = '';
+
+          // Iterate on data
+          for (var function_name in data) {
+            function_doc = data[function_name].doc;
+            new_text += function_name + function_doc + '\n';
+
+            // Only show forms if it's the right function
+            if (function_name == exact_fun) {
+              // Required args
+              data[function_name].spec.required_args.map(function(e) {
+                append_input_field_before("#submit", e, "Enter input", true);
+              });
+
+              // Optionnal args
+              default_args = data[function_name].spec.default_args;
+              console.log(default_args);
+              $.map(default_args, function(value, key) {
+                append_input_field_before("#submit", key, value);
+              });
+              console.log(data[function_name].spec);
+            }
+          }
+
+          // Set new doc pre
+          $("#doc-placeholder").text(new_text);
+        },
+        error: function (xhr, desc, err) {
+          console.log(xhr);
+          console.log("Desc: " + desc + "\nErr:" + err);
+        }
+      });
+    }, delay);
+  })
+});
+</script>
 {% endblock %}

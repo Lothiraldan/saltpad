@@ -82,12 +82,10 @@
 
     {% if minion_job.status == 'error' %}
 
-      <div class="col-lg-12" id="result-{{minion}}">
-          <h3> {{ minion }} result:
+      <div class="col-lg-12 alert alert-error" id="result-{{minion}}">
+          <h3> {{ minion }} error:
           </h3>
-          <div class="alert alert-error">
-              <h3>Job is in error: {{ minion_job.error }}</h3>
-          </div>
+          <pre>{{ minion_job.error|join('\n') }}</pre>
       </div>
 
     {% else %}

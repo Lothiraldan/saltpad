@@ -1,7 +1,7 @@
-from flask import Flask, redirect, render_template, url_for, session, request, flash
+from flask import Flask, redirect, render_template, url_for, session, request, flash, jsonify
 from core import HTTPSaltStackClient, ExpiredToken
 from functools import wraps
-from utils import login_url, parse_highstate, NotHighstateOutput
+from utils import login_url, parse_highstate, NotHighstateOutput, parse_argspec
 
 # Init app
 
@@ -37,7 +37,7 @@ def login_required(view):
 
     return wrapper
 
-@app.route('/', methods=["GET", "POST"])
+@app.route('/login', methods=["GET", "POST"])
 def login():
     form = LoginForm()
     if form.validate_on_submit():
@@ -57,7 +57,7 @@ def logout():
     return redirect(url_for('login'))
 
 
-@app.route("/dashboard")
+@app.route("/")
 @login_required
 def index():
     minions = client.minions_status()
@@ -71,8 +71,11 @@ def index():
     for minion in minions['up']:
         if sync_status.get(minion) is True:
             sync_number += 1
+
+    jobs = sorted(client.jobs().items(), reverse=True)[:10]
+
     return render_template('dashboard.html', minions=minions,
-        ok_status=sync_number)
+        ok_status=sync_number, jobs=jobs)
 
 @app.route("/minions")
 @login_required
@@ -116,7 +119,7 @@ def minions_do_check_sync(minion):
 @app.route("/jobs")
 @login_required
 def jobs():
-    jobs = client.jobs()
+    jobs = sorted(client.jobs().items(), reverse=True)
     return render_template('jobs.html', jobs=jobs)
 
 @app.route("/job_result/<jid>")
@@ -146,13 +149,25 @@ def deployments():
 
 
 from flask_wtf import Form
-from wtforms import StringField
+from wtforms import StringField, SelectField
 from wtforms.validators import DataRequired
 
+matchers = [
+    ('glob', 'Glob'),
+    ('pcre', 'Perl regular expression'),
+    ('list', 'List'),
+    ('grain', 'Grain'),
+    ('grain_pcre', 'Grain perl regex'),
+    ('pillar', 'Pillar'),
+    ('nodegroup', 'Nodegroup'),
+    ('range', 'Range'),
+    ('compound', 'Compound')
+]
+
 class RunForm(Form):
+    expr_form = SelectField('matcher', choices=matchers)
     tgt = StringField('target', validators=[DataRequired()])
     fun = StringField('function', validators=[DataRequired()])
-    arg = StringField('arg')
 
 
 @app.route('/run', methods=["GET", "POST"])
@@ -160,9 +175,56 @@ class RunForm(Form):
 def run():
     form = RunForm()
     if form.validate_on_submit():
-        jid = client.run(form.tgt.data.strip(), form.fun.data.strip(), form.arg.data.strip())['return'][0]['jid']
+
+        args = {k: v for (k, v) in request.form.iteritems() if not k in ('csrf_token', 'tgt', 'fun', 'expr_form') and v}
+
+        jid = client.run(form.tgt.data.strip(), form.fun.data.strip(),
+            **args)['return'][0]['jid']
         return redirect(url_for('job_result', jid=jid))
     return render_template("run.html", form=form)
+
+@app.route('/doc_search', methods=["POST", "OPTIONS"])
+@login_required
+def doc_search():
+    content = request.json
+    data = [{
+        'client': 'local',
+        'fun': 'sys.argspec',
+        'tgt': content['tgt'].strip(),
+        'expr_form': content['expr_form'],
+        'arg': [content['fun'].strip()]
+    }]
+    arg_specs = client.run_sync(data)
+
+    if not arg_specs:
+        return jsonify({'error': 'No minions up ?'})
+
+    # Take only first result
+    arg_specs = arg_specs.values()[0]
+
+    module_function_names = arg_specs.keys()
+
+    docs_data = [{
+        'client': 'local',
+        'fun': 'sys.doc',
+        'tgt': content['tgt'].strip(),
+        'expr_form': content['expr_form'],
+        'arg': list(module_function_names)
+    }]
+    docs = client.run_sync(docs_data)
+
+    # Take only first result
+    docs = docs.values()[0]
+
+    result = {}
+
+    for module_function_name in module_function_names:
+        result[module_function_name] = {
+            'spec': parse_argspec(arg_specs[module_function_name]),
+            'doc': docs[module_function_name]}
+
+    return jsonify(result)
+
 
 
 if __name__ == "__main__":

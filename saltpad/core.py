@@ -142,20 +142,26 @@ class HTTPSaltStackClient(object):
         r = self.session.get(self.urljoin('minions'), headers=headers)
         return r.json()['return'][0]
 
-    def minions_status(self):
+    def run_sync(self, data):
         token = self.get_token()
+        headers = {'accept': 'application/json', 'X-Auth-Token': token,
+            'content-type': 'application/json'}
+        r = self.session.post(self.endpoint, data=json.dumps(data),
+            headers=headers, verify=False)
+        base = r.json()
+
+        if 'status' in base and base['return'] == 'Please log in':
+            raise ExpiredToken()
+
+        return r.json()['return'][0]
+
+    def minions_status(self):
         data = [{
             "client": "runner",
             "fun": "manage.status",
             "arg": [False],
         }]
-        headers = {'accept': 'application/json', 'X-Auth-Token': token,
-            'content-type': 'application/json'}
-        r = self.session.post(self.endpoint, data=json.dumps(data),
-            headers=headers)
-        if r.json().get('status'):
-            raise ExpiredToken()
-        return r.json()['return'][0]
+        return self.run_sync(data)
 
     def jobs(self, minion=None):
         token = self.get_token()
@@ -246,12 +252,13 @@ class HTTPSaltStackClient(object):
 
         return jobs
 
-    def run(self, tgt, fun, *args, **kwargs):
+    def run(self, tgt, fun, expr_form='glob', *args, **kwargs):
         token = self.get_token()
         data = [{
             "client": "local",
             "fun": fun,
             "tgt": tgt,
+            "expr_form": expr_form,
             "arg": format_arg(args, kwargs),
         }]
         headers = {'accept': 'application/json', 'X-Auth-Token': token,
