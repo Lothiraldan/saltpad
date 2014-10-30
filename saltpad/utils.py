@@ -156,7 +156,15 @@ def parse_argspec(argspec):
 
     defaults = defaults if defaults else []
 
-    argspec['required_args'] = args[:-len(defaults)]
-    argspec['default_args'] = dict(zip(args[-len(defaults):], defaults))
+    if not args:
+        argspec['required_args'] = []
+    else:
+        argspec['required_args'] = args[:-len(defaults)]
+
+    if not defaults:
+        argspec['defaults_args'] = {}
+    else:
+        argspec['default_args'] = dict(zip(args[-len(defaults):], defaults))
+
 
     return argspec
