@@ -15,7 +15,7 @@
   {% set minions_down = minions['down']|length > 0 %}
   {% set total_minions = minions['down']|length + minions['up']|length %}
   <div class="col-lg-3">
-    <div class="panel {% if minions_down%}panel-danger{% else %}panel-info{% endif %}">
+    <div class="panel {% if minions_down%}panel-danger{% else %}panel-success{% endif %}">
       <div class="panel-heading">
         <div class="row">
           <div class="col-xs-6">
