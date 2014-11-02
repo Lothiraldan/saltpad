@@ -1,0 +1,70 @@
+{% extends "base_logged.html" %}
+
+{% macro render_keys(keys, title_text, class, links_title, links) %}
+<div class="row">
+  <div class="col-lg-12">
+    <div class="alert alert-{{class}}"><h2>{{ keys|length }} {{ title_text }}</h2></div>
+
+  {% if keys %}
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover tablesorter">
+      <thead>
+        <tr>
+          <th>Minion</th>
+          <th>Fingerprint</th>
+          {% for link_title in links_title %}
+          <th>{{link_title }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for key in keys %}
+        <tr>
+          <td>{{ key }}</td>
+          <td></td>
+          {% for link in links %}
+          <td>
+            <a href="{{ url_for(link[0], key=key) }}">
+              <button type="button" class="btn btn-{{ link[1] }}">
+                {{ links_title[loop.index0] }}
+              </button>
+            </a>
+          </td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+
+  </div>
+</div>
+{% endmacro %}
+
+{% block page %}
+<div id="page-wrapper">
+
+  <div class="row">
+    <div class="col-lg-12">
+      <h1>Minions keys</h1>
+      <ol class="breadcrumb">
+        <li><a href="{{ url_for('index') }}"><i class="fa fa-dashboard"></i> SaltPad</a></li>
+        <li class="active"><i class="fa fa-key"></i> Minions Keys</li>
+      </ol>
+    </div>
+  </div><!-- /.row -->
+
+  <!-- Accepted keys -->
+  {{ render_keys(keys.minions, 'accepted minions.', 'success', ['Delete key', 'Reject key'], [('delete_key', 'default'), ('reject_key', 'danger')]) }}
+
+
+  <!-- Pending keys -->
+  {{ render_keys(keys.minions_pre, 'minions waiting for approval.', 'info', ['Accept key', 'Delete key', 'Reject key'], [('accept_key', 'success'), ('delete_key', 'default'), ('reject_key', 'danger')]) }}
+
+  <!-- Rejected keys -->
+  {{ render_keys(keys.minions_rejected, 'rejected minions.', 'danger', [], []) }}
+
+</div>
+
+{% endblock %}
