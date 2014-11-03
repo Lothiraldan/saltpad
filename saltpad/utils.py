@@ -119,6 +119,11 @@ def parse_highstate(job):
             # Error detected
             if isinstance(minion_return, list):
                 job['return'][minion_name] = {'status': 'error',
+                    'error': '\n'.join(minion_return)}
+                continue
+
+            if isinstance(minion_return, (str, unicode)):
+                job['return'][minion_name] = {'status': 'error',
                     'error': minion_return}
                 continue
 

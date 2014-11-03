@@ -1,0 +1,63 @@
+{% extends "base_logged.html" %}
+{% block page %}
+<div id="page-wrapper">
+
+<div class="row">
+  <div class="col-lg-12">
+    <h1>Minions <small>Status</small></h1>
+    <ol class="breadcrumb">
+      <li><a href="{{ url_for('index') }}"><i class="fa fa-dashboard"></i> SaltPad</a></li>
+      <li class="active"><i class="fa fa-cloud"></i> Minions Status</li>
+    </ol>
+  </div>
+</div><!-- /.row -->
+
+<div class="row">
+  <div class="col-lg-12">
+    <h2>Minions</h2>
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover tablesorter">
+        <thead>
+          <tr>
+            <th>Minion <i class="fa fa-sort"></i></th>
+            <th>Up ? <i class="fa fa-sort"></i></th>
+            <th>Salt version</th>
+            <th>Roles</th>
+            <th>Latest sync jobs</th>
+            <th>Launch sync<i class="fa fa-sort"></i></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for minion, minion_data in minions|dictsort %}
+          <tr {% if minion_data['state'] == 'down' %}class="danger"{% endif %}>
+            <td>{{ minion }}</td>
+            <td>{{ minion_data.state }}</td>
+            <td>{{ minion_data.saltversioninfo|join('.') }}</td>
+            <td><ul>
+              {% for role in minion_data.roles %}<li>{{ role }}</li>{% endfor %}
+            </ul></td>
+            <td>{% if jobs.get(minion) %}
+              <ul class="list-group">
+                {% for jid, job_data in jobs[minion]|dictsort|reverse %}
+                  {% set level=None %}
+                  {% if job_data.status == 'running' %}
+                    {% set level = "info" %}
+                  {% elif job_data.status == 'error' %}
+                    {% set level = 'error' %}
+                  {% else %}
+                    {% if job_data.level == False %}{% set level="danger" %}{% elif job_data.level == None %}{% set level="warning" %}{% elif job_data.level == True %}{% set level="success" %}{% endif %}
+                  {% endif %}
+                  <li class="list-group-item {% if level %}list-group-item-{{level}}{% endif %}"><a href="{{ url_for('job_result', jid=jid, renderer='highstate') }}">Job status: {{ job_data.status }}, launched at {{ job_data.info.StartTime }} by {{ job_data.info.User }}</a></li>
+                {% endfor %}
+              </ul>
+            {% else %}No jobs{% endif %}</td>
+            <td><a href="{{ url_for('minions_do_deploy', minion=minion) }}">Launch a check now</a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  </div>
+</div><!-- /.row -->
+{% endblock %}

@@ -114,7 +114,15 @@ def minions_deployments():
 
     jobs = client.select_jobs('state.highstate', minions, with_details=True)
 
-    return render_template('minions.html', minions=minions, jobs=jobs)
+    return render_template('minions_deployments.html', minions=minions, jobs=jobs)
+
+
+@app.route("/minions/<minion>/do_deploy")
+@login_required
+def minions_do_deploy(minion):
+    jid = client.run(minion, 'state.highstate')['return'][0]['jid']
+    return redirect(url_for('job_result', minion=minion, jid=jid, renderer='highstate'))
+
 
 @app.route("/minions/<minion>/do_check_sync")
 @login_required
@@ -146,6 +154,24 @@ def job_result(jid):
         return "Unknown jid", 404
     return render_template('job_result.html', job=job, minion=minion,
         renderer=renderer)
+
+
+@app.route("/job/redo/<jid>")
+@login_required
+def redo_job(jid):
+    minion = request.args.get('minion', None)
+    renderer = request.args.get('renderer', 'raw')
+    job = client.job(jid)
+
+    if not job:
+        return "Unknown jid", 404
+
+    jid = client.run(job['info']['Target'], job['info']['Function'],
+            expr_form=job['info']['Target-type'], *job['info']['Arguments'])['return'][0]['jid']
+
+    return redirect(url_for('job_result', minion=minion, jid=jid,
+        renderer='highstate'))
+
 
 
 @app.route("/deployments")
