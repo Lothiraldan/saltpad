@@ -17,7 +17,7 @@ app.config.from_object('settings')
 # Setup logging
 if not app.debug:
     from logging import FileHandler
-    app.logger.addHandler(FileHandler(app.config.LOG_FILE))
+    app.logger.addHandler(FileHandler(app.config['LOG_FILE']))
 
 client = FlaskHTTPSaltStackClient(app.config['API_URL'])
 
