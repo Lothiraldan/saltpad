@@ -1,7 +1,7 @@
 from flask import Flask, redirect, render_template, url_for, session, request, flash, jsonify
 from core import HTTPSaltStackClient, ExpiredToken
 from functools import wraps
-from utils import login_url, parse_highstate, NotHighstateOutput, parse_argspec
+from utils import login_url, parse_highstate, NotHighstateOutput, parse_argspec, format_arg
 
 # Init app
 
@@ -12,8 +12,9 @@ class FlaskHTTPSaltStackClient(HTTPSaltStackClient):
 
 
 app = Flask("SaltPad", template_folder="templates")
-app.secret_key = 'MyVerySecretKey'
-client = FlaskHTTPSaltStackClient('http://localhost:8000/')
+app.config.from_object('settings')
+
+client = FlaskHTTPSaltStackClient(app.config['API_URL'])
 
 from flask_wtf import Form
 from wtforms import StringField, PasswordField
@@ -225,6 +226,56 @@ def doc_search():
 
     return jsonify(result)
 
+
+@app.route('/keys')
+@login_required
+def minions_keys():
+    content = request.json
+    data = [{
+        'client': 'wheel',
+        'fun': 'key.list_all',
+    }]
+    minions_keys = client.run_sync(data)['data']['return']
+    return render_template("minions_keys.html", keys=minions_keys)
+
+
+@app.route('/keys/delete/<key>')
+@login_required
+def delete_key(key):
+    content = request.json
+    data = [{
+        'client': 'wheel',
+        'fun': 'key.delete',
+        'match': key
+    }]
+    minions_keys = client.run_sync(data)['data']['return']
+    return redirect(url_for('minions_keys'))
+
+
+@app.route('/keys/reject/<key>')
+@login_required
+def reject_key(key):
+    content = request.json
+    data = [{
+        'client': 'wheel',
+        'fun': 'key.reject',
+        'match': key
+    }]
+    minions_keys = client.run_sync(data)['data']['return']
+    return redirect(url_for('minions_keys'))
+
+
+@app.route('/keys/accept/<key>')
+@login_required
+def accept_key(key):
+    content = request.json
+    data = [{
+        'client': 'wheel',
+        'fun': 'key.accept',
+        'match': key
+    }]
+    minions_keys = client.run_sync(data)
+    return redirect(url_for('minions_keys'))
 
 
 if __name__ == "__main__":
