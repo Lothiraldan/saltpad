@@ -78,7 +78,7 @@
     </div>
   {% elif renderer == 'highstate' %}
 
-    {% set minion_job = job.return[minion] %}
+    {% set minion_job = job.return.get(minion, {'status': 'error', 'error': 'No return for this minion, minion is down or return is not yet available'}) %}
 
     {% if minion_job.status == 'error' %}
 
@@ -132,7 +132,7 @@ $(function() {
     {% elif renderer=='raw' %}
 
       {% for minion in job.info.Minions %}
-      json = {{ job.return[minion]|tojson|safe }};
+      json = {{ job.return.get(minion, 'No return')|tojson|safe }};
       document.getElementById("tree-{{ minion }}").innerHTML = JSONTree.create(json);
       {% endfor %}
 
