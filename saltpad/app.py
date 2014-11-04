@@ -120,14 +120,14 @@ def minions_deployments():
 @app.route("/minions/<minion>/do_deploy")
 @login_required
 def minions_do_deploy(minion):
-    jid = client.run(minion, 'state.highstate')['return'][0]['jid']
+    jid = client.run(minion, 'state.highstate', 'glob')['return'][0]['jid']
     return redirect(url_for('job_result', minion=minion, jid=jid, renderer='highstate'))
 
 
 @app.route("/minions/<minion>/do_check_sync")
 @login_required
 def minions_do_check_sync(minion):
-    jid = client.run(minion, 'state.highstate', test=True)['return'][0]['jid']
+    jid = client.run(minion, 'state.highstate', 'glob', test=True)['return'][0]['jid']
     return redirect(url_for('job_result', minion=minion, jid=jid, renderer='highstate'))
 
 @app.route("/jobs")
@@ -167,7 +167,7 @@ def redo_job(jid):
         return "Unknown jid", 404
 
     jid = client.run(job['info']['Target'], job['info']['Function'],
-            expr_form=job['info']['Target-type'], *job['info']['Arguments'])['return'][0]['jid']
+            job['info']['Target-type'], *job['info']['Arguments'])['return'][0]['jid']
 
     return redirect(url_for('job_result', minion=minion, jid=jid,
         renderer='highstate'))
@@ -211,7 +211,7 @@ def run():
         args = {k: v for (k, v) in request.form.iteritems() if not k in ('csrf_token', 'tgt', 'fun', 'expr_form') and v}
 
         jid = client.run(form.tgt.data.strip(), form.fun.data.strip(),
-            **args)['return'][0]['jid']
+            form.expr_form.data.strip(), **args)['return'][0]['jid']
         return redirect(url_for('job_result', jid=jid))
     return render_template("run.html", form=form)
 

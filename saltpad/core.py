@@ -252,7 +252,7 @@ class HTTPSaltStackClient(object):
 
         return jobs
 
-    def run(self, tgt, fun, expr_form='glob', *args, **kwargs):
+    def run(self, tgt, fun, expr_form, *args, **kwargs):
         token = self.get_token()
         data = [{
             "client": "local",

@@ -23,8 +23,8 @@
             <th>Up ? <i class="fa fa-sort"></i></th>
             <th>Salt version</th>
             <th>Roles</th>
-            <th>Latest sync jobs</th>
-            <th>Launch sync<i class="fa fa-sort"></i></th>
+            <th>Latest deploys</th>
+            <th>Launch deploy<i class="fa fa-sort"></i></th>
           </tr>
         </thead>
         <tbody>
@@ -51,7 +51,7 @@
                 {% endfor %}
               </ul>
             {% else %}No jobs{% endif %}</td>
-            <td><a href="{{ url_for('minions_do_deploy', minion=minion) }}">Launch a check now</a></td>
+            <td><a href="{{ url_for('minions_do_deploy', minion=minion) }}">Launch a deploy now</a></td>
           </tr>
           {% endfor %}
         </tbody>
