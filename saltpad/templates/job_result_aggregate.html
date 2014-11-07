@@ -1,0 +1,51 @@
+{% extends "job_result.html" %}
+
+{% block job_result %}
+
+{% set total_minions_length = job.info.Minions|length %}
+
+<div class="row">
+  <div class="col-lg-12">
+    <p>
+        <button class="btn btn-primary btn-sm" id="expand-all"><i class="fa fa-sitemap"></i> Expand all</button>
+    </p>
+  </div>
+{% for result, minions in job.return|aggregate_len_sort %}
+
+  <div class="col-lg-12">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3>{{hiding_control('hide_control_minion', True)|safe }} {{ minions|length }} ({{ '{:.0%}'.format(minions|length / total_minions_length) }}) minion(s) with this result:</h3>
+        </div>
+        <pre class="panel-body">{{ result }}</pre>
+        <ul class="list-group" style="display: none">
+            {% for minion in minions %}
+            <li class="list-group-item"><a href="{{ url_for('minion_details', minion=minion) }}">{{ minion }}</a></li>
+            {% endfor %}
+        </ul>
+      </div>
+  </div>
+{% endfor %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+$(function() {
+  {% if job.status != 'running' %}
+
+      $("div.panel-heading i.hide_control_minion").click(function(event) {
+        $(this).parents("div.panel").first().find(".list-group").toggle();
+        $(this).parent().find("i.fa").toggle();
+      });
+
+      $("button#expand-all").click(function(event) {
+        $(document).find('.list-group').toggle(true);
+        $(document).find("i.fa-chevron-right").toggle(false);
+        $(document).find("i.fa-chevron-down").toggle(true);
+      });
+
+  {% endif %}
+});
+</script>
+{% endblock %}

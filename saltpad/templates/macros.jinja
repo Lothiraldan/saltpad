@@ -1,0 +1,22 @@
+{% macro hiding_control(class, hide=False) %}
+<i class="fa fa-chevron-right {{ class }}" {% if not hide %}style="display: none"{% endif %}></i><i class="fa fa-chevron-down {{ class }}" {% if hide %}style="display: none"{% endif %}></i>
+{% endmacro %}
+
+{% macro format_output(output, name, status, total, default_hide=False) %}
+  {% if output %}
+
+    <div class="panel panel-{{ status }} {% if default_hide %}hide_control{% endif %}">
+      <div class="panel-heading"><h3>{{ hiding_control('hide_control', default_hide)|safe }} {{ name }} {{ output | length }} / {{ total }}</h3></div>
+      <div class="list-group">
+        {% for step_name, step in output.items() %}
+          <a class="list-group-item list-group-item-{{ status }}">
+            <h4> {{hiding_control('hide_control', True)|safe }} {{ step_name }}</h4>
+            <ul class="sync-status-hidden">
+              {% for k, v in step.items() %}<li>{{ k.decode('utf-8') }}: {{ (v|string()).decode('utf-8') }}</li>{% endfor %}
+            </ul>
+          </a>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+{% endmacro %}
