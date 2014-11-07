@@ -16,21 +16,21 @@
   <div class="col-lg-12">
     <h2>Minions</h2>
     <div class="table-responsive">
-      <table class="table table-bordered table-hover tablesorter">
+      <table class="table table-bordered table-hover tablesorter" id="minions">
         <thead>
           <tr>
-            <th>Minion <i class="fa fa-sort"></i></th>
-            <th>Up ? <i class="fa fa-sort"></i></th>
+            <th>Minion</i></th>
+            <th>Up ?</i></th>
             <th>Salt version</th>
             <th>Roles</th>
             <th>Latest sync jobs</th>
-            <th>Launch sync<i class="fa fa-sort"></i></th>
+            <th>Launch sync</i></th>
           </tr>
         </thead>
         <tbody>
-          {% for minion, minion_data in minions|dictsort %}
+          {% for minion, minion_data in minions.items() %}
           <tr {% if minion_data['state'] == 'down' %}class="danger"{% endif %}>
-            <td>{{ minion }}</td>
+            <td><a href="{{ url_for('minion_details', minion=minion) }}">{{ minion }}</a></td>
             <td>{{ minion_data.state }}</td>
             <td>{{ minion_data.saltversioninfo|join('.') }}</td>
             <td><ul>
@@ -60,4 +60,15 @@
   </div>
   </div>
 </div><!-- /.row -->
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+$(function() {
+  $("#minions").dataTable({
+    "order": [[1, "desc"]],
+    "lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]]
+  });
+});
+</script>
 {% endblock %}

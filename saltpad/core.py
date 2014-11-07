@@ -142,6 +142,17 @@ class HTTPSaltStackClient(object):
         r = self.session.get(self.urljoin('minions'), headers=headers)
         return r.json()['return'][0]
 
+    def minion_details(self, minion):
+        token = self.get_token()
+        headers = {'accept': 'application/json', 'X-Auth-Token': token}
+        r = self.session.get(self.urljoin('minions', minion), headers=headers)
+        base = r.json()
+
+        if 'status' in base and base['return'] == 'Please log in':
+            raise ExpiredToken()
+
+        return base
+
     def run_sync(self, data):
         token = self.get_token()
         headers = {'accept': 'application/json', 'X-Auth-Token': token,

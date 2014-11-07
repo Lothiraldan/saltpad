@@ -90,7 +90,7 @@ def minions_status():
     minions_status = client.minions_status()
 
     for minion in minions_status['up']:
-        minions[minion]['state'] = 'up'
+        minions.setdefault(minion, {})['state'] = 'up'
 
     for minion in minions_status['down']:
         minions.setdefault(minion, {})['state'] = 'down'
@@ -307,6 +307,18 @@ def accept_key(key):
     }]
     minions_keys = client.run_sync(data)
     return redirect(url_for('minions_keys'))
+
+@app.route('/minion/<minion>')
+@login_required
+def minion_details(minion):
+    minion_details = client.minion_details(minion)
+    print "Minion details", minion_details
+    if not minion_details['return'][0]:
+        minion_details['status'] = 'down'
+    else:
+        minion_details['status'] = 'up'
+    minion_details['name'] = minion
+    return render_template("minion_details.html", minion_details=minion_details)
 
 
 if __name__ == "__main__":
