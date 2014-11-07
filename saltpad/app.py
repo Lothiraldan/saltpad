@@ -107,7 +107,7 @@ def minions_deployments():
     minions_status = client.minions_status()
 
     for minion in minions_status['up']:
-        minions[minion]['state'] = 'up'
+        minions.setdefault(minion, {})['state'] = 'up'
 
     for minion in minions_status['down']:
         minions.setdefault(minion, {})['state'] = 'down'
@@ -149,10 +149,19 @@ def job_result(jid):
         except NotHighstateOutput:
             return redirect(url_for('job_result', jid=jid, minion=minion,
                 renderer='raw'))
+    elif renderer == 'aggregate':
+        aggregate_result = {}
+
+        for minion, minion_return in job['return'].iteritems():
+            aggregate_result.setdefault(str(minion_return), []).append(minion)
+
+        missing_minions = set(job['info']['Minions']) - set(job['return'].iterkeys())
+        aggregate_result['Missing results'] = missing_minions
+        job['return'] = aggregate_result
 
     if not job:
         return "Unknown jid", 404
-    return render_template('job_result.html', job=job, minion=minion,
+    return render_template('job_result_{}.html'.format(renderer), job=job, minion=minion,
         renderer=renderer)
 
 
@@ -319,6 +328,12 @@ def minion_details(minion):
         minion_details['status'] = 'up'
     minion_details['name'] = minion
     return render_template("minion_details.html", minion_details=minion_details)
+
+
+@app.template_filter("aggregate_len_sort")
+def aggregate_len_sort(unsorted_dict):
+    return sorted(unsorted_dict.iteritems(), key=lambda x: len(x[1]),
+        reverse=True)
 
 
 if __name__ == "__main__":

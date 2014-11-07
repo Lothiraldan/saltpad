@@ -43,6 +43,6 @@ div.hide_control > div.list-group {
     display: none;
 }
 
-i.hide_control {
+i.hide_control, i.hide_control_minion {
     cursor: pointer;
 }

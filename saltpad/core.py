@@ -131,7 +131,7 @@ class HTTPSaltStackClient(object):
     def minions(self, minion_id=None):
         token = self.get_token()
         headers = {'accept': 'application/json', 'X-Auth-Token': token}
-        r = self.session.get(self.urljoin('minions'), headers=headers)
+        r = self.session.get(self.urljoin('minions'), headers=headers, verify=False)
         if r.status_code != 200:
             raise Exception()
         return r.json()['return'][0]
@@ -139,13 +139,13 @@ class HTTPSaltStackClient(object):
     def minions(self):
         token = self.get_token()
         headers = {'accept': 'application/json', 'X-Auth-Token': token}
-        r = self.session.get(self.urljoin('minions'), headers=headers)
+        r = self.session.get(self.urljoin('minions'), headers=headers, verify=False)
         return r.json()['return'][0]
 
     def minion_details(self, minion):
         token = self.get_token()
         headers = {'accept': 'application/json', 'X-Auth-Token': token}
-        r = self.session.get(self.urljoin('minions', minion), headers=headers)
+        r = self.session.get(self.urljoin('minions', minion), headers=headers, verify=False)
         base = r.json()
 
         if 'status' in base and base['return'] == 'Please log in':
@@ -177,7 +177,7 @@ class HTTPSaltStackClient(object):
     def jobs(self, minion=None):
         token = self.get_token()
         headers = {'accept': 'application/json', 'X-Auth-Token': token}
-        r = self.session.get(self.urljoin('jobs'), headers=headers)
+        r = self.session.get(self.urljoin('jobs'), headers=headers, verify=False)
         base = r.json()
 
         return base['return'][0]
@@ -185,7 +185,7 @@ class HTTPSaltStackClient(object):
     def job(self, jid, minion=None):
         token = self.get_token()
         headers = {'accept': 'application/json', 'X-Auth-Token': token}
-        r = self.session.get(self.urljoin('jobs', jid), headers=headers)
+        r = self.session.get(self.urljoin('jobs', jid), headers=headers, verify=False)
         base = r.json()
 
         if 'status' in base and base['return'] == 'Please log in':
@@ -275,7 +275,7 @@ class HTTPSaltStackClient(object):
         headers = {'accept': 'application/json', 'X-Auth-Token': token,
             'content-type': 'application/json'}
         r = self.session.post(self.urljoin('minions'), data=json.dumps(data),
-            headers=headers)
+            headers=headers, verify=False)
         if r.json().get('status'):
             raise ExpiredToken()
         return r.json()

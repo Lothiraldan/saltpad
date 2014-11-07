@@ -57,6 +57,7 @@
 <script type="text/javascript">
 $(function() {
   $("#jobs").dataTable({
+    "order": [[0, "desc"]],
     "lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]]
   });
 });
