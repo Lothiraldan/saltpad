@@ -20,8 +20,8 @@
         <thead>
           <tr>
             <th>JID</i></th>
-            <th>Function</i></th>
             <th>Target</i></th>
+            <th>Function</i></th>
             <th>Arguments</th>
             <th>Launched At</th>
             <th>User</th>
@@ -32,9 +32,9 @@
           {% for jid, job_data in jobs %}
           <tr>
             <td>{{ jid }}</td>
-            <td>{{ job_data.Function }}</td>
             <td>{{ job_data.Target }}</td>
-            <td>{{ job_data.Arguments }}</td>
+            <td>{{ job_data.Function }}</td>
+            <td>{{ job_data.Arguments|format_arguments }}</td>
             <td>{{ job_data.StartTime }}</td>
             <td>{{ job_data.User }}</td>
             {% if job_data.Function == 'state.highstate' %}

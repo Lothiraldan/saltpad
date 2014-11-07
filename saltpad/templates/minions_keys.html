@@ -1,11 +1,11 @@
 {% extends "base_logged.html" %}
 
-{% macro render_keys(keys, title_text, class, links_title, links) %}
+{% macro render_keys(minions, title_text, class, links_title, links) %}
 <div class="row">
   <div class="col-lg-12">
-    <div class="alert alert-{{class}}"><h2>{{ keys|length }} {{ title_text }}</h2></div>
+    <div class="alert alert-{{class}}"><h2>{{ minions|length }} {{ title_text }}</h2></div>
 
-  {% if keys %}
+  {% if minions %}
   <div class="table-responsive">
     <table class="table table-bordered table-hover tablesorter">
       <thead>
@@ -18,13 +18,13 @@
         </tr>
       </thead>
       <tbody>
-        {% for key in keys %}
+        {% for minion in minions %}
         <tr>
-          <td>{{ key }}</td>
+          <td><a href="{{ url_for('minion_details', minion=minion) }}"> {{ minion }}</a></td>
           <td></td>
           {% for link in links %}
           <td>
-            <a href="{{ url_for(link[0], key=key) }}">
+            <a href="{{ url_for(link[0], key=minion) }}">
               <button type="button" class="btn btn-{{ link[1] }}">
                 {{ links_title[loop.index0] }}
               </button>

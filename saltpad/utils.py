@@ -173,3 +173,12 @@ def parse_argspec(argspec):
 
 
     return argspec
+
+
+def format_arguments(arguments):
+    for argument in arguments:
+        if isinstance(argument, dict):
+            argument.pop('__kwarg__')
+            yield "--{}={}".format(*argument.items()[0])
+        else:
+            yield argument

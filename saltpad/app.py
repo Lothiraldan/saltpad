@@ -1,7 +1,7 @@
 from flask import Flask, redirect, render_template, url_for, session, request, flash, jsonify
 from core import HTTPSaltStackClient, ExpiredToken
 from functools import wraps
-from utils import login_url, parse_highstate, NotHighstateOutput, parse_argspec, format_arg
+from utils import login_url, parse_highstate, NotHighstateOutput, parse_argspec, format_arg, format_arguments
 
 # Init app
 
@@ -267,7 +267,7 @@ def doc_search():
     return jsonify(result)
 
 
-@app.route('/keys')
+@app.route('/minions_keys')
 @login_required
 def minions_keys():
     content = request.json
@@ -334,6 +334,10 @@ def minion_details(minion):
 def aggregate_len_sort(unsorted_dict):
     return sorted(unsorted_dict.iteritems(), key=lambda x: len(x[1]),
         reverse=True)
+
+@app.template_filter("format_arguments")
+def format_argument(arguments):
+    return " ".join(format_arguments(arguments))
 
 
 if __name__ == "__main__":

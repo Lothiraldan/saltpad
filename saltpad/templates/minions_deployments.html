@@ -30,7 +30,7 @@
         <tbody>
           {% for minion, minion_data in minions|dictsort %}
           <tr {% if minion_data['state'] == 'down' %}class="danger"{% endif %}>
-            <td>{{ minion }}</td>
+            <td><a href="{{ url_for('minion_details', minion=minion) }}">{{ minion }}</a></td>
             <td>{{ minion_data.state }}</td>
             <td>{{ minion_data.saltversioninfo|join('.') }}</td>
             <td><ul>
