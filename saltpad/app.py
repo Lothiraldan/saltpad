@@ -330,6 +330,18 @@ def minion_details(minion):
     minion_details['name'] = minion
     return render_template("minion_details.html", minion_details=minion_details)
 
+@app.route('/pillar')
+@login_required
+def pillar_data():
+    minion_details = client.minion_details(minion)
+    print "Minion details", minion_details
+    if not minion_details['return'][0]:
+        minion_details['status'] = 'down'
+    else:
+        minion_details['status'] = 'up'
+    minion_details['name'] = minion
+    return render_template("minion_details.html", minion_details=minion_details)
+
 
 @app.template_filter("aggregate_len_sort")
 def aggregate_len_sort(unsorted_dict):
