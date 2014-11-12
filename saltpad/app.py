@@ -156,7 +156,8 @@ def job_result(jid):
             aggregate_result.setdefault(str(minion_return), []).append(minion)
 
         missing_minions = set(job['info']['Minions']) - set(job['return'].iterkeys())
-        aggregate_result['Missing results'] = missing_minions
+        if missing_minions:
+            aggregate_result['Missing results'] = missing_minions
         job['return'] = aggregate_result
 
     if not job:
