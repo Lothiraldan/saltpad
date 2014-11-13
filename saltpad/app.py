@@ -1,5 +1,5 @@
 from flask import Flask, redirect, render_template, url_for, session, request, flash, jsonify
-from core import HTTPSaltStackClient, ExpiredToken
+from core import HTTPSaltStackClient, ExpiredToken, Unauthorized
 from functools import wraps
 from utils import login_url, parse_highstate, NotHighstateOutput, parse_argspec, format_arg, format_arguments
 
@@ -47,13 +47,15 @@ def login_required(view):
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        user_token = client.login(form['username'].data, form['password'].data)
-        if user_token:
+        try:
+            user_token = client.login(form['username'].data, form['password'].data)
             session['username'] = form['username'].data
             session['user_token'] = user_token
             flash('Hi {}'.format(form['username'].data))
             return redirect(request.args.get("next") or url_for("index"))
-        flash('Invalid credentials', 'error')
+        except Unauthorized:
+            flash('Invalid credentials', 'error')
+
     return render_template("login.html", form=form)
 
 @app.route('/logout', methods=["GET"])
@@ -351,6 +353,7 @@ def aggregate_len_sort(unsorted_dict):
 @app.template_filter("format_arguments")
 def format_argument(arguments):
     return " ".join(format_arguments(arguments))
+
 
 
 if __name__ == "__main__":
