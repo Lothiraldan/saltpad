@@ -1,7 +1,7 @@
 from flask import Flask, redirect, render_template, url_for, session, request, flash, jsonify
 from core import HTTPSaltStackClient, ExpiredToken, Unauthorized
 from functools import wraps
-from utils import login_url, parse_highstate, NotHighstateOutput, parse_argspec, format_arg, format_arguments
+from utils import login_url, parse_highstate, NotHighstateOutput, parse_argspec, format_arg, format_arguments, Call
 
 # Init app
 
@@ -168,23 +168,6 @@ def job_result(jid):
         renderer=renderer)
 
 
-@app.route("/job/redo/<jid>")
-@login_required
-def redo_job(jid):
-    minion = request.args.get('minion', None)
-    renderer = request.args.get('renderer', 'raw')
-    job = client.job(jid)
-
-    if not job:
-        return "Unknown jid", 404
-
-    jid = client.run(job['info']['Target'], job['info']['Function'],
-            job['info']['Target-type'], *job['info']['Arguments'])['return'][0]['jid']
-
-    return redirect(url_for('job_result', minion=minion, jid=jid,
-        renderer='highstate'))
-
-
 
 @app.route("/deployments")
 @login_required
@@ -222,23 +205,40 @@ def run():
 
         args = {k: v for (k, v) in request.form.iteritems() if not k in ('csrf_token', 'tgt', 'fun', 'expr_form') and v}
 
-        jid = client.run(form.tgt.data.strip(), form.fun.data.strip(),
-            form.expr_form.data.strip(), **args)['return'][0]['jid']
+        jid = client.run(form.fun.data.strip(), client="local_async",
+            tgt=form.tgt.data.strip(), expr_form=form.expr_form.data.strip(),
+            args=Call(**args))['jid']
+
         return redirect(url_for('job_result', jid=jid))
     return render_template("run.html", form=form)
+
+
+@app.route("/job/redo/<jid>")
+@login_required
+def redo_job(jid):
+    minion = request.args.get('minion', None)
+    renderer = request.args.get('renderer', 'raw')
+    job = client.job(jid)
+
+    if not job:
+        return "Unknown jid", 404
+
+    jid = client.run(job['info']['Function'], client="local_async",
+        tgt=job['info']['Target'], expr_form=job['info']['Target-type'],
+        args=job['info']['Arguments'])['jid']
+
+    return redirect(url_for('job_result', minion=minion, jid=jid,
+        renderer='highstate'))
+
 
 @app.route('/doc_search', methods=["POST", "OPTIONS"])
 @login_required
 def doc_search():
     content = request.json
-    data = [{
-        'client': 'local',
-        'fun': 'sys.argspec',
-        'tgt': content['tgt'].strip(),
-        'expr_form': content['expr_form'],
-        'arg': [content['fun'].strip()]
-    }]
-    arg_specs = client.run_sync(data)
+
+    arg_specs = client.run('sys.argspec', client='local',
+        tgt=content['tgt'].strip(), expr_form=content['expr_form'],
+        args=Call(content['fun'].strip()))
 
     if not arg_specs:
         return jsonify({'error': 'No minions up ?'})
@@ -248,14 +248,8 @@ def doc_search():
 
     module_function_names = arg_specs.keys()
 
-    docs_data = [{
-        'client': 'local',
-        'fun': 'sys.doc',
-        'tgt': content['tgt'].strip(),
-        'expr_form': content['expr_form'],
-        'arg': list(module_function_names)
-    }]
-    docs = client.run_sync(docs_data)
+    docs = client.run('sys.doc', client='local', tgt=content['tgt'].strip(),
+        expr_form=content['expr_form'], args=Call(*module_function_names))
 
     # Take only first result
     docs = docs.values()[0]
@@ -274,11 +268,7 @@ def doc_search():
 @login_required
 def minions_keys():
     content = request.json
-    data = [{
-        'client': 'wheel',
-        'fun': 'key.list_all',
-    }]
-    minions_keys = client.run_sync(data)['data']['return']
+    minions_keys = client.run('key.list_all', client='wheel')['data']['return']
     return render_template("minions_keys.html", keys=minions_keys)
 
 
@@ -286,12 +276,7 @@ def minions_keys():
 @login_required
 def delete_key(key):
     content = request.json
-    data = [{
-        'client': 'wheel',
-        'fun': 'key.delete',
-        'match': key
-    }]
-    minions_keys = client.run_sync(data)['data']['return']
+    minions_keys = client.run('key.delete', client="wheel", match=key)['data']['return']
     return redirect(url_for('minions_keys'))
 
 
@@ -299,12 +284,7 @@ def delete_key(key):
 @login_required
 def reject_key(key):
     content = request.json
-    data = [{
-        'client': 'wheel',
-        'fun': 'key.reject',
-        'match': key
-    }]
-    minions_keys = client.run_sync(data)['data']['return']
+    client.run('key.reject', client="wheel", match=key)['data']['return']
     return redirect(url_for('minions_keys'))
 
 
@@ -312,12 +292,7 @@ def reject_key(key):
 @login_required
 def accept_key(key):
     content = request.json
-    data = [{
-        'client': 'wheel',
-        'fun': 'key.accept',
-        'match': key
-    }]
-    minions_keys = client.run_sync(data)
+    client.run('key.accept', client="wheel", match=key)['data']['return']
     return redirect(url_for('minions_keys'))
 
 @app.route('/minion/<minion>')

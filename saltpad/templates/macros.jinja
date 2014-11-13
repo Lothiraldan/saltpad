@@ -1,5 +1,5 @@
 {% macro hiding_control(class, hide=False) %}
-<i class="fa fa-chevron-right {{ class }}" {% if not hide %}style="display: none"{% endif %}></i><i class="fa fa-chevron-down {{ class }}" {% if hide %}style="display: none"{% endif %}></i>
+<i class="fa fa-fw fa-chevron-right {{ class }} control_on_hidden" {% if not hide %}style="display: none"{% endif %}></i><i class="fa fa-fw fa-chevron-down {{ class }} control_on_showed" {% if hide %}style="display: none"{% endif %}></i>
 {% endmacro %}
 
 {% macro format_output(output, name, status, total, default_hide=False) %}

@@ -87,7 +87,7 @@ def get_job_level(job_result):
 def get_job_human_status(job_level):
     return human_status[job_level]
 
-def format_arg(args, kwargs):
+def format_arg(args):
     return list(args) + [{'__kwarg__': True, kwarg_k: kwarg_v} for
         (kwarg_k, kwarg_v) in kwargs.items()]
 
@@ -182,3 +182,7 @@ def format_arguments(arguments):
             yield "--{}={}".format(*argument.items()[0])
         else:
             yield argument
+
+def Call(*args, **kwargs):
+    return list(args) + [{'__kwarg__': True, kwarg_k: kwarg_v} for
+        (kwarg_k, kwarg_v) in kwargs.items()]

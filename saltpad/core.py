@@ -148,12 +148,6 @@ class HTTPSaltStackClient(object):
         return self.session.post(self.urljoin('login'), data=json.dumps(data),
             headers=headers, verify=False)['return'][0]['token']
 
-    def minions(self, minion_id=None):
-        token = self.get_token()
-        headers = {'accept': 'application/json', 'X-Auth-Token': token}
-        r = self.session.get(self.urljoin('minions'), headers=headers, verify=False)
-        return r['return'][0]
-
     def minions(self):
         token = self.get_token()
         headers = {'accept': 'application/json', 'X-Auth-Token': token}
@@ -165,22 +159,8 @@ class HTTPSaltStackClient(object):
         headers = {'accept': 'application/json', 'X-Auth-Token': token}
         return self.session.get(self.urljoin('minions', minion), headers=headers, verify=False)
 
-    def run_sync(self, data):
-        token = self.get_token()
-        headers = {'accept': 'application/json', 'X-Auth-Token': token,
-            'content-type': 'application/json'}
-        r = self.session.post(self.endpoint, data=json.dumps(data),
-            headers=headers, verify=False)
-
-        return r['return'][0]
-
     def minions_status(self):
-        data = [{
-            "client": "runner",
-            "fun": "manage.status",
-            "arg": [False],
-        }]
-        return self.run_sync(data)
+        return self.run("manage.status", client="runner")
 
     def jobs(self, minion=None):
         token = self.get_token()
@@ -266,18 +246,27 @@ class HTTPSaltStackClient(object):
 
         return jobs
 
-    def run(self, tgt, fun, expr_form, *args, **kwargs):
+    def run(self, fun, tgt=None, expr_form=None, client=None, args=[], **kwargs):
         token = self.get_token()
         data = [{
-            "client": "local",
             "fun": fun,
-            "tgt": tgt,
-            "expr_form": expr_form,
-            "arg": format_arg(args, kwargs),
+            "arg": args,
         }]
+
+        if tgt:
+            data[0]['tgt'] = tgt
+
+        if expr_form:
+            data[0]['expr_form'] = expr_form
+
+        if client:
+            data[0]['client'] = client
+
+        data[0].update(kwargs)
+
         headers = {'accept': 'application/json', 'X-Auth-Token': token,
             'content-type': 'application/json'}
-        r = self.session.post(self.urljoin('minions'), data=json.dumps(data),
+        r = self.session.post(self.endpoint, data=json.dumps(data),
             headers=headers, verify=False)
-        return r
+        return r['return'][0]
 
