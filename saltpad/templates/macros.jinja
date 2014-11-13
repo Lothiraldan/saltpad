@@ -20,3 +20,26 @@
     </div>
   {% endif %}
 {% endmacro %}
+
+{% macro panel_jsontree(heading_title, content, hide=True, heading_level=3) %}
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h{{ heading_level }}>{{hiding_control('hide_control', hide)|safe }} {{ heading_title }}</h{{ heading_level }}>
+  </div>
+  <div class="panel-body jsontree" {% if hide %}style="display: none"{% endif %}>{{ content|tojson|safe }}</div>
+</div>
+{% endmacro %}
+
+{% macro panel_jsontree_js() %}
+$("div.panel-heading i.hide_control").click(function(event) {
+  $(this).parents("div.panel").first().find(".panel-body").toggle();
+  $(this).parent().find("i.fa").toggle();
+});
+{% endmacro %}
+
+{% macro render_trees() %}
+$("div.jsontree").each(function() {
+  var tree = JSONTree.create(JSON.parse($(this).text()));
+  $(this).html(tree);
+});
+{% endmacro %}

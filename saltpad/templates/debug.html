@@ -1,0 +1,58 @@
+{% extends "base_logged.html" %}
+{% block page %}
+<div id="page-wrapper">
+
+<div class="row">
+  <div class="col-lg-12">
+    <h1>Minion <small>Debug</small></h1>
+    <ol class="breadcrumb">
+      <li><a href="{{ url_for('index') }}"><i class="fa fa-dashboard"></i> SaltPad</a></li>
+      <li><i class="fa fa-code"></i> Debug minion</li></a>
+    </ol>
+  </div>
+</div><!-- /.row -->
+
+<div class="row">
+  <div class="col-lg-12">
+    <h2>Minions</h2>
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover tablesorter" id="minions">
+        <thead>
+          <tr>
+            <th>Minion</i></th>
+            <th>Up ?</i></th>
+            <th>Salt version</th>
+            <th>Roles</th>
+            <th>Debug minion</i></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for minion, minion_data in minions.items() %}
+          <tr {% if minion_data['state'] == 'down' %}class="danger"{% endif %}>
+            <td><a href="{{ url_for('minion_details', minion=minion) }}">{{ minion }}</a></td>
+            <td>{{ minion_data.state }}</td>
+            <td>{{ minion_data.saltversioninfo|join('.') }}</td>
+            <td><ul>
+              {% for role in minion_data.roles %}<li>{{ role }}</li>{% endfor %}
+            </ul></td>
+            <td><a href="{{ url_for('debug_minion', minion=minion) }}">Debug minion</a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  </div>
+</div><!-- /.row -->
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+$(function() {
+  $("#minions").dataTable({
+    "order": [[1, "desc"]],
+    "lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]]
+  });
+});
+</script>
+{% endblock %}

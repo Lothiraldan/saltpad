@@ -26,7 +26,7 @@
             <ul class="collapse"id="minions-ul">
               <li><a href="{{ url_for('minions_status') }}"><i class="fa fa-check-square fa-fw fa-lg"></i> Minions sync status</a></li>
               <li><a href="{{ url_for('minions_deployments') }}"><i class="fa fa-rocket fa-fw fa-lg"></i> Minions deployments</a></li>
-              <li><a href="tables.html"><i class="fa fa-plus-square fa-fw fa-lg"></i> HealthChecks</a></li>
+              <li><a href="{{ url_for('wip') }}"><i class="fa fa-plus-square fa-fw fa-lg"></i> HealthChecks</a></li>
               <li><a href="{{ url_for('minions_keys') }}"><i class="fa fa-key fa-fw fa-lg"></i> Minions keys</a></li>
             </ul>
         </li>
@@ -34,9 +34,9 @@
         <li>
             <a href="javascript:;" data-toggle="collapse" data-target="#jobs-ul" class="" aria-expanded="true"><i class="fa fa-tasks fa-fw fa-lg"></i> Jobs <i class="fa fa-fw fa-caret-down"></i></a>
             <ul class="collapse"id="jobs-ul">
-              <li><a href="{{ url_for('minions_deployments') }}"><i class="fa fa-magic fa-fw fa-lg"></i> Templates</a></li>
+              <li><a href="{{ url_for('wip') }}"><i class="fa fa-magic fa-fw fa-lg"></i> Templates</a></li>
               <li><a href="{{ url_for('jobs') }}"><i class="fa fa-history fa-fw fa-lg"></i> Jobs history</a></li>
-              <li><a href="#scheduled"><i class="fa fa-retweet fa-fw fa-lg"></i> Scheduled Jobs</a></li>
+              <li><a href="{{ url_for('wip') }}"><i class="fa fa-retweet fa-fw fa-lg"></i> Scheduled Jobs</a></li>
             </ul>
         </li>
 
@@ -45,14 +45,14 @@
             <a href="javascript:;" data-toggle="collapse" data-target="#execute-ul" class="" aria-expanded="true"><i class="fa fa-play fa-fw fa-lg"></i> Execute <i class="fa fa-fw fa-caret-down"></i></a>
             <ul class="collapse"id="execute-ul">
               <li><a href="{{ url_for('run') }}"><i class="fa fa-terminal fa-fw fa-lg"></i> Run module</a></li>
-              <li><a href="typography.html"><i class="fa fa-list-alt fa-fw fa-lg"></i> Inventory / Reporting</a></li>
+              <li><a href="{{ url_for('wip') }}"><i class="fa fa-list-alt fa-fw fa-lg"></i> Inventory / Reporting</a></li>
             </ul>
         </li>
 
         <li>
             <a href="javascript:;" data-toggle="collapse" data-target="#debug-ul" class="" aria-expanded="true"><i class="fa fa-lightbulb-o fa-fw fa-lg"></i> Debug <i class="fa fa-fw fa-caret-down"></i></a>
             <ul class="collapse"id="debug-ul">
-              <li><a href="{{ url_for('pillar_data') }}"><i class="fa fa-code fa-fw fa-lg"></i> Pillar data</a></li>
+              <li><a href="{{ url_for('debug') }}"><i class="fa fa-code fa-fw fa-lg"></i> Debug minion</a></li>
             </ul>
         </li>
       </ul>

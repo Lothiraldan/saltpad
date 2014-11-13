@@ -1,5 +1,5 @@
+{% from "macros.jinja" import panel_jsontree, panel_jsontree_js, render_trees %}
 {% extends "base_logged.html" %}
-
 
 {% block page %}
 <div id="page-wrapper">
@@ -30,11 +30,9 @@
 
 </div><!-- /.row -->
 
-<div class="panel panel-default">
-  <div class="panel-heading"><h2>Grains</h2></div>
-    <div class="panel-body" id="tree-{{minion_details.name}}">
-    </div>
-</div>
+
+{{ panel_jsontree('Grains',  minion_details.return[0], False, heading_level=2)|safe }}
+
 {% endif %}
 
 
@@ -65,10 +63,8 @@
 {% if minion_details.status == 'up' %}
 
 <script type="text/javascript">
-$(function() {
-  json = {{ minion_details.return[0]|tojson|safe }};
-  document.getElementById("tree-{{ minion_details.name }}").innerHTML = JSONTree.create(json);
-});
+{{ panel_jsontree_js()|safe }}
+{{ render_trees()|safe }}
 </script>
 
 {% endif %}

@@ -1,0 +1,35 @@
+{% from "macros.jinja" import panel_jsontree, panel_jsontree_js, render_trees %}
+
+{% extends "base_logged.html" %}
+{% block page %}
+<div id="page-wrapper">
+
+<div class="row">
+  <div class="col-lg-12">
+    <h1>Minion {{ minion }} <small>debugging</small></h1>
+    <ol class="breadcrumb">
+      <li><a href="{{ url_for('index') }}"><i class="fa fa-dashboard"></i> SaltPad</a></li>
+      <li><a href="{{ url_for('debug') }}"><i class="fa fa-code"></i> Debug minion</li></a>
+      <li class="active"><i class="fa fa-code"></i> Debug minion {{ minion }}</li>
+    </ol>
+  </div>
+</div><!-- /.row -->
+
+<div class="row">
+  <div class="col-lg-12">
+    {{ panel_jsontree('Pillar data', pillar_data)|safe }}
+    {{ panel_jsontree('State Top', state_top)|safe }}
+    {{ panel_jsontree('Lowstate', lowstate)|safe }}
+    {{ panel_jsontree('Grains', grains)|safe }}
+  </div>
+</div><!-- /.row -->
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+$(function() {
+  {{ panel_jsontree_js()|safe }}
+  {{ render_trees()|safe }}
+});
+</script>
+{% endblock %}

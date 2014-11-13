@@ -299,7 +299,6 @@ def accept_key(key):
 @login_required
 def minion_details(minion):
     minion_details = client.minion_details(minion)
-    print "Minion details", minion_details
     if not minion_details['return'][0]:
         minion_details['status'] = 'down'
     else:
@@ -307,17 +306,39 @@ def minion_details(minion):
     minion_details['name'] = minion
     return render_template("minion_details.html", minion_details=minion_details)
 
-@app.route('/pillar')
+@app.route('/debug/')
 @login_required
-def pillar_data():
-    minion_details = client.minion_details(minion)
-    print "Minion details", minion_details
-    if not minion_details['return'][0]:
-        minion_details['status'] = 'down'
-    else:
-        minion_details['status'] = 'up'
-    minion_details['name'] = minion
-    return render_template("minion_details.html", minion_details=minion_details)
+def debug():
+    minions = client.minions()
+    minions_status = client.minions_status()
+
+    for minion in minions_status['up']:
+        minions.setdefault(minion, {})['state'] = 'up'
+
+    for minion in minions_status['down']:
+        minions.setdefault(minion, {})['state'] = 'down'
+
+    return render_template('debug.html', minions=minions)
+
+@app.route('/debug/<minion>')
+@login_required
+def debug_minion(minion):
+
+    pillar_data = client.run("pillar.items", client="local", tgt=minion)[minion]
+    # Make a PR for that
+    #pillar_top = client.run("pillar.show_top", client="runner", minion=minion)
+    state_top = client.run("state.show_top", client="local", tgt=minion)[minion]
+    lowstate = client.run("state.show_lowstate", client="local", tgt=minion)[minion]
+    grains = client.run("grains.items", client="local", tgt=minion)[minion]
+
+    return render_template('debug_minion.html', minion=minion,
+        pillar_data=pillar_data, state_top=state_top, lowstate=lowstate,
+        grains=grains)
+
+@app.route('/wip')
+@login_required
+def wip():
+    return render_template("wip.html")
 
 
 @app.template_filter("aggregate_len_sort")
@@ -328,6 +349,7 @@ def aggregate_len_sort(unsorted_dict):
 @app.template_filter("format_arguments")
 def format_argument(arguments):
     return " ".join(format_arguments(arguments))
+
 
 
 
