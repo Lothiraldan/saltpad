@@ -7,7 +7,7 @@
     <h1>Minions <small>Status</small></h1>
     <ol class="breadcrumb">
       <li><a href="{{ url_for('index') }}"><i class="fa fa-dashboard"></i> SaltPad</a></li>
-      <li class="active"><i class="fa fa-cloud"></i> Minions Status</li>
+      <li class="active"><i class="fa fa-check-square"></i> Minions Status</li>
     </ol>
   </div>
 </div><!-- /.row -->
@@ -67,7 +67,10 @@
 $(function() {
   $("#minions").dataTable({
     "order": [[1, "desc"]],
-    "lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]]
+    "lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]],
+    "columnDefs": [
+      { "orderable": false, "targets": -1 }
+    ]
   });
 });
 </script>
