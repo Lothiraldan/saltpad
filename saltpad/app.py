@@ -122,14 +122,16 @@ def minions_deployments():
 @app.route("/minions/<minion>/do_deploy")
 @login_required
 def minions_do_deploy(minion):
-    jid = client.run(minion, 'state.highstate', 'glob')['return'][0]['jid']
+    jid = client.run('state.highstate', client="local_async",
+        tgt=minion)['jid']
     return redirect(url_for('job_result', minion=minion, jid=jid, renderer='highstate'))
 
 
 @app.route("/minions/<minion>/do_check_sync")
 @login_required
 def minions_do_check_sync(minion):
-    jid = client.run(minion, 'state.highstate', 'glob', test=True)['return'][0]['jid']
+    jid = client.run('state.highstate', client="local_async",
+        tgt=minion, args=Call(test=True))['jid']
     return redirect(url_for('job_result', minion=minion, jid=jid, renderer='highstate'))
 
 @app.route("/jobs")
