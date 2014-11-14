@@ -4,6 +4,7 @@ from flask import Flask, redirect, render_template, url_for, session, request, f
 from urlparse import urlparse
 from werkzeug.urls import url_decode, url_encode
 from copy import copy
+from flask import render_template_string
 
 if sys.version < '3':  # pragma: no cover
     from urlparse import urlparse, urlunparse
@@ -186,3 +187,80 @@ def format_arguments(arguments):
 def Call(*args, **kwargs):
     return list(args) + [{'__kwarg__': True, kwarg_k: kwarg_v} for
         (kwarg_k, kwarg_v) in kwargs.items()]
+
+
+GRAPHVIZ_TEMPLATE = """
+digraph G {
+
+    {% for state in lowstate -%}
+    {{ state['order'] }} [label="{{ state['state'] }} {{ state['fun'] }} : {{ state['__id__'] }}"];
+    {% endfor %}
+
+    {% for sls_name in states %}
+    subgraph cluster_{{ sls_name|replace('.', '_')|replace('-', '_') }} {
+        label = "{{ sls_name }}";
+        style=filled;
+        color=lightgrey;
+
+        {% for require in states_requires[sls_name] -%}
+        {{ require[0] }} -> {{ require[1] }};
+        {% endfor %}
+    }
+    {% endfor %}
+
+    {% for require in requires -%}
+    {{ require[0] }} -> {{ require[1] }};
+    {% endfor %}
+
+    {% for watch in watchs -%}
+    {{ watch[0] }} -> {{ watch[2] }};
+    {% endfor %}
+}
+"""
+
+
+
+def process_lowstate(lowstate):
+    id_map = {}
+    requires = []
+    watchs = []
+    states = set()
+    states_requires = {}
+    states_watchs = {}
+
+    for state in lowstate:
+        # Generate map id
+        id_map[(state['state'], state['__id__'])] = (state['order'], state['__sls__'])
+        id_map[(state['state'], state['name'])] = (state['order'], state['__sls__'])
+
+        # Append to states
+        states_requires.setdefault(state['__sls__'], [])
+        states_watchs.setdefault(state['__sls__'], [])
+
+    for state in lowstate:
+        # Add requires and watch
+        for require in state.get('require', []):
+            require_state, require_name = list(require.items())[0]
+
+            if require_state == 'sls':
+                requires.append((state['order'], 'cluster_{}'.format(require_name.replace('.', '_').replace('-', '_'))))
+                continue
+
+            required_state = id_map[(require_state, require_name)]
+
+            if required_state[1] == state['__sls__']:
+                states.add(state['__sls__'])
+                states_requires.setdefault(state['__sls__'], []).append((state['order'], required_state[0]))
+            else:
+                requires.append((state['order'], required_state[0]))
+
+        # for watch in state.get('watch', []):
+        #     watchs.append((state['order'], id_map[list(watch.items())[0]]))
+
+    # Generate dot file
+    graph = render_template_string(GRAPHVIZ_TEMPLATE, lowstate=lowstate,
+        requires=requires, watchs=watchs, states=states,
+        states_requires=states_requires, states_watchs=states_watchs)
+
+    return graph
+
