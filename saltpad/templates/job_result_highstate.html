@@ -44,7 +44,9 @@
         </div>
         <div class="panel-body" {% if level=='success' %}style="display: none"{% endif %}>
           {{ format_output(minion_job['highstate'][False], 'Errors', 'danger', total)|safe }}
-          {{ format_output(minion_job['highstate'][None], 'Warnings (changes)', 'warning', total)|safe }}
+          {{ format_output(minion_job['highstate']['requirement_failed'], 'Requirements failed', 'danger', total, True)|safe }}
+          {{ format_output(minion_job['highstate'][None], 'Warning (changes)', 'warning', total)|safe }}
+          {{ format_output(minion_job['highstate']['changes'], 'Changes', 'info', total)|safe }}
           {{ format_output(minion_job['highstate'][True], 'Success', 'success', total, True)|safe }}
         </div>
       </div>

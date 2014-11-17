@@ -191,6 +191,8 @@ class HTTPSaltStackClient(object):
     def select_jobs(self, fun, minions=None, with_details=False, **arguments):
         jobs = {}
 
+        default_arguments_values = arguments.pop('default_arguments_values', {})
+
         for jid, job in self.jobs().iteritems():
             if job['Function'] != fun:
                 continue
@@ -200,7 +202,9 @@ class HTTPSaltStackClient(object):
             match = True
             for argument, argument_value in arguments.items():
 
-                if job_args_kwargs.get(argument) != argument_value:
+                default_argument_value = default_arguments_values.get(argument)
+
+                if job_args_kwargs.get(argument, default_argument_value) != argument_value:
                     match = False
                     break
 
@@ -212,7 +216,7 @@ class HTTPSaltStackClient(object):
 
                 # Running job
                 if job_details.get('status') == 'running':
-                    for minion_name in job_details['Minions']:
+                    for minion_name in job_details['info']['Minions']:
                         minion_data = job_details
                         jobs.setdefault(minion_name, {})[jid] = minion_data
                     continue

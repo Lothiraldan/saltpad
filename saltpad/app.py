@@ -98,7 +98,7 @@ def minions_status():
         minions.setdefault(minion, {})['state'] = 'down'
 
     jobs = client.select_jobs('state.highstate', minions, with_details=True,
-        test=True)
+        test=True, default_arguments_values={'test': False})
 
     return render_template('minions.html', minions=minions, jobs=jobs)
 
@@ -114,7 +114,8 @@ def minions_deployments():
     for minion in minions_status['down']:
         minions.setdefault(minion, {})['state'] = 'down'
 
-    jobs = client.select_jobs('state.highstate', minions, with_details=True)
+    jobs = client.select_jobs('state.highstate', minions, with_details=True,
+        test=False, default_arguments_values={'test': False})
 
     return render_template('minions_deployments.html', minions=minions, jobs=jobs)
 
