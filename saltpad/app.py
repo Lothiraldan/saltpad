@@ -38,7 +38,7 @@ def login_required(view):
 
         try:
             return view(*args, **kwargs)
-        except ExpiredToken:
+        except (ExpiredToken, Unauthorized):
             return redirect(login_url('login', request.url))
 
     return wrapper
@@ -408,9 +408,6 @@ def format_argument(arguments):
     return " ".join(format_arguments(arguments))
 
 
-
-
 if __name__ == "__main__":
-    print "Start ?"
     app.debug = True
     app.run()
