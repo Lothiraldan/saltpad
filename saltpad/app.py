@@ -22,7 +22,7 @@ if not app.debug:
 client = FlaskHTTPSaltStackClient(app.config['API_URL'])
 
 from flask_wtf import Form
-from wtforms import StringField, PasswordField
+from wtforms import StringField, PasswordField, TextAreaField
 from wtforms.validators import DataRequired
 
 class LoginForm(Form):
@@ -169,6 +169,57 @@ def job_result(jid):
     return render_template('job_result_{}.html'.format(renderer), job=job, minion=minion,
         renderer=renderer)
 
+@app.route("/templates")
+@login_required
+def templates():
+    master_config = client.run('config.values', client="wheel")['data']['return']
+    if not master_config.get('templates'):
+        client.run('config.apply', client="wheel", key="templates", value={})
+        master_config['templates'] = {}
+    return render_template("templates.html", templates=master_config['templates'])
+
+@app.route("/templates/run/<template>")
+@login_required
+def run_template(template):
+    master_config = client.run('config.values', client="wheel")['data']['return']
+    template_data = master_config['templates'].get(template)
+
+    if not template_data:
+        return "Unknown template", 404
+
+    jid = client.run(template_data['fun'], client="local_async",
+        tgt=template_data['tgt'], expr_form=template_data['expr_form'],
+        args=Call(**template_data['args']))['jid']
+
+    return redirect(url_for('job_result', jid=jid))
+
+@app.route("/templates/new", methods=['GET', 'POST'])
+@login_required
+def add_template():
+    form = NewTemplateForm()
+    if form.validate_on_submit():
+        master_config = client.run('config.values', client="wheel")['data']['return']
+
+
+        args = {k: v for (k, v) in request.form.iteritems() if not k in
+            ('csrf_token', 'tgt', 'fun', 'expr_form', 'name', 'description') and v}
+
+        templates = master_config.get('templates', {})
+        templates[form.name.data.strip()] = {
+            'description': form.description.data.strip(),
+            'fun': form.fun.data.strip(),
+            'tgt': form.tgt.data.strip(),
+            'expr_form': form.expr_form.data.strip(),
+            'args': args}
+
+        client.run('config.apply', client="wheel", key="templates", value=templates)
+
+        master_config = client.run('config.values', client="wheel")
+
+        flash('Template {} has been successfully saved'.format(form.name.data.strip()))
+
+        return redirect(url_for('templates'))
+    return render_template("add_template.html", form=form)
 
 
 @app.route("/deployments")
@@ -197,6 +248,10 @@ class RunForm(Form):
     expr_form = SelectField('matcher', choices=matchers)
     tgt = StringField('target', validators=[DataRequired()])
     fun = StringField('function', validators=[DataRequired()])
+
+class NewTemplateForm(RunForm):
+    name = StringField('name', validators=[DataRequired()])
+    description = TextAreaField('description', validators=[DataRequired()])
 
 
 @app.route('/run', methods=["GET", "POST"])
