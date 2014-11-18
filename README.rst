@@ -23,8 +23,8 @@ SaltPad is not yet available on Pypi, so you can clone it here: git@github.com:t
 
     git clone git@github.com:tinyclues/saltpad.git
 
-Web GUI configuration
-=====================
+SaltPad Web GUI configuration
+=============================
 
 The Wed GUI use the HTTP Api of SaltStack to interract with the Salt-Master. You should first install the Salt-Api on your Salt-Master. You can find the documentation in the `SaltStack documentation`_.
 
@@ -82,7 +82,24 @@ Now go on http://127.0.0.1:5000 in your browser, login using SaltStack external 
 Features
 --------
 
-* TODO
+* Get overview of all your minions.
+* Get details about each minions, its Salt version.
+* Easy launch of state.highstate jobs with or without dry-run mode.
+* Manage minions keys.
+* Launch jobs.
+* Access jobs details easily.
+* Save job configuration as templates and launch them with one click on a button.
+* Quick debug minion, get all usefull information in one place.
 
 .. _SaltStack documentation: http://docs.saltstack.com/en/latest/ref/netapi/all/salt.netapi.rest_cherrypy.html
 .. _configure the external auth: http://docs.saltstack.com/en/latest/topics/eauth/index.html
+
+SaltPad CLI CONFIGURATION
+=========================
+
+TODO
+
+SaltPad vagrant CLI CONFIGURATION
+=================================
+
+TODO
