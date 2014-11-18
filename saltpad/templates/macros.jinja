@@ -56,3 +56,16 @@ $("div.jsontree").each(function() {
   $(this).html(tree);
 });
 {% endmacro %}
+
+{% set category_mapper = {'message': 'info', 'success': 'success',
+                          'warning': 'warning', 'error': 'danger'} %}
+
+{% macro print_flash_messages() %}
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category_mapper.get(category, category) }}" role="alert">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+{% endmacro %}

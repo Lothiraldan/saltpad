@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from "macros.jinja" import print_flash_messages %}
 {% block body %}
 
 <div id="wrapper">
@@ -117,13 +118,7 @@
 
   <div id="page-wrapper">
 
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        {% for category, message in messages %}
-          <div class="alert alert-{{ category }}" role="alert">{{ message }}</div>
-        {% endfor %}
-      {% endif %}
-    {% endwith %}
+    {{ print_flash_messages()|safe }}
 
     {% block page %}
     {% endblock %}

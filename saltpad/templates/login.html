@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from "macros.jinja" import print_flash_messages %}
 {% block body %}
 
 <div class="container">
@@ -10,13 +11,7 @@
 
                 <div style="padding-top:30px" class="panel-body" >
 
-                    {% with messages = get_flashed_messages() %}
-                      {% if messages %}
-                        {% for message in messages %}
-                          <div class="alert alert-danger" role="alert">{{ message }}</div>
-                        {% endfor %}
-                      {% endif %}
-                    {% endwith %}
+                    {{ print_flash_messages()|safe }}
 
                     <div style="display:none" id="login-alert" class="alert alert-danger col-sm-12"></div>
 
