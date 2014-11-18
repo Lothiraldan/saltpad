@@ -37,7 +37,7 @@
 {% macro panel_jsontree(heading_title, content, hide=True, heading_level=3) %}
 <div class="panel panel-default">
   <div class="panel-heading">
-    <h{{ heading_level }}>{{hiding_control('hide_control', hide)|safe }} {{ heading_title }} {{ content|is_string() }}</h{{ heading_level }}>
+    <h{{ heading_level }}>{{hiding_control('hide_control', hide)|safe }} {{ heading_title }}</h{{ heading_level }}>
   </div>
   {% if content|is_string() %}
     <pre class="panel-body" {% if hide %}style="display: none"{% endif %}>{{ content }}</pre>
