@@ -13,6 +13,8 @@
     </div>
   </div><!-- /.row -->
 
+  <div class="alert alert-warning" role="alert">Jobs templates are saved in salt-master configuration and adding a new template will change the salt-master configuration formatting and will strip comments. See <a href="http://docs.saltstack.com/en/latest/ref/wheel/all/salt.wheel.config.html#salt.wheel.config.apply">the documentation for more details.</a></div>
+
 <div class="row">
   <div class="col-lg-12">
     <h2>Templates <a href="{{ url_for('add_template') }}"><button type="button" class="btn btn-info">Add a template</button></a></h2>

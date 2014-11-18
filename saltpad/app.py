@@ -175,7 +175,6 @@ def job_result(jid):
 def templates():
     master_config = client.run('config.values', client="wheel")['data']['return']
     if not master_config.get('templates'):
-        client.run('config.apply', client="wheel", key="templates", value={})
         master_config['templates'] = {}
     return render_template("templates.html", templates=master_config['templates'])
 
