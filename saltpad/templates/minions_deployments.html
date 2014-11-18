@@ -23,8 +23,8 @@
             <th>Up ?</i></th>
             <th>Salt version</th>
             <th>Roles</th>
-            <th>Latest deploys</th>
-            <th>Launch deploy</i></th>
+            <th>Latest 5 deploys</th>
+            <th>Deploy</i></th>
           </tr>
         </thead>
         <tbody>
@@ -38,7 +38,7 @@
             </ul></td>
             <td>{% if jobs.get(minion) %}
               <ul class="list-group">
-                {% for jid, job_data in jobs[minion]|dictsort|reverse %}
+                {% for jid, job_data in (jobs[minion]|dictsort|reverse|list)[:5] %}
                   {% set level=None %}
                   {% if job_data.status == 'running' %}
                     {% set level = "info" %}
@@ -51,7 +51,7 @@
                 {% endfor %}
               </ul>
             {% else %}No jobs{% endif %}</td>
-            <td><a href="{{ url_for('minions_do_deploy', minion=minion) }}">Launch a deploy now</a></td>
+            <td><a href="{{ url_for('minions_do_deploy', minion=minion) }}">Deploy now</a></td>
           </tr>
           {% endfor %}
         </tbody>

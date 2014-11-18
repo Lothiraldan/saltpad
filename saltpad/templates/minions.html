@@ -38,7 +38,7 @@
             </ul></td>
             <td>{% if jobs.get(minion) %}
               <ul class="list-group">
-                {% for jid, job_data in jobs[minion]|dictsort|reverse %}
+                {% for jid, job_data in (jobs[minion]|dictsort|reverse|list)[:5] %}
                   {% set level=None %}
                   {% if job_data.status == 'running' %}
                     {% set level = "info" %}
