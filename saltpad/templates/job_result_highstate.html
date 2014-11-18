@@ -40,7 +40,7 @@
       <div class="col-lg-12" id="result-{{minion}}">
       <div class="panel panel-{{ level }}">
         <div class="panel-heading">
-          <h3 class="hide_control">{{hiding_control('hide_control_minion', level=='success')|safe }} {{ minion }} - {{ total }} steps: {{ minion_job['highstate'][False] | length }} in errors, {{ minion_job['highstate'][None] | length }} in warning and {{ minion_job['highstate'][True] | length }} in success. </h3>
+          <h3 class="hide_control">{{hiding_control('hide_control_minion', level=='success')|safe }} {{ minion }} - {{ total }} steps: {{ minion_job['highstate'][False] | length }} in errors, {{ minion_job['highstate']['requirement_failed'] | length }} requirements failed, {{ minion_job['highstate'][None] | length }} in warning, {{ minion_job['highstate']['changes'] | length }} changes and {{ minion_job['highstate'][True] | length }} in success. </h3>
         </div>
         <div class="panel-body" {% if level=='success' %}style="display: none"{% endif %}>
           {{ format_output(minion_job['highstate'][False], 'Errors', 'danger', total)|safe }}
