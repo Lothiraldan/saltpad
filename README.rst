@@ -60,13 +60,15 @@ Get into the saltpad directory, copy the file named "local_settings.sample.py" a
 Launch SaltPad
 --------------
 
-Now start SaltPad with this command:
+Now start SaltPad with this command, note that you should be in the saltpad directory:
 
 .. code:: bash
 
     saltpad/ $> python app.py
      * Running on http://127.0.0.1:5000/
      * Restarting with reloader
+
+You can also serve the wsgi app with the wsgi server of your choice. The wsgi path is "saltpad.saltpad".
 
 Now go on http://127.0.0.1:5000 in your browser, login using SaltStack external auth and enjoy!
 
