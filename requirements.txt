@@ -6,4 +6,4 @@ python-vagrant>=0.5.0
 plumbum
 flask
 flask-wtf
-request
+requests
