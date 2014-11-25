@@ -1,0 +1,27 @@
+cachedir: /var/cache/salt/master
+conf_file: /etc/salt/master
+external_auth:
+  pam:
+    vagrant:
+    - .*
+    - '@runner'
+    - '@wheel'
+file_roots:
+  base:
+  - /srv/salt
+fileserver_backend:
+- roots
+master_roots:
+  base:
+  - /srv/salt-master
+pillar_roots:
+  base:
+  - /srv/pillar
+pki_dir: /etc/salt/pki/master
+rest_cherrypy:
+  debug: true
+  disable_ssl: true
+  port: 8000
+salt_transport: zeromq
+timeout: 5
+worker_threads: 5
