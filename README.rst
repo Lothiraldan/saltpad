@@ -5,7 +5,7 @@ What is SaltPad?
 
 SaltPad is a GUI and CLI tool to manage SaltStack deployments + orchestration. It's still very young and it's should be considered as Alpha.
 
-.. image:: highstate_result.png
+.. image:: screenshots/highstate_result.png
 
 A walkthrough using screenshots is available in the screenshots directory.
 
