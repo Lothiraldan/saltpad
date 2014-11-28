@@ -13,18 +13,18 @@
             <h4> {{hiding_control('hide_control', True)|safe }} {{ step_name }}</h4>
             <ul class="sync-status-hidden">
               {% for k, v in step.items() %}
-                {% if k == 'changes' %}
 
                   <li>{{ k.decode('utf-8') }}:
+                    {% if v is mapping %}
                     <ul>
                       {% for ck, cv in v.items() %}
                       <li> {{ ck.decode('utf-8') }}: {% if cv %}<pre>{{ (cv|string()).decode('utf-8') }}</pre>{% endif %}</li>
                       {% endfor %}
                     </ul>
+                    {% else %}
+                    {{ (v|string()).decode('utf-8') }}
+                    {% endif %}
                   </li>
-                {% else %}
-                  <li>{{ k.decode('utf-8') }}: {{ (v|string()).decode('utf-8') }}</li>
-                {% endif %}
               {% endfor %}
             </ul>
           </a>
