@@ -163,9 +163,8 @@ $(function() {
           // Set new doc pre
           $("#doc-placeholder").text(new_text);
         },
-        error: function (xhr, desc, err) {
-          console.log(xhr);
-          console.log("Desc: " + desc + "\nErr:" + err);
+        error: function (err) {
+          $("#doc-placeholder").text(err.responseText);
         }
       });
     }, delay);

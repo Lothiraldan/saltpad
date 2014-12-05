@@ -298,7 +298,7 @@ def doc_search():
         args=Call(content['fun'].strip()))
 
     if not arg_specs:
-        return jsonify({'error': 'No minions up ?'})
+        return jsonify({'error': 'No matching minions found'}), 400
 
     # Take only first result
     arg_specs = arg_specs.values()[0]
