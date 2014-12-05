@@ -28,7 +28,7 @@ If you just want to test SaltPad, you can use the Vagrantfile provided in vagran
 Install salt-api
 ----------------
 
-The Salt-Api project has been merged into SaltStack in release 2014.7.0 but this merge seems to have introduced some changes in the API and so SaltPad is not compatible with SaltStack 2014.7.0 (yet!). Please use the release 2014.1.Z and install salt-api separately using pip:
+The Salt-Api project has been merged into SaltStack in release 2014.7.0, so you can use the salt-api with SaltStack 2014.7.0 release or install salt-api with previous releases, you can install it using pip:
 
 .. code:: bash
 
@@ -92,6 +92,11 @@ Features
 
 .. _SaltStack documentation: http://docs.saltstack.com/en/latest/ref/netapi/all/salt.netapi.rest_cherrypy.html
 .. _configure the external auth: http://docs.saltstack.com/en/latest/topics/eauth/index.html
+
+Known issues
+------------
+
+* When getting single job output, SaltStack render it even if it's not necessary. This can cause severe slowdown and so slow the interface. It's a known issue in SaltStack (https://github.com/saltstack/salt/issues/18518) and it's should be solved in next release. If it's a problem, you can comment this line https://github.com/saltstack/salt/blob/v2014.7.0/salt/runners/jobs.py#L102 and this line https://github.com/saltstack/salt/blob/v2014.7.0/salt/runners/jobs.py#L81 in your salt master to speed up the job retrieval system.
 
 SaltPad CLI CONFIGURATION
 =========================
