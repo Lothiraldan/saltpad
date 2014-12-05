@@ -130,6 +130,10 @@ $(function() {
         success: function (data, status) {
 
           // Update doc and update form
+          if(data instanceof String || typeof data == 'string') {
+             $("#doc-placeholder").text("Invalid docs: " + data);
+             return
+          }
 
 
           // New doc content
