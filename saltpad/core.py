@@ -6,8 +6,9 @@ import requests
 from urlparse import urljoin
 from functools import wraps
 from itertools import chain
+from itertools import izip
 
-from utils import get_job_level, get_job_human_status, format_arg, transform_arguments
+from utils import get_job_level, get_job_human_status, format_arg, transform_arguments, Call
 
 
 class ExpiredToken(Exception):
@@ -187,17 +188,36 @@ class HTTPSaltStackClient(object):
 
         return {'info': r['info'][0], 'return': r['return'][0]}
 
+    def jobs_batch(self, jobs):
+        token = self.get_token()
+
+        data = [{"fun": "jobs.lookup_jid", "jid": jid, "client": 'runner'}
+            for jid in jobs]
+
+        # raise Exception(data)
+
+        headers = {'accept': 'application/json', 'X-Auth-Token': token,
+            'content-type': 'application/json'}
+        r = self.session.post(self.endpoint, data=json.dumps(data),
+            headers=headers, verify=False)
+        for jid, job_return in izip(jobs, r['return']):
+            jobs[jid]['return'] = job_return
+        return jobs
+
 
     def select_jobs(self, fun, minions=None, with_details=False, **arguments):
         jobs = {}
 
         default_arguments_values = arguments.pop('default_arguments_values', {})
 
+        jids = {}
+
+        # Pre-match
         for jid, job in self.jobs().iteritems():
             if job['Function'] != fun:
                 continue
 
-            job_args_args, job_args_kwargs = transform_arguments(job['Arguments'])
+            _, job_args_kwargs = transform_arguments(job['Arguments'])
 
             match = True
             for argument, argument_value in arguments.items():
@@ -211,8 +231,19 @@ class HTTPSaltStackClient(object):
             if not match:
                 continue
 
-            if minions or with_details:
-                job_details = self.job(jid)
+            jids[jid] = job
+
+            if not (minions or with_details):
+                jobs.setdefault('*', {})[jid] = job
+
+
+        # Get each job detail if needed
+        if minions or with_details:
+            job_returns = self.jobs_batch(jids)
+
+            # raise Exception(jobs)
+
+            for jid, job_details in job_returns.iteritems():
 
                 # Running job
                 if job_details.get('status') == 'running':
@@ -245,8 +276,7 @@ class HTTPSaltStackClient(object):
                         minion_data['status'] = 'error'
 
                     jobs.setdefault(minion_name, {})[jid] = minion_data
-            else:
-                jobs.setdefault('*', {})[jid] = job
+
 
         return jobs
 
