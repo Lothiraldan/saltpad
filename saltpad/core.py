@@ -135,9 +135,10 @@ class HTTPSaltStackSession(requests.Session):
 
 class HTTPSaltStackClient(object):
 
-    def __init__(self, api_endpoint):
+    def __init__(self, api_endpoint, verify_ssl=True):
         self.endpoint = api_endpoint
         self.session = HTTPSaltStackSession()
+        self.verify_ssl = verify_ssl
 
     def urljoin(self, *parts):
         return urljoin(self.endpoint, '/'.join(parts))
@@ -147,18 +148,18 @@ class HTTPSaltStackClient(object):
             'content-type': 'application/json'}
         data = {'username': user, 'password': password, 'eauth': 'pam'}
         return self.session.post(self.urljoin('login'), data=json.dumps(data),
-            headers=headers, verify=False)['return'][0]['token']
+            headers=headers, verify=self.verify_ssl)['return'][0]['token']
 
     def minions(self):
         token = self.get_token()
         headers = {'accept': 'application/json', 'X-Auth-Token': token}
-        r = self.session.get(self.urljoin('minions'), headers=headers, verify=False)
+        r = self.session.get(self.urljoin('minions'), headers=headers, verify=self.verify_ssl)
         return r['return'][0]
 
     def minion_details(self, minion):
         token = self.get_token()
         headers = {'accept': 'application/json', 'X-Auth-Token': token}
-        return self.session.get(self.urljoin('minions', minion), headers=headers, verify=False)
+        return self.session.get(self.urljoin('minions', minion), headers=headers, verify=self.verify_ssl)
 
     def minions_status(self):
         return self.run("manage.status", client="runner")
@@ -166,14 +167,14 @@ class HTTPSaltStackClient(object):
     def jobs(self, minion=None):
         token = self.get_token()
         headers = {'accept': 'application/json', 'X-Auth-Token': token}
-        r = self.session.get(self.urljoin('jobs'), headers=headers, verify=False)
+        r = self.session.get(self.urljoin('jobs'), headers=headers, verify=self.verify_ssl)
 
         return r['return'][0]
 
     def job(self, jid, minion=None):
         token = self.get_token()
         headers = {'accept': 'application/json', 'X-Auth-Token': token}
-        r = self.session.get(self.urljoin('jobs', jid), headers=headers, verify=False)
+        r = self.session.get(self.urljoin('jobs', jid), headers=headers, verify=self.verify_ssl)
 
         if not r['return'][0]:
             output = {'status': 'running', 'info': r['info'][0]}
@@ -194,12 +195,10 @@ class HTTPSaltStackClient(object):
         data = [{"fun": "jobs.lookup_jid", "jid": jid, "client": 'runner'}
             for jid in jobs]
 
-        # raise Exception(data)
-
         headers = {'accept': 'application/json', 'X-Auth-Token': token,
             'content-type': 'application/json'}
         r = self.session.post(self.endpoint, data=json.dumps(data),
-            headers=headers, verify=False)
+            headers=headers, verify=self.verify_ssl)
         for jid, job_return in izip(jobs, r['return']):
             jobs[jid]['return'] = job_return
         return jobs
@@ -301,6 +300,6 @@ class HTTPSaltStackClient(object):
         headers = {'accept': 'application/json', 'X-Auth-Token': token,
             'content-type': 'application/json'}
         r = self.session.post(self.endpoint, data=json.dumps(data),
-            headers=headers, verify=False)
+            headers=headers, verify=self.verify_ssl)
         return r['return'][0]
 

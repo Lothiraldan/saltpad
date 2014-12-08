@@ -1,3 +1,5 @@
+import sys
+
 from flask import Flask, redirect, render_template, url_for, session, request, flash, jsonify
 from core import HTTPSaltStackClient, ExpiredToken, Unauthorized
 from functools import wraps
@@ -19,7 +21,19 @@ if not app.debug:
     from logging import FileHandler
     app.logger.addHandler(FileHandler(app.config['LOG_FILE']))
 
-client = FlaskHTTPSaltStackClient(app.config['API_URL'])
+# Setup sentry
+try:
+    from raven.contrib.flask import Sentry
+    sentry = Sentry(app, dsn=app.config['SENTRY_DSN'])
+except ImportError:
+    if app.config.get('SENTRY_DSN'):
+        install_cmd = "pip install raven[flask]"
+        print "Couldn't import raven, please install it with '%s'" % install_cmd
+        sys.exit(1)
+
+
+client = FlaskHTTPSaltStackClient(app.config['API_URL'],
+    app.config.get('VERIFY_SSL', True))
 
 from flask_wtf import Form
 from wtforms import StringField, PasswordField, TextAreaField
