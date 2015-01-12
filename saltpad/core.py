@@ -9,7 +9,8 @@ from itertools import chain
 from itertools import izip
 
 from utils import get_job_level, get_job_human_status, format_arg, transform_arguments, Call
-
+import pymongo
+import salt
 
 class ExpiredToken(Exception):
     pass
