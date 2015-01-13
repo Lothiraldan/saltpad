@@ -421,6 +421,10 @@ def aggregate_len_sort(unsorted_dict):
 def format_argument(arguments):
     return " ".join(format_arguments(arguments))
 
+@app.template_filter("dict_sort_value_subkey")
+def format_argument(arguments, sort_key):
+    return sorted(arguments.items(), key=lambda item: item[1][sort_key])
+
 @app.template_filter("is_string")
 def format_argument(instance):
     return isinstance(instance, (str, unicode))

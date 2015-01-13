@@ -8,7 +8,7 @@
     <div class="panel panel-{{ status }} {% if default_hide %}hide_control{% endif %}">
       <div class="panel-heading"><h3>{{ hiding_control('hide_control', default_hide)|safe }} {{ name }} {{ output | length }} / {{ total }}</h3></div>
       <div class="list-group">
-        {% for step_name, step in output.items() %}
+        {% for step_name, step in output|dict_sort_value_subkey('__run_num__') %}
           <a class="list-group-item list-group-item-{{ status }}">
             <h4> {{hiding_control('hide_control', True)|safe }} {{ step_name }}</h4>
             <ul class="sync-status-hidden">

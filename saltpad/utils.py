@@ -140,7 +140,6 @@ def parse_highstate(job):
                 reversed_level = reverse_statues[level]
 
                 # Filter step
-                step.pop('__run_num__')
                 if not step['changes']:
                     step.pop('changes')
 
