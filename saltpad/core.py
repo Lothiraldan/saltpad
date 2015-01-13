@@ -7,10 +7,10 @@ from urlparse import urljoin
 from functools import wraps
 from itertools import chain
 from itertools import izip
-
-from utils import get_job_level, get_job_human_status, format_arg, transform_arguments, Call
 import pymongo
+from utils import get_job_level, get_job_human_status, format_arg, transform_arguments, Call
 import salt
+from salt.output import highstate
 
 class ExpiredToken(Exception):
     pass
@@ -22,7 +22,7 @@ class Unauthorized(Exception):
 
 class SaltStackClient(object):
 
-    def __init__(self, remote_host):
+    def __init__(self, remote_host, collection_name="saltpad"):
         master_opts = salt.config.master_config(
             os.environ.get('SALT_MASTER_CONFIG', '/etc/salt/master'))
 
@@ -116,6 +116,11 @@ class SaltStackClient(object):
 
 
 class HTTPSaltStackSession(requests.Session):
+
+    def get_token(self):
+        """
+        Will be overridden.
+        """
 
     def request(self, *args, **kwargs):
         response = super(HTTPSaltStackSession, self).request(*args, **kwargs)
