@@ -7,3 +7,4 @@ plumbum
 flask
 flask-wtf
 requests
+pymongo
