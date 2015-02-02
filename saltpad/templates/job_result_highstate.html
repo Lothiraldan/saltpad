@@ -7,7 +7,7 @@
   </h3>
   <div class="list-group">
     {% for minion in job.info.Minions %}
-    {% set minion_job = job.return.get(minion, {'level': None]}) %}
+    {% set minion_job = job.return.get(minion, {'level': None}) %}
 
     {% if minion_job['level'] == False %}{% set level="danger" %}{% elif minion_job['level'] == None %}{% set level="warning" %}{% else %}{% set level="success" %}{% endif %}
     <a href="#result-{{minion}}" class="list-group-item list-group-item-{{level}}">{{ minion }}</a>
