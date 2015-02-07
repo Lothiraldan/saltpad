@@ -1,14 +1,11 @@
 import os
-import sys
 import json
 import requests
 
 from urlparse import urljoin
-from functools import wraps
-from itertools import chain
 from itertools import izip
 import pymongo
-from utils import get_job_level, get_job_human_status, format_arg, transform_arguments, Call
+from utils import get_job_level, get_job_human_status, transform_arguments
 import salt
 from salt.output import highstate
 

@@ -1,9 +1,7 @@
 import sys
 
-from flask import Flask, redirect, render_template, url_for, session, request, flash
-from urlparse import urlparse
+from flask import url_for
 from werkzeug.urls import url_decode, url_encode
-from copy import copy
 from flask import render_template_string
 
 if sys.version < '3':  # pragma: no cover

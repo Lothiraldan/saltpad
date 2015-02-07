@@ -3,19 +3,16 @@
 
 import os
 import sys
-import json
 import logging
-import operator
 
 from subprocess import check_output
-from saltpad import SaltPad, parse_step_name, call, bool_choice, return_output
+from saltpad import SaltPad, call, bool_choice
 from saltpad import Deploy as BaseDeploy
-from plumbum import cli, local, FG
+from plumbum import cli, local
 from vagrant import Vagrant, SandboxVagrant
-from clint.eng import join as eng_join
 from clint.textui import colored, puts, indent
 from os import listdir, mkdir
-from os.path import expanduser, isfile, join, isdir, split, abspath
+from os.path import isfile, join, isdir, abspath
 from jinja2 import Environment, meta
 from shutil import copy
 from time import sleep

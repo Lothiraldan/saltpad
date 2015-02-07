@@ -3,7 +3,7 @@ import sys
 from flask import Flask, redirect, render_template, url_for, session, request, flash, jsonify
 from core import HTTPSaltStackClient, ExpiredToken, Unauthorized
 from functools import wraps
-from utils import login_url, parse_highstate, NotHighstateOutput, parse_argspec, format_arg, format_arguments, Call
+from utils import login_url, parse_highstate, NotHighstateOutput, parse_argspec, format_arguments, Call
 
 # Init app
 
