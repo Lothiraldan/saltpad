@@ -1,25 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import os
 import sys
 import json
-import logging
-import operator
 
-from salt.output.highstate import _format_host, output
+from salt.output.highstate import _format_host
 
 from core import SaltStackClient
 
-from time import sleep
 from plumbum import cli, local, FG
 from clint.eng import join as eng_join
 from clint.textui import colored, puts, indent
-from os import listdir, mkdir
-from os.path import expanduser, isfile, join, isdir, split, abspath
-from pprint import pformat
-from jinja2 import Environment, meta
-from shutil import copy
+from os.path import expanduser, isfile
 from distutils.util import strtobool
 
 
