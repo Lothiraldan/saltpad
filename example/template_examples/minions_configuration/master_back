@@ -1,7 +1,0 @@
-grains:
-  roles:
-    - redis
-    - flow
-  env: vagrant
-
-master: 10.0.0.1
