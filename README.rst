@@ -3,7 +3,7 @@ What is SaltPad?
 ===============================
 
 
-SaltPad is a GUI and CLI tool to manage SaltStack deployments + orchestration. It's still very young and it's should be considered as Alpha.
+SaltPad is a GUI tool to manage SaltStack deployments + orchestration. It's still very young and it's should be considered as Alpha.
 
 .. image:: screenshots/highstate_result.png
 
@@ -97,13 +97,3 @@ Known issues
 ------------
 
 * When getting single job output, SaltStack render it even if it's not necessary. This can cause severe slowdown and so slow the interface. It's a known issue in SaltStack (https://github.com/saltstack/salt/issues/18518) and it's should be solved in next release. If it's a problem, you can comment this line https://github.com/saltstack/salt/blob/v2014.7.0/salt/runners/jobs.py#L102 and this line https://github.com/saltstack/salt/blob/v2014.7.0/salt/runners/jobs.py#L81 in your salt master to speed up the job retrieval system.
-
-SaltPad CLI CONFIGURATION
-=========================
-
-TODO
-
-SaltPad vagrant CLI CONFIGURATION
-=================================
-
-TODO

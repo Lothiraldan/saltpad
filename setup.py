@@ -14,8 +14,15 @@ if sys.argv[-1] == 'publish':
     os.system('python setup.py sdist upload')
     sys.exit()
 
-readme = open('README.rst').read()
-history = open('HISTORY.rst').read().replace('.. :changelog:', '')
+
+with open('README.rst') as readme_file:
+    readme = readme_file.read()
+
+with open('HISTORY.rst') as history_file:
+    history = history_file.read().replace('.. :changelog:', '')
+
+with open('requirements.txt') as requirements_file:
+    requirements = requirements_file.read().splitlines()
 
 setup(
     name='saltpad',
@@ -30,8 +37,7 @@ setup(
     ],
     package_dir={'saltpad': 'saltpad'},
     include_package_data=True,
-    install_requires=[
-    ],
+    install_requires=requirements,
     zip_safe=False,
     keywords='saltpad',
     classifiers=[
