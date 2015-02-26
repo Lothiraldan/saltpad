@@ -3,7 +3,7 @@
 {% endmacro %}
 
 {% macro format_value(value) %}
-  {% if value %}
+  {% if value is defined and not None %}
     {% set value = (value|string()).decode('utf-8') %}
     {% if '\n' in value %}
       <pre>{{ value }}</pre>
@@ -33,7 +33,7 @@
                       {% endfor %}
                     </ul>
                     {% else %}
-                    {{ format_value(cv) }}
+                    {{ format_value(v) }}
                     {% endif %}
                   </li>
               {% endfor %}
