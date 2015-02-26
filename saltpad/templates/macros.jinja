@@ -2,6 +2,17 @@
 <i class="fa fa-fw fa-chevron-right {{ class }} control_on_hidden" {% if not hide %}style="display: none"{% endif %}></i><i class="fa fa-fw fa-chevron-down {{ class }} control_on_showed" {% if hide %}style="display: none"{% endif %}></i>
 {% endmacro %}
 
+{% macro format_value(value) %}
+  {% if value %}
+    {% set value = (value|string()).decode('utf-8') %}
+    {% if '\n' in value %}
+      <pre>{{ value }}</pre>
+    {% else %}
+      {{ value }}
+    {% endif %}
+  {% endif %}
+{% endmacro %}
+
 {% macro format_output(output, name, status, total, default_hide=False) %}
   {% if output %}
 
@@ -18,11 +29,11 @@
                     {% if v is mapping %}
                     <ul>
                       {% for ck, cv in v.items() %}
-                      <li> {{ ck.decode('utf-8') }}: {% if cv %}<pre>{{ (cv|string()).decode('utf-8') }}</pre>{% endif %}</li>
+                      <li> {{ ck.decode('utf-8') }}: {{ format_value(cv) }}</li>
                       {% endfor %}
                     </ul>
                     {% else %}
-                    {{ (v|string()).decode('utf-8') }}
+                    {{ format_value(cv) }}
                     {% endif %}
                   </li>
               {% endfor %}
