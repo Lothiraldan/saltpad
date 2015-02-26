@@ -56,13 +56,32 @@
 {% block scripts %}
 <script type="text/javascript">
 $(function() {
-  $("#jobs").dataTable({
+
+  var str='';
+  $('#jobs thead th').each( function () {
+        var title = $('#jobs thead th').eq( $(this).index() ).text();
+        str += '<th><input type="text" placeholder="Search '+title+'" /></th>';
+  } );
+
+  $('#jobs thead').prepend('<tr>'+str+'</tr>');
+
+  var table = $("#jobs").dataTable({
     "order": [[0, "desc"]],
     "lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]],
     "columnDefs": [
       { "orderable": false, "targets": -1 }
     ]
   });
+
+  table.columns().eq( 0 ).each( function ( colIdx ) {
+        $('input', table.column(colIdx).header()).on('keyup change', function () {
+            table
+                .column( colIdx )
+                .search( this.value )
+                .draw();
+        } );
+    } );
+
 });
 </script>
 {% endblock %}
