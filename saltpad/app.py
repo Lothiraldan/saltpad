@@ -432,4 +432,4 @@ def format_argument(instance):
 
 if __name__ == "__main__":
     app.debug = True
-    app.run()
+    app.run(host=app.config['HOST'])

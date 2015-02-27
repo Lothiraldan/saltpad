@@ -9,3 +9,9 @@ SECRET_KEY = ''
 
 # Uncomment next line if your API use a self-signed HTTPS certificate
 # VERIFY_SSL = False
+
+# You can make saltpad bind 0.0.0.0 (all server address) but you should
+# only bind 0.0.0.0 for testing purposes, you should really deploy
+# saltpad in production using a wsgi server (like gunicorn or chaussette)
+# behind nginx, you have been warned!
+# HOST = "0.0.0.0"
