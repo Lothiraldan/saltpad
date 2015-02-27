@@ -27,7 +27,7 @@ with open('requirements.txt') as requirements_file:
 setup(
     name='saltpad',
     version='0.0.1',
-    description='SaltPad is a GUI and CLI tool to manage saltstack deployments + orchestration.',
+    description='SaltPad is a GUI tool to manage saltstack deployments + orchestration.',
     long_description=readme + '\n\n' + history,
     author='Boris FELD',
     author_email='boris.feld@tinyclues.com',
