@@ -84,3 +84,10 @@ $("div.jsontree").each(function() {
     {% endif %}
   {% endwith %}
 {% endmacro %}
+
+{% set level_mapper = {True: 'success', 'changes': 'info',
+                       None: 'warning', False: 'danger'} %}
+
+{% macro level_to_status(level) -%}
+  {{ level_mapper[level] }}
+{%- endmacro %}

@@ -162,12 +162,27 @@ def job_result(jid):
     renderer = request.args.get('renderer', 'raw')
     job = client.job(jid)
 
-    if renderer == 'highstate':
+    if renderer in ['highstate', 'duration']:
         try:
             job = parse_highstate(job)
         except NotHighstateOutput:
             return redirect(url_for('job_result', jid=jid, minion=minion,
                 renderer='raw'))
+
+        if renderer == 'duration':
+            max_duration = 0
+            for minion, minion_data in job['return'].items():
+                new_steps = []
+                for status, steps in minion_data['highstate'].items():
+                    for step_name, step_data in steps.items():
+                        new_steps.append((step_name, step_data['duration'], status))
+
+                new_steps = sorted(new_steps, key=lambda x: x[1], reverse=True)
+
+                minion_data['duration'] = new_steps[:15]
+                minion_data['total_duration'] = sum(x[1] for x in new_steps)
+                max_duration = max(max_duration, minion_data['total_duration'])
+            job['max_duration'] = max_duration
     elif renderer == 'aggregate':
         aggregate_result = {}
 
