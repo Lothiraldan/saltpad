@@ -65,11 +65,14 @@
             </div>
         </div>
     </div><!-- /.row -->
-
+</div>
     {% endblock %}
 
     {% block scripts %}
     <script type="text/javascript">
+
+
+        var no_current_ajax_call = true;
 
         function template(field_name, default_value, required) {
             return '<div class="form-group run-arg" id="form-group-fun">' +
@@ -133,13 +136,25 @@
 
                     // Set new doc pre
                     $("#doc-placeholder").text(new_text);
+
+                    no_current_ajax_call = true;
                 },
                 error: function (err) {
                     $("#doc-placeholder").text(err.responseText);
+                    no_current_ajax_call = true;
                 }
             });
-        }
+        };
 
+        var check_for_call_ajax = function (data, delay){
+            if(no_current_ajax_call && data.expr_form !== '' && data.tgt !== '' && data.fun !== ''){
+                no_current_ajax_call = false;
+                get_doc_search(data);
+            }
+            else {
+                window.setTimeout(function(){check_for_call_ajax(data)}, delay);
+            }
+        };
 
         $(function() {
             var timer;
@@ -174,9 +189,7 @@
                         'fun': exact_fun
                     };
 
-                    if(data.expr_form !== '' && data.tgt !== '' && data.fun !== ''){
-                        get_doc_search(data);
-                    }
+                    check_for_call_ajax(data, delay);
 
                 }, delay);
             })
