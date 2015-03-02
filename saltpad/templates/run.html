@@ -92,12 +92,12 @@
             $(field_id).append(template(field_name, default_value, required));
         }
 
-        var get_doc_search = function(data){
+        var get_doc_search = function(datas){
             $.ajax({
                 url: "{{ url_for('doc_search') }}",
                 type: "post",
                 contentType: "application/json",
-                data: JSON.stringify(data),
+                data: JSON.stringify(datas),
                 success: function (data, status) {
 
                     // Update doc and update form
@@ -115,7 +115,7 @@
                         new_text += function_name + function_doc + '\n';
 
                         // Only show forms if it's the right function
-                        if (function_name == data.exact_fun) {
+                        if (function_name == datas.exact_fun) {
                             // Required args
                             data[function_name].spec.required_args.map(function(e) {
                                 append_input_field_before("#optional_panel", e, "Enter input", true);
@@ -183,13 +183,13 @@
 
                     var exact_fun = $('#fun').val();
 
-                    var data = {
+                    var datas = {
                         'expr_form': $('#expr_form').val(),
                         'tgt': $('#tgt').val(),
                         'fun': exact_fun
                     };
 
-                    check_for_call_ajax(data, delay);
+                    check_for_call_ajax(datas, delay);
 
                 }, delay);
             })
