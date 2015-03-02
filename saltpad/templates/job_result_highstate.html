@@ -1,3 +1,4 @@
+{% from "macros.jinja" import gradient_background %}
 {% extends "job_result.html" %}
 
 {% block job_result %}
@@ -9,8 +10,15 @@
     {% for minion in job.info.Minions %}
     {% set minion_job = job.return.get(minion, {'level': None}) %}
 
+    {% set total = minion_job['steps'] | length %}
+    {% set success = minion_job['highstate'][True] | length %}
+    {% set changes = minion_job['highstate']['changes'] | length %}
+    {% set warning = minion_job['highstate'][None] | length %}
+    {% set requirements = minion_job['highstate']['requirement_failed'] | length %}
+    {% set errors = minion_job['highstate'][False] | length %}
+
     {% if minion_job['level'] == False %}{% set level="danger" %}{% elif minion_job['level'] == None %}{% set level="warning" %}{% else %}{% set level="success" %}{% endif %}
-    <a href="#result-{{minion}}" class="list-group-item list-group-item-{{level}}">{{ minion }}</a>
+    <a href="#result-{{minion}}" class="list-group-item list-group-item-{{level}}" style="{{ gradient_background(total, success, changes, warning, errors + requirements) }}">{{ minion }}</a>
     {% endfor %}
   </ul>
 </div>
@@ -38,12 +46,18 @@
     {% else %}
 
       {% set total = minion_job['steps'] | length %}
+      {% set success = minion_job['highstate'][True] | length %}
+      {% set changes = minion_job['highstate']['changes'] | length %}
+      {% set warning = minion_job['highstate'][None] | length %}
+      {% set requirements = minion_job['highstate']['requirement_failed'] | length %}
+      {% set errors = minion_job['highstate'][False] | length %}
+
 
       {% if minion_job['level'] == False %}{% set level="danger" %}{% elif minion_job['level'] == None %}{% set level="warning" %}{% else %}{% set level="success" %}{% endif %}
       <div class="col-lg-12" id="result-{{minion}}">
       <div class="panel panel-{{ level }}">
         <div class="panel-heading">
-          <h3 class="hide_control">{{hiding_control('hide_control_minion', level=='success')|safe }} {{ minion }} - {{ total }} steps: {{ minion_job['highstate'][False] | length }} in errors, {{ minion_job['highstate']['requirement_failed'] | length }} requirements failed, {{ minion_job['highstate'][None] | length }} in warning, {{ minion_job['highstate']['changes'] | length }} changes and {{ minion_job['highstate'][True] | length }} in success. </h3>
+          <h3 class="hide_control">{{hiding_control('hide_control_minion', level=='success')|safe }} {{ minion }} - {{ total }} steps: {{ errors }} in errors, {{ requirements }} requirements failed, {{ warning }} in warning, {{ changes }} changes and {{ success }} in success. </h3>
         </div>
         <div class="panel-body" {% if level=='success' %}style="display: none"{% endif %}>
           {{ format_output(minion_job['highstate'][False], 'Errors', 'danger', total)|safe }}
