@@ -89,10 +89,61 @@
             $(field_id).append(template(field_name, default_value, required));
         }
 
+        var get_doc_search = function(data){
+            $.ajax({
+                url: "{{ url_for('doc_search') }}",
+                type: "post",
+                contentType: "application/json",
+                data: JSON.stringify(data),
+                success: function (data, status) {
+
+                    // Update doc and update form
+                    if(data instanceof String || typeof data == 'string') {
+                        $("#doc-placeholder").text("Invalid docs: " + data);
+                        return
+                    }
+
+                    // New doc content
+                    var new_text = '';
+
+                    // Iterate on data
+                    for (var function_name in data) {
+                        function_doc = data[function_name].doc;
+                        new_text += function_name + function_doc + '\n';
+
+                        // Only show forms if it's the right function
+                        if (function_name == data.exact_fun) {
+                            // Required args
+                            data[function_name].spec.required_args.map(function(e) {
+                                append_input_field_before("#optional_panel", e, "Enter input", true);
+                            });
+
+                            // Optionnal args
+                            default_args = data[function_name].spec.default_args;
+                            if(default_args == undefined){
+                                $("#optional_panel").hide();
+                            } else {
+                                $("#optional_panel").show();
+                                $.map(default_args, function(value, key) {
+                                    insert_input_field("#optional_arguments", key, value);
+                                });
+                            }
+                        }
+                    }
+
+                    // Set new doc pre
+                    $("#doc-placeholder").text(new_text);
+                },
+                error: function (err) {
+                    $("#doc-placeholder").text(err.responseText);
+                }
+            });
+        }
+
 
         $(function() {
             var timer;
-            var delay = 300; // 0.3 seconds delay after last input
+            var delay = 500; // 0.5 seconds delay after last input
 
             $("div.panel-heading i.hide_control").click(function(event) {
                 $(this).parents("div.panel").first().find("div.panel-body").toggle();
@@ -100,7 +151,7 @@
             });
 
 
-            $('#fun').on('input', function() {
+            $('#fun, #tgt, #expr_form').on('input', function() {
                 window.clearTimeout(timer);
                 timer = window.setTimeout(function(){
 
@@ -115,62 +166,18 @@
                     // Clear docs
                     $("#doc-placeholder").text('');
 
-                    var exact_fun = $('#fun').val()
+                    var exact_fun = $('#fun').val();
 
                     var data = {
                         'expr_form': $('#expr_form').val(),
                         'tgt': $('#tgt').val(),
                         'fun': exact_fun
                     };
-                    $.ajax({
-                        url: "{{ url_for('doc_search') }}",
-                        type: "post",
-                        contentType: "application/json",
-                        data: JSON.stringify(data),
-                        success: function (data, status) {
 
-                            // Update doc and update form
-                            if(data instanceof String || typeof data == 'string') {
-                                $("#doc-placeholder").text("Invalid docs: " + data);
-                                return
-                            }
+                    if(data.expr_form !== '' && data.tgt !== '' && data.fun !== ''){
+                        get_doc_search(data);
+                    }
 
-
-                            // New doc content
-                            var new_text = '';
-
-                            // Iterate on data
-                            for (var function_name in data) {
-                                function_doc = data[function_name].doc;
-                                new_text += function_name + function_doc + '\n';
-
-                                // Only show forms if it's the right function
-                                if (function_name == exact_fun) {
-                                    // Required args
-                                    data[function_name].spec.required_args.map(function(e) {
-                                        append_input_field_before("#optional_panel", e, "Enter input", true);
-                                    });
-
-                                    // Optionnal args
-                                    default_args = data[function_name].spec.default_args;
-                                    if(default_args == undefined){
-                                        $("#optional_panel").hide();
-                                    } else {
-                                        $("#optional_panel").show();
-                                        $.map(default_args, function(value, key) {
-                                            insert_input_field("#optional_arguments", key, value);
-                                        });
-                                    }
-                                }
-                            }
-
-                            // Set new doc pre
-                            $("#doc-placeholder").text(new_text);
-                        },
-                        error: function (err) {
-                            $("#doc-placeholder").text(err.responseText);
-                        }
-                    });
                 }, delay);
             })
         });
