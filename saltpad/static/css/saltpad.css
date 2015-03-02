@@ -63,6 +63,15 @@ ol.bar_chart li {
     position: relative;
 }
 
+ol.bar_chart li span.step_duration {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 70px;
+    left: 0;
+    text-align: right;
+}
+
 ol.bar_chart li span.step_percent {
     position: absolute;
     top: 0;

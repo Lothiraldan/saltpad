@@ -43,8 +43,9 @@
                 {% set step_percent = (step[1] / minion_job['total_duration']) * 100 %}
                 {% set global_percent = (step[1] / job['max_duration']) * 100 %}
                 <li>
-                  <span class="step_percent odometer" data-minion-percent="{{ step_percent }}" data-global-percent="{{ global_percent }}">{{ step_percent|round(2, 'floor') }}%</span>
-                  <div class="step_name step_{{ level_to_status(step[2]) }}" style="width:{{ step_percent }}%">{{ step[0] }} ({{ step[1]|round(2, 'floor') }}ms)</div>
+                  <span class="step_duration">{{ '%0.2f' % step[1] }}ms</span>
+                  <span class="step_percent odometer" data-minion-percent="{{ step_percent }}" data-global-percent="{{ global_percent }}">{{ '%0.2f' % step_percent }}%</span>
+                  <div class="step_name step_{{ level_to_status(step[2]) }}" style="width:{{ step_percent }}%">{{ step[0] }}</div>
                 </li>
               {% endfor %}
           </ol>
