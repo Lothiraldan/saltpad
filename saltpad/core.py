@@ -1,6 +1,7 @@
 import json
 import requests
 
+from requests.exceptions import ConnectionError
 from urlparse import urljoin
 from itertools import izip
 from utils import get_job_level, get_job_human_status, transform_arguments
@@ -14,6 +15,10 @@ class Unauthorized(Exception):
     pass
 
 
+class InvalidURI(Exception):
+    pass
+
+
 class HTTPSaltStackSession(requests.Session):
 
     def get_token(self):
@@ -21,8 +26,12 @@ class HTTPSaltStackSession(requests.Session):
         Will be overridden.
         """
 
-    def request(self, *args, **kwargs):
-        response = super(HTTPSaltStackSession, self).request(*args, **kwargs)
+    def request(self, method, url, **kwargs):
+        try:
+            response = super(HTTPSaltStackSession, self).request(method, url, **kwargs)
+        except ConnectionError as e:
+            err_msg = "Could not connect to salt-api at URL '%s': %s"
+            raise InvalidURI(err_msg % (url, repr(e)))
 
         if response.status_code == 401:
             raise Unauthorized()
@@ -33,7 +42,6 @@ class HTTPSaltStackSession(requests.Session):
 
         if 'status' in json_response and json_response['return'] == 'Please log in':
             raise ExpiredToken()
-
 
         return json_response
 
@@ -207,4 +215,3 @@ class HTTPSaltStackClient(object):
         r = self.session.post(self.endpoint, data=json.dumps(data),
             headers=headers, verify=self.verify_ssl)
         return r['return'][0]
-

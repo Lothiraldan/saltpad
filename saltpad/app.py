@@ -24,7 +24,8 @@ if not app.debug:
 # Setup sentry
 try:
     from raven.contrib.flask import Sentry
-    sentry = Sentry(app, dsn=app.config['SENTRY_DSN'])
+    if app.config.get('SENTRY_DSN'):
+        sentry = Sentry(app, dsn=app.config['SENTRY_DSN'])
 except ImportError:
     if app.config.get('SENTRY_DSN'):
         install_cmd = "pip install raven[flask]"
