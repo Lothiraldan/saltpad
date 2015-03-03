@@ -18,6 +18,25 @@ SaltPad is not yet available on Pypi, so you can clone it here: git@github.com:t
 
     git clone git@github.com:tinyclues/saltpad.git
 
+The recommended way to install saltpad is to create a dedicated virtualenv to isolate saltpad's dependencies from the system one (https://pypi.python.org/pypi/virtualenv/):
+
+.. code-block:: bash
+
+    cd saltpad
+    virtualenv venv
+
+On you create the virtualenv, you should see in the beginning of your terminal "(venv)", it means the virtualenv has been activated and that you will use the local python and local python packages. If "(venv)" is not printed, try running this command:
+
+.. code-block:: bash
+
+    source venv/bin/activate
+
+Once you are in your virtualenv, you can now install all the dependencies, for easing the copy/paste, I omit the "(venv)"" in the start of the line:
+
+    pip install -r requirements.txt
+
+You're now ready to configure the salt-api, saltpad and starting playing with it! Please be sure to follow the next part of the Readme or you will not be able to connect to the salt-api.
+
 SaltPad Web GUI configuration
 =============================
 
