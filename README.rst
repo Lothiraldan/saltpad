@@ -53,6 +53,25 @@ The Salt-Api project has been merged into SaltStack in release 2014.7.0, so you 
 
     pip install salt-api
 
+Or if you're using a Debian-derived linux:
+
+.. code:: bash
+
+    sudo apt-get install salt-api
+
+The salt-api requires some configuration too. Salt-api supports multiple implementation, but the rest_cherrypy implementation is the more mature and the recommended one when using saltpad. If you want to run salt-api and saltpad on the same host, you can configuration salt-api as followed in the file /etc/salt/master:
+
+.. code:: yaml
+
+    rest_cherrypy:
+      port: 8000
+      host: 127.0.0.1
+      disable_ssl: true
+
+Warning, this configuration disable ssl as it only listens to localhost, if you want to expose the salt-api to the network, you should really deploy it behind nginx with ssl, do not change the host to 0.0.0.0 without ssl!
+
+With this salt-api configuration, the saltpad default configuration should work, if the salt-api and saltpad are not located on your device, you either could change the HOST settings in saltpad (but only for testing purposes, it will not use tls so all your data will be sent in clear text) or deploy it behind nginx with ssl configured.
+
 Then you can launch the API using the following command:
 
 .. code:: bash
