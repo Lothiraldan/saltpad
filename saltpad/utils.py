@@ -113,7 +113,7 @@ def parse_highstate(job):
 
     if job.get('status') != 'running':
 
-        for minion_name, minion_return in job['return'].iteritems():
+        for minion_name, minion_return in job['return'].items():
 
             # Error detected
             if isinstance(minion_return, list):
@@ -131,7 +131,7 @@ def parse_highstate(job):
             # Minion return level
             level = 0
 
-            for step_name, step in minion_return.iteritems():
+            for step_name, step in minion_return.items():
 
                 # Step
                 level = max(level, statuses[step['result']])
@@ -269,3 +269,5 @@ def process_lowstate(lowstate):
 
     return graph
 
+def is_string(instance):
+    return isinstance(instance, (str, unicode))

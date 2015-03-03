@@ -3,7 +3,8 @@ import sys
 from flask import Flask, redirect, render_template, url_for, session, request, flash, jsonify
 from core import HTTPSaltStackClient, ExpiredToken, Unauthorized
 from functools import wraps
-from utils import login_url, parse_highstate, NotHighstateOutput, parse_argspec, format_arguments, Call
+from utils import (login_url, parse_highstate, NotHighstateOutput,
+                   parse_argspec, format_arguments, Call, is_string)
 
 # Init app
 
@@ -29,7 +30,7 @@ try:
 except ImportError:
     if app.config.get('SENTRY_DSN'):
         install_cmd = "pip install raven[flask]"
-        print "Couldn't import raven, please install it with '%s'" % install_cmd
+        print("Couldn't import raven, please install it with '%s'" % install_cmd)
         sys.exit(1)
 
 
@@ -172,7 +173,7 @@ def job_result(jid):
     elif renderer == 'aggregate':
         aggregate_result = {}
 
-        for minion, minion_return in job['return'].iteritems():
+        for minion, minion_return in job['return'].items():
             aggregate_result.setdefault(str(minion_return), []).append(minion)
 
         missing_minions = set(job['info']['Minions']) - set(job['return'].iterkeys())
@@ -216,7 +217,7 @@ def add_template():
         master_config = client.run('config.values', client="wheel")['data']['return']
 
 
-        args = {k: v for (k, v) in request.form.iteritems() if not k in
+        args = {k: v for (k, v) in request.form.items() if not k in
             ('csrf_token', 'tgt', 'fun', 'expr_form', 'name', 'description') and v}
 
         templates = master_config.get('templates', {})
@@ -275,7 +276,7 @@ def run():
     form = RunForm()
     if form.validate_on_submit():
 
-        args = {k: v for (k, v) in request.form.iteritems() if not k in ('csrf_token', 'tgt', 'fun', 'expr_form') and v}
+        args = {k: v for (k, v) in request.form.items() if not k in ('csrf_token', 'tgt', 'fun', 'expr_form') and v}
 
         jid = client.run(form.fun.data.strip(), client="local_async",
             tgt=form.tgt.data.strip(), expr_form=form.expr_form.data.strip(),
@@ -415,7 +416,7 @@ def wip():
 
 @app.template_filter("aggregate_len_sort")
 def aggregate_len_sort(unsorted_dict):
-    return sorted(unsorted_dict.iteritems(), key=lambda x: len(x[1]),
+    return sorted(unsorted_dict.items(), key=lambda x: len(x[1]),
         reverse=True)
 
 @app.template_filter("format_arguments")
@@ -428,7 +429,7 @@ def format_argument(arguments, sort_key):
 
 @app.template_filter("is_string")
 def format_argument(instance):
-    return isinstance(instance, (str, unicode))
+    return is_string(instance)
 
 
 if __name__ == "__main__":
