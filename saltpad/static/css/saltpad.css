@@ -98,3 +98,7 @@ ol.bar_chart li .step_info {
 ol.bar_chart li .step_warning {
     background: #fcf8e3;
 }
+
+ol.bar_chart li .step_danger {
+    background: #f2dede;
+}
