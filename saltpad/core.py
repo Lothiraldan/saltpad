@@ -1,6 +1,9 @@
 import json
 import requests
+import re
+import six
 
+from six import string_types
 from requests.exceptions import ConnectionError
 from urlparse import urljoin
 from itertools import izip
@@ -60,8 +63,10 @@ class HTTPSaltStackClient(object):
         headers = {'accept': 'application/json',
             'content-type': 'application/json'}
         data = {'username': user, 'password': password, 'eauth': 'pam'}
-        return self.session.post(self.urljoin('login'), data=json.dumps(data),
-            headers=headers, verify=self.verify_ssl)['return'][0]['token']
+        result = self.session.post(self.urljoin('login'), data=json.dumps(data),
+            headers=headers, verify=self.verify_ssl)['return'][0]
+        self.perms = result['perms']
+        return result['token']
 
     def minions(self):
         token = self.get_token()
@@ -192,6 +197,25 @@ class HTTPSaltStackClient(object):
 
         return jobs
 
+    @staticmethod
+    def convert_to_compound(tgt, expr_form=None):
+        if expr_form in (None, 'compound', 'glob'):
+            return tgt
+        if expr_form == 'grain':
+            return 'G@%s' % tgt
+        if expr_form == 'grain_pcre':
+            return 'P@%s' % tgt
+        if expr_form == 'pillar':
+            return 'I@%s' % tgt
+        if expr_form == 'list':
+            return 'L@%s' % tgt
+        if expr_form == 'ipcidr':
+            return 'S@%s' % tgt
+        if expr_form == 'pcre':
+            return 'E@%s' % tgt
+        if expr_form == 'range':
+            return 'R@%s' % tgt
+
     def run(self, fun, tgt=None, expr_form=None, client=None, args=[], **kwargs):
         token = self.get_token()
         data = [{
@@ -200,6 +224,32 @@ class HTTPSaltStackClient(object):
         }]
 
         if tgt:
+            targets = []
+            for perm in self.perms:
+                if isinstance(perm, string_types):
+                    # allowed for all minions
+                    if re.match(perm, fun):
+                        break
+                elif isinstance(perm, dict):
+                    if len(perm) != 1:
+                        # invalid argument
+                        continue
+                    valid = next(six.iterkeys(perm))
+                    if isinstance(perm[valid], string_types):
+                        if re.match(perm[valid], fun):
+                            targets.append(valid)
+                    elif isinstance(perm[valid], list):
+                        for regex in perm[valid]:
+                            if re.match(regex, fun):
+                                targets.append(valid)
+                                break
+                    else:
+                        assert 0
+
+            if targets:
+                tgt = self.convert_to_compound(tgt, expr_form)
+                tgt = '%s and ( %s )' % (tgt, ' or '.join(targets))
+                expr_form = 'compound'
             data[0]['tgt'] = tgt
 
         if expr_form:
