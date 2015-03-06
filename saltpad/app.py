@@ -14,7 +14,7 @@ class FlaskHTTPSaltStackClient(HTTPSaltStackClient):
 
 
 app = Flask("SaltPad", template_folder="templates")
-app.config.from_object('settings')
+app.config.from_object('saltpad.settings')
 
 # Setup logging
 if not app.debug:

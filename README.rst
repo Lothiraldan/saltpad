@@ -112,7 +112,7 @@ Now start SaltPad with this command, note that you should be in the saltpad dire
      * Running on http://127.0.0.1:5000/
      * Restarting with reloader
 
-You can also serve the wsgi app with the wsgi server of your choice. The wsgi path is "saltpad.saltpad".
+You can also serve the wsgi app with the wsgi server of your choice. The wsgi path is "saltpad.app:app".
 
 Now go on http://127.0.0.1:5000 in your browser, login using SaltStack external auth and enjoy!
 
