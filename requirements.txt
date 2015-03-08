@@ -4,3 +4,4 @@ flask
 flask-wtf
 requests
 pymongo
+werkzeug==0.9.4
