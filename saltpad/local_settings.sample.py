@@ -15,3 +15,6 @@ SECRET_KEY = ''
 # saltpad in production using a wsgi server (like gunicorn or chaussette)
 # behind nginx, you have been warned!
 # HOST = "0.0.0.0"
+
+# You can customize the external auth module to use, by default, pam is used
+# EAUTH = "pam"

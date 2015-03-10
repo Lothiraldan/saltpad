@@ -4,6 +4,7 @@ import requests
 from requests.exceptions import ConnectionError
 from urlparse import urljoin
 from itertools import izip
+from flask import current_app
 from utils import get_job_level, get_job_human_status, transform_arguments
 
 
@@ -59,7 +60,7 @@ class HTTPSaltStackClient(object):
     def login(self, user, password):
         headers = {'accept': 'application/json',
             'content-type': 'application/json'}
-        data = {'username': user, 'password': password, 'eauth': 'pam'}
+        data = {'username': user, 'password': password, 'eauth': current_app.config['EAUTH']}
         return self.session.post(self.urljoin('login'), data=json.dumps(data),
             headers=headers, verify=self.verify_ssl)['return'][0]['token']
 
