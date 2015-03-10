@@ -6,6 +6,9 @@ the container.
 
 *Note: This will need more work to run in production, for now - only use for development.*
 
+*Note: This will not setup your salt-master's salt-api or other requisites to be able to talke to salt, it only
+runs SaltPad*
+
 Build
 -----
 
