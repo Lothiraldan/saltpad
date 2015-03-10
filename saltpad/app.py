@@ -5,6 +5,8 @@ from core import HTTPSaltStackClient, ExpiredToken, Unauthorized
 from functools import wraps
 from utils import login_url, parse_highstate, NotHighstateOutput, parse_argspec, format_arguments, Call
 
+import settings
+
 # Init app
 
 class FlaskHTTPSaltStackClient(HTTPSaltStackClient):
@@ -14,7 +16,7 @@ class FlaskHTTPSaltStackClient(HTTPSaltStackClient):
 
 
 app = Flask("SaltPad", template_folder="templates")
-app.config.from_object('saltpad.settings')
+app.config.from_object(settings)
 
 # Setup logging
 if not app.debug:
