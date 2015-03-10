@@ -142,11 +142,11 @@ def parse_highstate(job):
                     step.pop('changes')
 
                 # Support for requirements failed
-                if step['result'] == False and step['comment'] == "One or more requisite failed":
+                if step['result'] is False and "One or more requisite failed" in step['comment']:
                     step['result'] = 'requirement_failed'
 
                 # Job with changes
-                if step['result'] == True and step.get('changes'):
+                if step['result'] is True and step.get('changes'):
                     step['result'] = 'changes'
 
                 new_minion_return['steps'][parse_step_name(step_name)] = step
