@@ -40,7 +40,7 @@ You're now ready to configure the salt-api, saltpad and starting playing with it
 SaltPad Web GUI configuration
 =============================
 
-The Wed GUI use the HTTP Api of SaltStack to interract with the Salt-Master. You should first install the Salt-Api on your Salt-Master. You can find the documentation in the `SaltStack documentation`_.
+The Web GUI uses the HTTP Api of SaltStack to interract with the Salt-Master. You should first install the Salt-Api on your Salt-Master. You can find the documentation in the `SaltStack documentation`_.
 
 If you just want to test SaltPad, you can use the Vagrantfile provided in vagrant directory. Just follow README in the same repository and have fun!
 
