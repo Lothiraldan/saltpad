@@ -17,7 +17,7 @@ SaltPad is not yet available on Pypi, so you can clone it here: git@github.com:t
 .. code-block:: bash
 
     git clone git@github.com:tinyclues/saltpad.git
-    
+
 SaltPad currently only works on Python 2.7, but the support of Python 2.6 is currently discussed here, please leave a comment if it's a big issue for you.
 
 The recommended way to install saltpad is to create a dedicated virtualenv to isolate saltpad's dependencies from the system one (https://pypi.python.org/pypi/virtualenv/):
@@ -38,6 +38,16 @@ Once you are in your virtualenv, you can now install all the dependencies, for e
     pip install -r requirements.txt
 
 You're now ready to configure the salt-api, saltpad and starting playing with it! Please be sure to follow the next part of the Readme or you will not be able to connect to the salt-api.
+
+Werkzeug dependency
+-------------------
+
+There is known issues with werkzeug:
+
+- On windows platform, it raises strange errors about `_winreg` module, it's a known issue solved in the six project (https://bitbucket.org/gutworth/six/issue/99/six-and-inspect-importerror-_winreg-module) but not available right now. The fix is to use werkzeug version 0.9.4.
+- On all platforms, werkzeug fails with python version 2.7.7, see https://github.com/mitsuhiko/werkzeug/issues/537. The fix is to use werkzeug version 0.9.6 and superior.
+
+Due to this two conflictings problems, we can't fix the minimal werkzeug version and need to wait for the six release.
 
 SaltPad Web GUI configuration
 =============================
