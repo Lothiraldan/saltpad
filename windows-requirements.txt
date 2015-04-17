@@ -1,2 +1,2 @@
 -r _requirements.txt
-werkzeug
+werkzeug==0.9.4

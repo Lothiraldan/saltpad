@@ -1,0 +1,6 @@
+wheel==0.22.0
+jinja2
+flask
+flask-wtf
+requests
+pymongo
