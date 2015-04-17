@@ -58,10 +58,9 @@ class HTTPSaltStackClient(object):
         return urljoin(self.endpoint, '/'.join(parts))
 
     def login(self, user, password):
-        headers = {'accept': 'application/json',
-            'content-type': 'application/json'}
+        headers = {'accept': 'application/json'}
         data = {'username': user, 'password': password, 'eauth': current_app.config['EAUTH']}
-        return self.session.post(self.urljoin('login'), data=json.dumps(data),
+        return self.session.post(self.urljoin('login'), data=data,
             headers=headers, verify=self.verify_ssl)['return'][0]['token']
 
     def minions(self):
