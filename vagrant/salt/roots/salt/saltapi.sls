@@ -2,18 +2,15 @@ python-pip:
     pkg.installed:
         - refresh_modules: true
 
-salt-api:
-    pip.installed:
-        - require:
-            - pkg: python-pip
-
 cherrypy:
     pip.installed:
         - require:
             - pkg: python-pip
 
-salt-api-run:
-    cmd.run:
-        - name: "salt-api -d"
+salt-api:
+    pkg:
+        - installed
+    service.running:
         - require:
-            - pip: salt-api
+            - pkg: salt-api
+            - pip: cherrypy
