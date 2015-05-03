@@ -11,6 +11,9 @@ else:  # pragma: no cover
     unicode = str
 
 
+REQUIRED_PERMISSIONS = ['.*', '@runner', '@wheel']
+
+
 class NotHighstateOutput(Exception):
     pass
 
@@ -269,3 +272,6 @@ def process_lowstate(lowstate):
 
     return graph
 
+
+def validate_permissions(permissions):
+    return sorted(permissions) == sorted(REQUIRED_PERMISSIONS)
