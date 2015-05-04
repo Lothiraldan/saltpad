@@ -3,7 +3,7 @@ import sys
 from flask import Flask, redirect, render_template, url_for, session, request, flash, jsonify
 from core import HTTPSaltStackClient, ExpiredToken, Unauthorized
 from functools import wraps
-from utils import login_url, parse_highstate, NotHighstateOutput, parse_argspec, format_arguments, Call
+from utils import login_url, parse_highstate, NotHighstateOutput, parse_argspec, format_arguments, Call, validate_permissions, REQUIRED_PERMISSIONS
 
 import settings
 
@@ -67,9 +67,14 @@ def login():
         try:
             user_token = client.login(form['username'].data, form['password'].data)
             session['username'] = form['username'].data
-            session['user_token'] = user_token
-            flash('Hi {}'.format(form['username'].data))
-            return redirect(request.args.get("next") or url_for("index"))
+            session['user_token'] = user_token['token']
+            if not validate_permissions(user_token['perms']):
+                perms = REQUIRED_PERMISSIONS
+                msg = 'Invalid permissions, saltpad need {} for user {}'.format(perms, session['username'])
+                flash(msg, 'error')
+            else:
+                flash('Hi {}'.format(form['username'].data))
+                return redirect(request.args.get("next") or url_for("index"))
         except Unauthorized:
             flash('Invalid credentials', 'error')
 

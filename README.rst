@@ -106,6 +106,8 @@ You'll also need to `configure the external auth`_ in your salt master. For exam
           - '@runner'
           - '@wheel'
 
+Currently SaltPad requires exactly these permissions, for various reasons. There is ongoing improvements on SaltStack part and in Saltpad to need less permissions. Saltpad will not allow you to connect if you don't have this set of permissions and will show you an error message.
+
 Configure SaltPad
 -----------------
 
