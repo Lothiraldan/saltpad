@@ -70,7 +70,7 @@ def login():
             session['user_token'] = user_token['token']
             if not validate_permissions(user_token['perms']):
                 perms = REQUIRED_PERMISSIONS
-                msg = 'Invalid permissions, saltpad need {} for user {}'.format(perms, session['username'])
+                msg = 'Invalid permissions, saltpad needs {} for user {}'.format(perms, session['username'])
                 flash(msg, 'error')
             else:
                 flash('Hi {}'.format(form['username'].data))
