@@ -35,5 +35,8 @@ nosetests.xml
 .project
 .pydevproject
 
+# PyCharm
+.idea
+
 # we shoudnt need venv in git
 venv/
