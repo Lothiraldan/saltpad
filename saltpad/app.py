@@ -2,6 +2,7 @@ import sys
 
 from functools import wraps
 from six import string_types
+from os.path import join, dirname
 
 from flask import Flask, redirect, render_template, url_for, session, request, flash, jsonify
 from .core import HTTPSaltStackClient, ExpiredToken, Unauthorized
@@ -18,8 +19,9 @@ class FlaskHTTPSaltStackClient(HTTPSaltStackClient):
     def get_token(self):
         return session.get('user_token')
 
-
-app = Flask("SaltPad", template_folder="templates")
+template_folder = join(dirname(__file__), 'templates')
+static_folder = join(dirname(__file__), 'static')
+app = Flask("SaltPad", template_folder=template_folder, static_folder=static_folder)
 app.config.from_object(settings)
 
 # Setup logging
@@ -75,10 +77,10 @@ def login():
             session['user_token'] = user_token['token']
             if not validate_permissions(user_token['perms']):
                 perms = REQUIRED_PERMISSIONS
-                msg = 'Invalid permissions, saltpad needs {} for user {}'.format(perms, session['username'])
+                msg = 'Invalid permissions, saltpad needs {0} for user {1}'.format(perms, session['username'])
                 flash(msg, 'error')
             else:
-                flash('Hi {}'.format(form['username'].data))
+                flash('Hi {0}'.format(form['username'].data))
                 return redirect(request.args.get("next") or url_for("index"))
         except Unauthorized:
             flash('Invalid credentials', 'error')
@@ -194,7 +196,7 @@ def job_result(jid):
 
     if not job:
         return "Unknown jid", 404
-    return render_template('job_result_{}.html'.format(renderer), job=job, minion=minion,
+    return render_template('job_result_{0}.html'.format(renderer), job=job, minion=minion,
         renderer=renderer)
 
 @app.route("/templates")
@@ -242,7 +244,7 @@ def add_template():
 
         master_config = client.run('config.values', client="wheel")
 
-        flash('Template {} has been successfully saved'.format(form.name.data.strip()))
+        flash('Template {0} has been successfully saved'.format(form.name.data.strip()))
 
         return redirect(url_for('templates'))
     return render_template("add_template.html", form=form)
@@ -440,8 +442,3 @@ def format_argument(arguments, sort_key):
 @app.template_filter("is_string")
 def format_argument(instance):
     return isinstance(instance, string_types)
-
-
-if __name__ == "__main__":
-    app.debug = True
-    app.run(host=app.config['HOST'])
