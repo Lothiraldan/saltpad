@@ -21,8 +21,12 @@ with open('README.rst') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read().replace('.. :changelog:', '')
 
-with open('requirements.txt') as requirements_file:
+with open('_requirements.txt') as requirements_file:
     requirements = requirements_file.read().splitlines()
+
+with open('requirements.txt') as requirements_file:
+    requirements.extend([req for req in requirements_file.read().splitlines()
+                         if not req.startswith('-r ')])
 
 setup(
     name='saltpad',

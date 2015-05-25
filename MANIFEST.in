@@ -3,3 +3,6 @@ include CONTRIBUTING.rst
 include HISTORY.rst
 include LICENSE
 include README.rst
+include requirements.txt
+include windows-requirements.txt
+include _requirements.txt

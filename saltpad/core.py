@@ -2,10 +2,10 @@ import json
 import requests
 
 from requests.exceptions import ConnectionError
-from urlparse import urljoin
-from itertools import izip
+from six.moves.urllib.parse import urljoin
+
 from flask import current_app
-from utils import get_job_level, get_job_human_status, transform_arguments
+from .utils import get_job_level, get_job_human_status, transform_arguments
 
 
 class ExpiredToken(Exception):
@@ -112,7 +112,7 @@ class HTTPSaltStackClient(object):
             'content-type': 'application/json'}
         r = self.session.post(self.endpoint, data=json.dumps(data),
             headers=headers, verify=self.verify_ssl)
-        for jid, job_return in izip(jobs, r['return']):
+        for jid, job_return in zip(jobs, r['return']):
             jobs[jid]['return'] = job_return
         return jobs
 
@@ -125,14 +125,14 @@ class HTTPSaltStackClient(object):
         jids = {}
 
         # Pre-match
-        for jid, job in self.jobs().iteritems():
+        for jid, job in self.jobs().items():
             if job['Function'] != fun:
                 continue
 
             _, job_args_kwargs = transform_arguments(job['Arguments'])
 
             match = True
-            for argument, argument_value in arguments.items():
+            for argument, argument_value in list(arguments.items()):
 
                 default_argument_value = default_arguments_values.get(argument)
 
@@ -155,7 +155,7 @@ class HTTPSaltStackClient(object):
 
             # raise Exception(jobs)
 
-            for jid, job_details in job_returns.iteritems():
+            for jid, job_details in job_returns.items():
 
                 # Running job
                 if job_details.get('status') == 'running':
@@ -166,7 +166,7 @@ class HTTPSaltStackClient(object):
 
                 job_return = job_details['return']
 
-                for minion_name, minion_return in job_return.iteritems():
+                for minion_name, minion_return in job_return.items():
                     if not minion_name in minions:
                         continue
 

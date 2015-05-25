@@ -1,11 +1,15 @@
 import sys
 
-from flask import Flask, redirect, render_template, url_for, session, request, flash, jsonify
-from core import HTTPSaltStackClient, ExpiredToken, Unauthorized
 from functools import wraps
-from utils import login_url, parse_highstate, NotHighstateOutput, parse_argspec, format_arguments, Call, validate_permissions, REQUIRED_PERMISSIONS
+from six import string_types
 
-import settings
+from flask import Flask, redirect, render_template, url_for, session, request, flash, jsonify
+from .core import HTTPSaltStackClient, ExpiredToken, Unauthorized
+from .utils import login_url, parse_highstate, NotHighstateOutput, parse_argspec
+from .utils import format_arguments, Call, validate_permissions, REQUIRED_PERMISSIONS
+from .utils import get_filtered_post_arguments
+
+from . import settings
 
 # Init app
 
@@ -31,7 +35,7 @@ try:
 except ImportError:
     if app.config.get('SENTRY_DSN'):
         install_cmd = "pip install raven[flask]"
-        print "Couldn't import raven, please install it with '%s'" % install_cmd
+        print("Couldn't import raven, please install it with '%s'" % install_cmd)
         sys.exit(1)
 
 
@@ -59,6 +63,7 @@ def login_required(view):
             return redirect(login_url('login', request.url))
 
     return wrapper
+
 
 @app.route('/login', methods=["GET", "POST"])
 def login():
@@ -102,7 +107,7 @@ def index():
         if sync_status.get(minion) is True:
             sync_number += 1
 
-    jobs = sorted(client.jobs().items(), reverse=True)[:10]
+    jobs = sorted(list(client.jobs().items()), reverse=True)[:10]
 
     return render_template('dashboard.html', minions=minions,
         ok_status=sync_number, jobs=jobs)
@@ -160,7 +165,7 @@ def minions_do_check_sync(minion):
 @app.route("/jobs")
 @login_required
 def jobs():
-    jobs = sorted(client.jobs().items(), reverse=True)
+    jobs = sorted(list(client.jobs().items()), reverse=True)
     return render_template('jobs.html', jobs=jobs)
 
 @app.route("/job_result/<jid>")
@@ -179,10 +184,10 @@ def job_result(jid):
     elif renderer == 'aggregate':
         aggregate_result = {}
 
-        for minion, minion_return in job['return'].iteritems():
+        for minion, minion_return in job['return'].items():
             aggregate_result.setdefault(str(minion_return), []).append(minion)
 
-        missing_minions = set(job['info']['Minions']) - set(job['return'].iterkeys())
+        missing_minions = set(job['info']['Minions']) - set(job['return'].keys())
         if missing_minions:
             aggregate_result['Missing results'] = missing_minions
         job['return'] = aggregate_result
@@ -222,9 +227,8 @@ def add_template():
     if form.validate_on_submit():
         master_config = client.run('config.values', client="wheel")['data']['return']
 
-
-        args = {k: v for (k, v) in request.form.iteritems() if not k in
-            ('csrf_token', 'tgt', 'fun', 'expr_form', 'name', 'description') and v}
+        BLACKLIST_ARGS = ('csrf_token', 'tgt', 'fun', 'expr_form', 'name', 'description')
+        args = get_filtered_post_arguments(BLACKLIST_ARGS)
 
         templates = master_config.get('templates', {})
         templates[form.name.data.strip()] = {
@@ -282,7 +286,7 @@ def run():
     form = RunForm()
     if form.validate_on_submit():
 
-        args = {k: v for (k, v) in request.form.iteritems() if not k in ('csrf_token', 'tgt', 'fun', 'expr_form') and v}
+        args = get_filtered_post_arguments(('csrf_token', 'tgt', 'fun', 'expr_form'))
 
         jid = client.run(form.fun.data.strip(), client="local_async",
             tgt=form.tgt.data.strip(), expr_form=form.expr_form.data.strip(),
@@ -323,15 +327,15 @@ def doc_search():
         return jsonify({'error': 'No matching minions found'}), 400
 
     # Take only first result
-    arg_specs = arg_specs.values()[0]
+    arg_specs = list(arg_specs.values())[0]
 
-    module_function_names = arg_specs.keys()
+    module_function_names = list(arg_specs.keys())
 
     docs = client.run('sys.doc', client='local', tgt=content['tgt'].strip(),
         expr_form=content['expr_form'], args=Call(*module_function_names))
 
     # Take only first result
-    docs = docs.values()[0]
+    docs = list(docs.values())[0]
 
     result = {}
 
@@ -422,7 +426,7 @@ def wip():
 
 @app.template_filter("aggregate_len_sort")
 def aggregate_len_sort(unsorted_dict):
-    return sorted(unsorted_dict.iteritems(), key=lambda x: len(x[1]),
+    return sorted(unsorted_dict.items(), key=lambda x: len(x[1]),
         reverse=True)
 
 @app.template_filter("format_arguments")
@@ -431,11 +435,11 @@ def format_argument(arguments):
 
 @app.template_filter("dict_sort_value_subkey")
 def format_argument(arguments, sort_key):
-    return sorted(arguments.items(), key=lambda item: item[1][sort_key])
+    return sorted(list(arguments.items()), key=lambda item: item[1][sort_key])
 
 @app.template_filter("is_string")
 def format_argument(instance):
-    return isinstance(instance, (str, unicode))
+    return isinstance(instance, string_types)
 
 
 if __name__ == "__main__":

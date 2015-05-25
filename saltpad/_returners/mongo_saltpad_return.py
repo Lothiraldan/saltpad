@@ -41,7 +41,7 @@ def __virtual__():
 
 def _remove_dots(src):
     output = {}
-    for key, val in src.iteritems():
+    for key, val in src.items():
         if isinstance(val, dict):
             val = _remove_dots(val)
         output[key.replace('.', '-')] = val
