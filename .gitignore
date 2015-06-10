@@ -40,3 +40,4 @@ nosetests.xml
 
 # we shoudnt need venv in git
 venv/
+.tox

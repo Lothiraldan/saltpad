@@ -4,7 +4,6 @@
 
 {% macro format_value(value) %}
   {% if value is defined and not None %}
-    {% set value = (value|string()).decode('utf-8') %}
     {% if '\n' in value %}
       <pre>{{ value }}</pre>
     {% else %}
@@ -25,11 +24,11 @@
             <ul class="sync-status-hidden">
               {% for k, v in step.items() %}
 
-                  <li>{{ k.decode('utf-8') }}:
+                  <li>{{ k }}:
                     {% if v is mapping %}
                     <ul>
                       {% for ck, cv in v.items() %}
-                      <li> {{ ck.decode('utf-8') }}: {{ format_value(cv) }}</li>
+                      <li> {{ ck }}: {{ format_value(cv) }}</li>
                       {% endfor %}
                     </ul>
                     {% else %}

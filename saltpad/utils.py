@@ -2,13 +2,10 @@ import sys
 
 from flask import url_for
 from werkzeug.urls import url_decode, url_encode
-from flask import render_template_string
+from flask import render_template_string, request
 
-if sys.version < '3':  # pragma: no cover
-    from urlparse import urlparse, urlunparse
-else:  # pragma: no cover
-    from urllib.parse import urlparse, urlunparse
-    unicode = str
+from six.moves.urllib.parse import urlparse, urlunparse
+from six import string_types
 
 
 REQUIRED_PERMISSIONS = ['.*', '@runner', '@wheel']
@@ -69,7 +66,7 @@ def login_url(login_view, next_url=None, next_field='next'):
 
 
 statuses = {False: 2, None: 1, True: 0}
-reverse_statues = {v:k for k, v in statuses.items()}
+reverse_statues = dict((v, k) for k, v in list(statuses.items()))
 human_status = {False: 'failure', None: 'warning', True: 'success'}
 
 
@@ -80,7 +77,7 @@ def parse_step_name(step_name):
 
 def get_job_level(job_result):
     job_status = 0
-    for state in job_result.values():
+    for state in list(job_result.values()):
         job_status = max(job_status, statuses[state['result']])
     job_status = reverse_statues[job_status]
     return job_status
@@ -91,7 +88,7 @@ def get_job_human_status(job_level):
 
 def format_arg(args):
     return list(args) + [{'__kwarg__': True, kwarg_k: kwarg_v} for
-        (kwarg_k, kwarg_v) in kwargs.items()]
+        (kwarg_k, kwarg_v) in list(kwargs.items())]
 
 
 def transform_arguments(job_arguments):
@@ -116,7 +113,7 @@ def parse_highstate(job):
 
     if job.get('status') != 'running':
 
-        for minion_name, minion_return in job['return'].iteritems():
+        for minion_name, minion_return in job['return'].items():
 
             # Error detected
             if isinstance(minion_return, list):
@@ -124,7 +121,7 @@ def parse_highstate(job):
                     'error': '\n'.join(minion_return)}
                 continue
 
-            if isinstance(minion_return, (str, unicode)):
+            if isinstance(minion_return, string_types):
                 job['return'][minion_name] = {'status': 'error',
                     'error': minion_return}
                 continue
@@ -134,7 +131,7 @@ def parse_highstate(job):
             # Minion return level
             level = 0
 
-            for step_name, step in minion_return.iteritems():
+            for step_name, step in minion_return.items():
 
                 # Step
                 level = max(level, statuses[step['result']])
@@ -188,7 +185,7 @@ def format_arguments(arguments):
     for argument in arguments:
         if isinstance(argument, dict):
             argument.pop('__kwarg__')
-            yield "--{}={}".format(*argument.items()[0])
+            yield "--{}={}".format(*list(argument.items())[0])
         else:
             yield argument
 
@@ -275,3 +272,11 @@ def process_lowstate(lowstate):
 
 def validate_permissions(permissions):
     return sorted(permissions) == sorted(REQUIRED_PERMISSIONS)
+
+
+def get_filtered_post_arguments(arguments_to_exclude):
+    args = {}
+    for arg_key, arg_value in request.form.items():
+        if arg_key not in arguments_to_exclude and arg_value:
+            args[arg_key] = arg_value
+    return args
