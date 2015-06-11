@@ -140,12 +140,12 @@ For example you can use chaussette (https://chaussette.readthedocs.org/en/latest
 
 .. code:: bash
 
-    saltpad/ $> chaussette app:app
+    saltpad/ $> chaussette saltpad.app:app
     2015-04-05 12:34:04 [58304] [INFO] Application is <Flask 'SaltPad'>
     2015-04-05 12:34:04 [58304] [INFO] Serving on localhost:8080
     2015-04-05 12:34:04 [58304] [INFO] Using <class chaussette.backend._wsgiref.ChaussetteServer at 0x102f267a0> as a backend
 
-You can also serve the wsgi app with the wsgi server of your choice. The wsgi path is "app:app" and you should launch the wsgi server in the root of this repository.
+You can also serve the wsgi app with the wsgi server of your choice. The wsgi path is "saltpad.app:app" and you should launch the wsgi server in the root of this repository.
 
 Now configure your favorite webserver to listen on the port 443 with tls enabled. For example with nginx:
 
