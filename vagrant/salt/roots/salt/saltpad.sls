@@ -21,7 +21,7 @@ chaussette:
 
 run_saltad:
     cmd.run:
-        - name: "setsid chaussette app:app --host 0.0.0.0 --port 5000 >/tmp/saltpad.log 2>&1 < /dev/null &"
-        - cwd: "/home/vagrant/saltpad/saltpad"
+        - name: "setsid chaussette saltpad.app:app --host 0.0.0.0 --port 5000 >/tmp/saltpad.log 2>&1 < /dev/null &"
+        - cwd: "/home/vagrant/saltpad"
         - require:
             - pip: saltpad_requirements

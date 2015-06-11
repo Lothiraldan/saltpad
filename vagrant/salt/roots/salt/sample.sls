@@ -6,7 +6,7 @@ working_file:
 changing_file:
     file.managed:
         - name: /etc/changing_file
-        - contents: "{{ salt['status.uptime'] }}"
+        - contents: "{{ salt['status.uptime']() }}"
 
 unicode_character:
     cmd.run:
