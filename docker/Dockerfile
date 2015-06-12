@@ -16,4 +16,4 @@ ADD ./local_settings.docker /opt/saltpad/saltpad/local_settings.py
 EXPOSE 5000
 WORKDIR /opt/saltpad/saltpad
 
-CMD ["/usr/bin/python","/opt/saltpad/saltpad/app.py"]
+CMD ["/usr/bin/python","/opt/saltpad/run.py"]
