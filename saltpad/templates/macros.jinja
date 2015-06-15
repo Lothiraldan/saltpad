@@ -4,7 +4,7 @@
 
 {% macro format_value(value) %}
   {% if value is defined and not None %}
-    {% if '\n' in value %}
+    {% if '\n' in value|string %}
       <pre>{{ value }}</pre>
     {% else %}
       {{ value }}
