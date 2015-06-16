@@ -134,7 +134,7 @@ def parse_highstate(job):
             for step_name, step in minion_return.items():
 
                 # Check if step key was returned
-                if step['changes']:
+                if step.get('changes'):
                     # Check if step is empty
                     if not step['changes']:
                         step.pop('changes')
