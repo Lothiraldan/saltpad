@@ -140,7 +140,7 @@ def parse_highstate(job):
                         step.pop('changes')
 
                 # Support for requirements failed
-                if step['result'] is False and "One or more requisite failed" in step['comment']:
+                if not step.get('result') and "One or more requisite failed" in step['comment']:
                     step['result'] = 'requirement_failed'
 
                 # Job with changes
