@@ -125,7 +125,7 @@ When you just want to test saltpad in a local non-production environment, you ca
 
 .. code:: bash
 
-    saltpad/ $> python app.py
+    / $> python run.py
      * Running on http://127.0.0.1:5000/
      * Restarting with reloader
 
