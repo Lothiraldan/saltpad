@@ -133,10 +133,6 @@ def parse_highstate(job):
 
             for step_name, step in minion_return.items():
 
-                # Step
-                level = max(level, statuses[step['result']])
-                reversed_level = reverse_statues[level]
-
                 # Filter step
                 if not step['changes']:
                     step.pop('changes')
@@ -148,6 +144,10 @@ def parse_highstate(job):
                 # Job with changes
                 if step['result'] is True and step.get('changes'):
                     step['result'] = 'changes'
+
+                # Step
+                level = max(level, statuses[step['result']])
+                reversed_level = reverse_statues[level]
 
                 new_minion_return['steps'][parse_step_name(step_name)] = step
                 new_minion_return['highstate'].setdefault(step['result'], {})[parse_step_name(step_name)] = step
