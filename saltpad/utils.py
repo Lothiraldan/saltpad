@@ -149,7 +149,7 @@ def parse_highstate(job):
                     if step['result'] is True and step.get('changes'):
                         step['result'] = 'changes'
                 else:
-                    step['result'] = 'no_result'
+                    step['result'] = None
 
                 # Step
                 level = max(level, statuses[step['result']])
