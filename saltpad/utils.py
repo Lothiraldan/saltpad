@@ -113,7 +113,7 @@ def parse_highstate(job):
 
     if job.get('status') != 'running':
 
-        for minion_name, minion_return in job['return'].items():
+        for minion_name, minion_return in job['return']['data'].items():
 
             # Error detected
             if isinstance(minion_return, list):
