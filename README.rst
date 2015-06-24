@@ -9,6 +9,28 @@ SaltPad is a GUI tool to manage SaltStack deployments + orchestration. It's stil
 
 A walkthrough using screenshots is available in the screenshots directory.
 
+SaltPad compatibility
+=====================
+
+SaltPad is mainly coded in Python and is compatible with python2.X and python3.4.
+
+SaltPad communicate with Salt through the salt-api. The salt-api format / specification is not stable, for now so SaltPad could only provides limited compatibility with salt-api. The salt-api format depends on 3 variables, salt version, the netapi used (cherrypy or tornado) and the master_job_cache used for storing and retrieving jobs results. We aim to provide maximum compatibility with the most frequent combinaison but while the format is not clearly specified, each combinaison would require an huge amount of work. Here is the compatibility table to quickly see if your configuration is supported or not:
+
++--------------+---------------+------------------+------------+-----------------------------------+
+| Salt Version | Netapi        | Master_job_cache | Supported? | Issue if not supported            |
++--------------+---------------+------------------+------------+-----------------------------------+
+| 2014.7.X     | *             | *                | NO         | Format incompatible with 2015.5.X |
++--------------+---------------+------------------+------------+-----------------------------------+
+| 2015.5.2     | rest_cherrypy | local (default)  | YES        |                                   |
++--------------+---------------+------------------+------------+-----------------------------------+
+
+Here is the list of issues about the salt-api format standardisation that would make the saltpad job much much easier:
+
+* https://github.com/saltstack/salt/issues/23131
+* https://github.com/saltstack/salt/issues/22713
+* https://github.com/saltstack/salt/issues/19018
+* https://github.com/saltstack/salt/issues/13698
+
 Installation
 ============
 
@@ -191,3 +213,4 @@ Known issues
 ------------
 
 * When getting single job output, SaltStack render it even if it's not necessary. This can cause severe slowdown and so slow the interface. It's a known issue in SaltStack (https://github.com/saltstack/salt/issues/18518) and it's should be solved in next release. If it's a problem, you can comment this line https://github.com/saltstack/salt/blob/v2014.7.0/salt/runners/jobs.py#L102 and this line https://github.com/saltstack/salt/blob/v2014.7.0/salt/runners/jobs.py#L81 in your salt master to speed up the job retrieval system.
+* In 2015.5.X version, the job result miss some important informations like the arguments of the job, the target of the job and the target-type (glob, compound...) making job result page less usefull and making the redo-job button unusable. See this issue in SatlStack (https://github.com/saltstack/salt/issues/21496#event-339068972).

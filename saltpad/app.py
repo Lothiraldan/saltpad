@@ -5,7 +5,7 @@ from six import string_types
 from os.path import join, dirname
 
 from flask import Flask, redirect, render_template, url_for, session, request, flash, jsonify
-from .core import HTTPSaltStackClient, ExpiredToken, Unauthorized
+from .core import HTTPSaltStackClient, ExpiredToken, Unauthorized, JobNotStarted
 from .utils import login_url, parse_highstate, NotHighstateOutput, parse_argspec
 from .utils import format_arguments, Call, validate_permissions, REQUIRED_PERMISSIONS
 from .utils import get_filtered_post_arguments
@@ -308,11 +308,17 @@ def redo_job(jid):
     if not job:
         return "Unknown jid", 404
 
-    jid = client.run(job['info']['Function'], client="local_async",
-        tgt=job['info']['Target'], expr_form=job['info']['Target-type'],
-        args=job['info']['Arguments'])['jid']
+    try:
+        new_jid = client.run(job['info']['Function'], client="local_async",
+            tgt=job['info']['Target'], expr_form=job['info']['Target-type'],
+            args=job['info']['Arguments'])['jid']
+    except JobNotStarted:
+        msg = "Couldn't redo the job, check salt api log for more details"
+        flash(msg, 'error')
+        return redirect(url_for('job_result', minion=minion, jid=jid,
+            renderer='highstate'))
 
-    return redirect(url_for('job_result', minion=minion, jid=jid,
+    return redirect(url_for('job_result', minion=minion, jid=new_jid,
         renderer='highstate'))
 
 
