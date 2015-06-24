@@ -133,17 +133,23 @@ def parse_highstate(job):
 
             for step_name, step in minion_return.items():
 
-                # Filter step
-                if not step['changes']:
-                    step.pop('changes')
+                # Check if step key was returned
+                if step.get('changes'):
+                    # Check if step is empty
+                    if not step['changes']:
+                        step.pop('changes')
 
-                # Support for requirements failed
-                if step['result'] is False and "One or more requisite failed" in step['comment']:
-                    step['result'] = 'requirement_failed'
+                if step.get('result'):
+                    if step.get('comment'):
+                        # Support for requirements failed
+                        if not step['result'] is False and "One or more requisite failed" in step['comment']:
+                            step['result'] = 'requirement_failed'
 
-                # Job with changes
-                if step['result'] is True and step.get('changes'):
-                    step['result'] = 'changes'
+                    # Job with changes
+                    if step['result'] is True and step.get('changes'):
+                        step['result'] = 'changes'
+                else:
+                    step['result'] = 1
 
                 # Step
                 level = max(level, statuses[step['result']])
