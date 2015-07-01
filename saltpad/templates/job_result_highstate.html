@@ -11,7 +11,7 @@
     {% set minion_job = job.return.get(minion, {'level': None}) %}
 
 
-      {% if minion_job['level'] != None %}
+      {% if minion_job['level'] != 1 %}
         {% set total = minion_job['steps'] | length %}
         {% set success = minion_job['highstate'][True] | length %}
         {% set changes = minion_job['highstate']['changes'] | length %}
@@ -19,7 +19,7 @@
         {% set requirements = minion_job['highstate']['requirement_failed'] | length %}
         {% set errors = minion_job['highstate'][False] | length %}
 
-        {% if minion_job['level'] == False %}{% set level="danger" %}{% elif minion_job['level'] == None %}{% set level="warning" %}{% else %}{% set level="success" %}{% endif %}
+        {% if minion_job['level'] == 2 %}{% set level="danger" %}{% elif minion_job['level'] == 1 %}{% set level="warning" %}{% else %}{% set level="success" %}{% endif %}
         <a href="#result-{{minion}}" class="list-group-item list-group-item-{{level}}" style="{{ gradient_background(total, success, changes, warning, errors + requirements) }}">{{ minion }}</a>
 
       {% else %}
@@ -74,7 +74,7 @@
         {% set errors = minion_job['highstate'][False] | length %}
 
 
-        {% if minion_job['level'] == False %}{% set level="danger" %}{% elif minion_job['level'] == None %}{% set level="warning" %}{% else %}{% set level="success" %}{% endif %}
+        {% if minion_job['level'] == 2 %}{% set level="danger" %}{% elif minion_job['level'] == 1 %}{% set level="warning" %}{% else %}{% set level="success" %}{% endif %}
         <div class="col-lg-12" id="result-{{minion}}">
         <div class="panel panel-{{ level }}">
           <div class="panel-heading">

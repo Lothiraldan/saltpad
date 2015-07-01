@@ -66,7 +66,7 @@ def login_url(login_view, next_url=None, next_field='next'):
 
 
 statuses = {False: 2, None: 1, True: 0}
-reverse_statues = dict((v, k) for k, v in list(statuses.items()))
+reverse_statuses = dict((v, k) for k, v in list(statuses.items()))
 human_status = {False: 'failure', None: 'warning', True: 'success'}
 
 
@@ -79,12 +79,12 @@ def get_job_level(job_result):
     job_status = 0
     for state in list(job_result.values()):
         job_status = max(job_status, statuses[state['result']])
-    job_status = reverse_statues[job_status]
+    job_status = reverse_statuses[job_status]
     return job_status
 
 
 def get_job_human_status(job_level):
-    return human_status[job_level]
+    return human_status.get(job_level, job_level)
 
 def format_arg(args):
     return list(args) + [{'__kwarg__': True, kwarg_k: kwarg_v} for
@@ -134,31 +134,31 @@ def parse_highstate(job):
             for step_name, step in minion_return.items():
 
                 # Check if step key was returned
-                if step.get('changes'):
+                if 'changes' in step:
                     # Check if step is empty
                     if not step['changes']:
                         step.pop('changes')
 
-                if step.get('result'):
+                if 'result' in step:
                     if step.get('comment'):
                         # Support for requirements failed
-                        if not step['result'] is False and "One or more requisite failed" in step['comment']:
+                        if step['result'] is False and "One or more requisite failed" in step['comment']:
                             step['result'] = 'requirement_failed'
 
                     # Job with changes
                     if step['result'] is True and step.get('changes'):
                         step['result'] = 'changes'
                 else:
-                    step['result'] = 1
+                    step['result'] = None
 
                 # Step
-                level = max(level, statuses[step['result']])
-                reversed_level = reverse_statues[level]
+                level = max(level, statuses.get(step['result']))
+                reversed_level = reverse_statuses[level]
 
                 new_minion_return['steps'][parse_step_name(step_name)] = step
                 new_minion_return['highstate'].setdefault(step['result'], {})[parse_step_name(step_name)] = step
 
-            new_minion_return['level'] = reversed_level
+            new_minion_return['level'] = level
             new_minion_return['status'] = get_job_human_status(reversed_level)
 
             job['return'][minion_name] = new_minion_return

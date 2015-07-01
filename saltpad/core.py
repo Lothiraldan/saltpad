@@ -20,6 +20,10 @@ class InvalidURI(Exception):
     pass
 
 
+class JobNotStarted(Exception):
+    pass
+
+
 class HTTPSaltStackSession(requests.Session):
 
     def get_token(self):
@@ -95,7 +99,7 @@ class HTTPSaltStackClient(object):
 
         # Only filter minion
         if minion:
-            minion_return = r['return'][0][minion]
+            minion_return = r['return'][0]['data'][minion]
             output = {'return': minion_return, 'info': r['info']}
 
             return output
@@ -112,8 +116,14 @@ class HTTPSaltStackClient(object):
             'content-type': 'application/json'}
         r = self.session.post(self.endpoint, data=json.dumps(data),
             headers=headers, verify=self.verify_ssl)
+        if not r['return']:
+            return {}
+
         for jid, job_return in zip(jobs, r['return']):
-            jobs[jid]['return'] = job_return
+            if job_return.get('data'):
+                jobs[jid]['return'] = job_return['data']
+            else:
+                jobs[jid]['return'] = job_return
         return jobs
 
 
@@ -152,8 +162,6 @@ class HTTPSaltStackClient(object):
         # Get each job detail if needed
         if minions or with_details:
             job_returns = self.jobs_batch(jids)
-
-            # raise Exception(jobs)
 
             for jid, job_details in job_returns.items():
 
@@ -214,4 +222,6 @@ class HTTPSaltStackClient(object):
             'content-type': 'application/json'}
         r = self.session.post(self.endpoint, data=json.dumps(data),
             headers=headers, verify=self.verify_ssl)
+        if not r['return'][0]:
+            raise JobNotStarted("Couldn't run job")
         return r['return'][0]
