@@ -10,8 +10,7 @@
     {% for minion in job.info.Minions %}
     {% set minion_job = job.return.get(minion, {'level': None}) %}
 
-
-      {% if minion_job['level'] != 1 %}
+      {% if minion_job['status'] != 'error'  %}
         {% set total = minion_job['steps'] | length %}
         {% set success = minion_job['highstate'][True] | length %}
         {% set changes = minion_job['highstate']['changes'] | length %}
@@ -23,7 +22,7 @@
         <a href="#result-{{minion}}" class="list-group-item list-group-item-{{level}}" style="{{ gradient_background(total, success, changes, warning, errors + requirements) }}">{{ minion }}</a>
 
       {% else %}
-        <a href="#result-{{minion}}" class="list-group-item list-group-item-warning">{{ minion }}</a>
+        <a href="#result-{{minion}}" class="list-group-item list-group-item-danger">{{ minion }}</a>
       {% endif %}
 
 

@@ -64,10 +64,9 @@ def login_url(login_view, next_url=None, next_field='next'):
     parts[4] = url_encode(md, sort=True)
     return urlunparse(parts)
 
-
-statuses = {False: 2, None: 1, True: 0}
+statuses = {False: 2, None: 1, True: 0, 'changes': 0}
 reverse_statuses = dict((v, k) for k, v in list(statuses.items()))
-human_status = {False: 'failure', None: 'warning', True: 'success'}
+human_status = {False: 'failure', None: 'warning', True: 'success', 'changes': 'warning'}
 
 
 def parse_step_name(step_name):

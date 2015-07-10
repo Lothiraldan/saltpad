@@ -17,7 +17,13 @@
 
   {% for minion in job.info.Minions %}
 
-    {% if job.return.get(minion) is none %}
+    {% if job.return.get('data') %}
+      {% set job_return = job.return.data %}
+    {% else %}
+      {% set job_return = job.return %}
+    {% endif %}
+
+    {% if job_return.get(minion) is none %}
 
       <div class="col-lg-12" id="result-{{minion}}">
 
@@ -34,7 +40,7 @@
     {% else %}
 
       <div class="col-lg-12" id="result-{{minion}}">
-        {{ panel_jsontree(minion + ' result', job.return[minion], False)|safe }}
+        {{ panel_jsontree(minion + ' result', job_return[minion], False)|safe }}
       </div>
 
     {% endif %}
