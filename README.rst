@@ -40,8 +40,6 @@ SaltPad is not yet available on Pypi, so you can clone it here: git@github.com:t
 
     git clone git@github.com:tinyclues/saltpad.git
 
-SaltPad currently only works on Python 2.7, but the support of Python 2.6 is currently discussed here, please leave a comment if it's a big issue for you.
-
 The recommended way to install saltpad is to create a dedicated virtualenv to isolate saltpad's dependencies from the system one (https://pypi.python.org/pypi/virtualenv/):
 
 .. code-block:: bash
