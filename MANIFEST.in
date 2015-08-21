@@ -6,3 +6,4 @@ include README.rst
 include requirements.txt
 include windows-requirements.txt
 include _requirements.txt
+graft saltpad
