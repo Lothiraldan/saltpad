@@ -276,7 +276,7 @@ def process_lowstate(lowstate):
 
 
 def validate_permissions(permissions):
-    return sorted(permissions) == sorted(REQUIRED_PERMISSIONS)
+    return set(REQUIRED_PERMISSIONS).issubset(set(permissions))
 
 
 def get_filtered_post_arguments(arguments_to_exclude):
