@@ -190,7 +190,7 @@ def format_arguments(arguments):
     for argument in arguments:
         if isinstance(argument, dict):
             argument.pop('__kwarg__')
-            yield "--{}={}".format(*list(argument.items())[0])
+            yield "--{0}={1}".format(*list(argument.items())[0])
         else:
             yield argument
 
@@ -253,7 +253,7 @@ def process_lowstate(lowstate):
             require_state, require_name = list(require.items())[0]
 
             if require_state == 'sls':
-                requires.append((state['order'], 'cluster_{}'.format(require_name.replace('.', '_').replace('-', '_'))))
+                requires.append((state['order'], 'cluster_{0}'.format(require_name.replace('.', '_').replace('-', '_'))))
                 continue
 
             required_state = id_map[(require_state, require_name)]
