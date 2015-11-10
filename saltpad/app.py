@@ -177,12 +177,14 @@ def job_result(jid):
     renderer = request.args.get('renderer', 'raw')
     job = client.job(jid)
 
+    context = {}
+
     if renderer == 'highstate':
         try:
             job = parse_highstate(job)
         except NotHighstateOutput:
             return redirect(url_for('job_result', jid=jid, minion=minion,
-                renderer='raw'))
+                            renderer='raw'))
     elif renderer == 'aggregate':
         aggregate_result = {}
 
@@ -192,12 +194,13 @@ def job_result(jid):
         missing_minions = set(job['info']['Minions']) - set(job['return'].keys())
         if missing_minions:
             aggregate_result['Missing results'] = missing_minions
-        job['return'] = aggregate_result
+        job['aggregate_return'] = aggregate_result
+        context['total_minions'] = sum(len(minions) for minions in aggregate_result.values())
 
     if not job:
         return "Unknown jid", 404
     return render_template('job_result_{0}.html'.format(renderer), job=job, minion=minion,
-        renderer=renderer)
+                           renderer=renderer, **context)
 
 @app.route("/templates")
 @login_required
