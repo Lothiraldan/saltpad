@@ -237,7 +237,7 @@ class JobRun extends React.Component {
 
       let ArgumentChanger = (arg_name) => {
           return (event) => {
-            this.setState({args: {[arg_name]: event.target.value}});
+            this.setState({arguments: {[arg_name]: event.target.value}});
           };
       }
 
