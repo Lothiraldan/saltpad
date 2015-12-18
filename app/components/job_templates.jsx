@@ -33,7 +33,7 @@ class JobTemplates extends Component {
     LaunchTemplate = (template_name, e) => {
         let template = this.props.settings.templates[template_name];
         RunJob(template['matcher'], template['target'],
-               template['moduleFunction'], template['arguments'])
+               template['moduleFunction'], [[], template['arguments']])
           .then(job_id => {
             if(job_id) {
               this.context.history.pushState(null, `/job_result/${job_id}`, null);

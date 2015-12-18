@@ -168,8 +168,6 @@ class JobRun extends React.Component {
     constructor(props, context) {
         super(props, context);
 
-        console.log("Location state", this.props.location.state);
-
         // If we want to copy an existing job, initialize state to job params
         if(_.get(this.props.location.state, "copy_job") != undefined) {
           let job = this.props.location.state.copy_job;
@@ -188,7 +186,7 @@ class JobRun extends React.Component {
         e.preventDefault();
 
         let state = this.state;
-        RunJob(state.matcher, state.target, state.moduleFunction, [[], state.args])
+        RunJob(state.matcher, state.target, state.moduleFunction, [[], state.arguments])
           .then(job_id => {
             if(job_id) {
               this.context.history.pushState(null, `/job_result/${job_id}`, null);
