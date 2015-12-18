@@ -8,26 +8,6 @@ import {HighstateReturnParser, gradientBackground} from '../../jobs/utils';
 
 
 
-// {% macro percent(n, tot) -%}
-// {{ ((n / tot) * 100) }}
-// {%- endmacro %}
-
-// {% macro gradient_background(total, green, blue, yellow, red) -%}
-// background: linear-gradient(to right, #d8ffc9, #d8ffc9 {{ percent(green, total) }}%
-// {%- if blue -%}
-// ,#d1f0ff {{ percent(green, total) }}%, #d1f0ff {{ percent(green + blue, total) }}%
-// {%- endif %}
-// {%- if yellow -%}
-// ,#faebcc {{ percent(green + blue, total) }}%, #faebcc {{ percent(green + blue + yellow, total) }}%
-// {%- endif -%}
-// {%- if red -%}
-// ,#ffd1d1 {{ percent(green + blue + yellow, total) }}%, #ffd1d1 {{ percent(green + blue + yellow + red, total) }}%
-// {%- endif -%}
-// );
-// {%- endmacro %}
-
-
-
 class MinionHighstateHeader extends React.Component {
 
   render() {
@@ -35,7 +15,6 @@ class MinionHighstateHeader extends React.Component {
     let className = `list-group-item list-group-item-${stateResult.status}`;
 
     let background = gradientBackground(stateResult.chunks);
-    console.log(background);
 
     return (
       <li key={this.props.minion} className="list-group-item" style={background}>{this.props.minion}</li>

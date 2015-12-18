@@ -25,8 +25,7 @@ function updateMinionStatus() {
 
 function updateMinionDocs() {
     let service = new SaltLowStateService();
-    service.Run({client: 'local_async', 'fun': 'sys.doc', 'tgt': '*', 'arg': []})
-        .then(result => console.log("Minion doc", result))
+    service.Run({client: 'local_async', 'fun': 'sys.doc', 'tgt': '*', 'arg': []});
 }
 
 

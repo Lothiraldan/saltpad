@@ -29,7 +29,6 @@ export function ArgFormatter(args) {
     let formatted_kwargs = _.map(_.pairs(kwargs), ([arg_key, arg_value]) => {
         return {__kwarg__: true, [arg_key]: arg_value}
     });
-    console.log("ArgsFormatter", args, poargs, kwargs, formatted_kwargs, _.union(poargs, formatted_kwargs));
     return _.union(poargs, formatted_kwargs);
 }
 

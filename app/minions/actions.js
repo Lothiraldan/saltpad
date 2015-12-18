@@ -13,10 +13,7 @@ export default function auth_minion(auth_payload) {
 
 export function ListMinions() {
     return MinionsService.ListMinions()
-        .then(result => result.data.return[0])
-        .then(result => {
-            console.log(result)
-        });
+        .then(result => result.data.return[0]);
 }
 
 export function UpdateMinionStatus(minion_status) {

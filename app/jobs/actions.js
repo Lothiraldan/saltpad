@@ -24,7 +24,6 @@ export function newJobReturn(job_id, minion, job) {
 }
 
 export function ListJobs() {
-    console.log("ListJobs");
     return JobsService.ListJobs()
         .then(result => result.data.return[0])
         .then(UpdateJobs);
@@ -80,7 +79,6 @@ export function RunJob(matcher, minions, module_function, args, add_to_runned_jo
 
     return JobsService.RunJob(matcher, minions, module_function, args)
         .then((result) => {
-            console.log("Result run job", result);
             return result;
         })
         .then((result) => result.data.return[0])

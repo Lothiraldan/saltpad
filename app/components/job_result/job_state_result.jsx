@@ -71,7 +71,6 @@ export class StateResultMinion extends React.Component  {
         let job_data = this.props.job_data;
 
         let grouped_chunks = _.groupBy(_.pairs(job_data.return), (chunk) => {
-            console.error(chunk);
 
             if(chunk[1] == undefined) {
                 return "Undefined";

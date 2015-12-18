@@ -11,7 +11,6 @@ class JobTemplates extends Component {
 
 
     CopyTemplate = (template_name, e) => {
-        console.log(template_name, this.props.settings.templates);
         let template = this.props.settings.templates[template_name];
         let formatted_template = {'TargetType': template.matcher,
                                   'Target': template.target,

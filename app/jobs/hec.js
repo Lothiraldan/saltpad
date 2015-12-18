@@ -74,7 +74,6 @@ export function SingleJobStoreHEC(DecoratedComponent, job_id_param) {
 
             // Check if it's a runner job
             if (master_id && _.startsWith(_.get(job, ['Result', master_id, 'return', 'fun']), 'runner')) {
-                console.log('RunnerJob', job, _.get(job, ['Result', master_id, 'return']));
                 var job = JobEventToJobStore(_.get(job, ['Result', master_id, 'return']));
                 runner_job = true;
             }

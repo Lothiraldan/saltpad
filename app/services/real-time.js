@@ -29,12 +29,10 @@ export default function connect_ws() {
 
     var source = new WebSocket(url);
 
-    source.onerror = function(e) { console.debug('error!', e); };
+    source.onerror = function(e) { console.error('error!', e); };
     source.onmessage = e => {
         let raw_data = e.data.replace("data: ", "");
         let data = JSON.parse(raw_data);
-
-        console.debug("Message", data);
 
         for(let entry of EVENT_MAP) {
             let match = data.tag.match(new R(entry[0]));
