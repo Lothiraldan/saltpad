@@ -12,7 +12,7 @@ class MinionKeysWidget extends React.Component {
       return (
         <div className="col-md-3 col-sm-3 box0">
           <div className="box1">
-            <span className="fa fa-key"></span>
+            <span className="fa fa-key" />
             <h3>
               <span style={{color: "green"}}>{accepted}</span> / <span style={{color: "orange"}}>{pending}</span> / <span style={{color: "red"}}>{refused}</span>
             </h3>

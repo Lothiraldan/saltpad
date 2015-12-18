@@ -11,18 +11,17 @@ class Aside extends React.Component {
           <div id="sidebar" className="nav-collapse ">
             <ul className="sidebar-menu" id="nav-accordion">
 
-              <p className="centered"><a href="profile.html"><img className="img-circle" width="60"></img></a></p>
-              <UserPart></UserPart>
+              <UserPart />
 
-              <MenuLink link="/" icon="dashboard" title="Dashboard"></MenuLink>
+              <MenuLink link="/" icon="dashboard" title="Dashboard" />
 
-              <MenuLink link="/jobs" icon="tasks" title="Jobs"></MenuLink>
+              <MenuLink link="/jobs" icon="tasks" title="Jobs" />
 
-              <MenuLink link="/minions" icon="cubes" title="Minions"></MenuLink>
+              <MenuLink link="/minions" icon="cubes" title="Minions" />
 
-              <MenuLink link="/job/run" icon="play" title="Run job"></MenuLink>
+              <MenuLink link="/job/run" icon="play" title="Run job" />
 
-              <MenuLink link="/job/templates" icon="magic" title="Jobs templates"></MenuLink>
+              <MenuLink link="/job/templates" icon="magic" title="Jobs templates" />
 
             </ul>
           </div>

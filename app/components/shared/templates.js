@@ -5,7 +5,7 @@ export class If extends React.Component {
         if(this.props.condition) {
             return <div>{this.props.children}</div>;
         } else {
-            return <div></div>;
+            return <div />;
         }
     }
 }

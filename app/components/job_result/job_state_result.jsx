@@ -48,7 +48,7 @@ export class StateResultStatusMinion extends React.Component {
 
       var chunks = _.sortBy(jobs, (chunk) => chunk[1]['__run_num__']);
       var chunks = _.map(chunks, (chunk) => {
-          return <SingleChunkResult key={chunk[0]} chunk={chunk[1]} chunk_id={chunk[0]} status={status} default_open={false}></SingleChunkResult>;
+          return <SingleChunkResult key={chunk[0]} chunk={chunk[1]} chunk_id={chunk[0]} status={status} default_open={false} />;
       });
 
 
@@ -107,7 +107,7 @@ export class StateResultMinion extends React.Component  {
         }
 
         let chunks = _.map(status_order, (status) => {
-            return <StateResultStatusMinion key={status} status={status} jobs={grouped_chunks[status]} chunk_number={chunk_number}></StateResultStatusMinion>;
+            return <StateResultStatusMinion key={status} status={status} jobs={grouped_chunks[status]} chunk_number={chunk_number} />;
         });
 
         return (

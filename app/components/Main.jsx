@@ -19,7 +19,7 @@ class Main extends React.Component {
     let settings = this.props.settings;
 
     if (settings == undefined) {
-        return <div></div>;
+        return <div />;
     }
 
     let login_children = this.props.children.type == Login;
@@ -29,9 +29,9 @@ class Main extends React.Component {
         var aside = undefined;
         var notification = undefined;
     } else {
-        var navbar = <NavBar></NavBar>;
-        var aside = <Aside></Aside>;
-        var notification = <Notification></Notification>;
+        var navbar = <NavBar />;
+        var aside = <Aside />;
+        var notification = <Notification />;
     }
 
     return (

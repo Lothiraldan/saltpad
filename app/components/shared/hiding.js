@@ -26,9 +26,11 @@ export function HidingHEC(DecoratedComponent) {
               var body=this.props.children;
           }
 
-          let chevron_control=<i className={chevron} onClick={this.onClick} style={{cursor: "pointer"}}></i>;
+          let chevron_control = (
+            <i className={chevron} onClick={this.onClick} style={{cursor: "pointer"}} />
+          );
 
-          return <DecoratedComponent {...this.props} hiding_control={chevron_control} open={this.state.open}></DecoratedComponent>;
+          return <DecoratedComponent {...this.props} hiding_control={chevron_control} open={this.state.open} />;
       }
   }
 

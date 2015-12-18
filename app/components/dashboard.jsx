@@ -20,13 +20,13 @@ class Dashboard extends React.Component {
 
       return (
         <div className="row mtbox">
-          <MinionCounterWidget></MinionCounterWidget>
+          <MinionCounterWidget />
 
-          <MinionKeysWidget></MinionKeysWidget>
+          <MinionKeysWidget />
 
-          <JobCounterWidget></JobCounterWidget>
+          <JobCounterWidget />
 
-          <JobsLast10Widget></JobsLast10Widget>
+          <JobsLast10Widget />
         </div>
       )
     }

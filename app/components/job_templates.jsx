@@ -58,7 +58,7 @@ class JobTemplates extends Component {
         var CopyJobTemplate = (template_name, template) => {
             return (
                 <button className="btn btn-primary btn-sm" onClick={_.partial(this.CopyTemplate, template_name)}>
-                    <i className="fa fa-copy"></i> Copy job parameters
+                    <i className="fa fa-copy" /> Copy job parameters
                 </button>
             )
         }
@@ -66,7 +66,7 @@ class JobTemplates extends Component {
         var RunJobTemplate = (template_name, template) => {
             return (
                 <button className="btn btn-primary btn-sm" onClick={_.partial(this.LaunchTemplate, template_name)}>
-                    <i className="fa fa-play"></i> Launch job template
+                    <i className="fa fa-play" /> Launch job template
                 </button>
             )
         }

@@ -35,13 +35,13 @@ class Login extends React.Component {
 
             <form id="loginform" className="form-horizontal" role="form">
               <div style={{marginBotton: "25px"}} className="input-group">
-                <span className="input-group-addon"><i className="fa fa-fw fa-user"></i></span>
-                <input id="login-username" type="text" className="form-control" name="username" placeholder="username" valueLink={this.linkState('username')}></input>
+                <span className="input-group-addon"><i className="fa fa-fw fa-user" /></span>
+                <input id="login-username" type="text" className="form-control" name="username" placeholder="username" valueLink={this.linkState('username')} />
               </div>
 
               <div style={{marginBotton: "25px"}} className="input-group">
-                <span className="input-group-addon"><i className="fa fa-fw fa-key"></i></span>
-                <input id="login-password" type="password" className="form-control" name="password" placeholder="password" valueLink={this.linkState('password')}></input>
+                <span className="input-group-addon"><i className="fa fa-fw fa-key" /></span>
+                <input id="login-password" type="password" className="form-control" name="password" placeholder="password" valueLink={this.linkState('password')} />
               </div>
 
               <div style={{marginTop: "10px"}} className="form-group">

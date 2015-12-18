@@ -22,15 +22,15 @@ class MinionResult extends React.Component {
           let job_data = _.get(job.Result, minion, undefined);
           var heading = minion;
           if(job_data == undefined) {
-            return <JobEmptyResult key={minion} minion={minion}></JobEmptyResult>;
+            return <JobEmptyResult key={minion} minion={minion} />;
           }
 
           else if(job.Function == 'state.highstate') {
-            return <StateResultMinion key={minion} minion={minion} job_data={job_data}></StateResultMinion>;
+            return <StateResultMinion key={minion} minion={minion} job_data={job_data} />;
           }
 
           else {
-            return <RawResultMinion key={minion} minion={minion} job_data={job_data}></RawResultMinion>;
+            return <RawResultMinion key={minion} minion={minion} job_data={job_data} />;
           }
 
           return (
@@ -73,7 +73,9 @@ class JobRunnerResult extends React.Component {
       return (
         <div>
           <div className="col-lg-12">
-            <h1>{job.Function} started {moment.unix(job.StartTime).fromNow()} by {job.User} <JobFollowStar job_id={job.jid}></JobFollowStar></h1>
+            <h1>
+              {job.Function} started {moment.unix(job.StartTime).fromNow()} by {job.User} <JobFollowStar job_id={job.jid} />
+            </h1>
 
             <h2>
               TODO ADD COPY AND RELAUNCH
@@ -112,22 +114,24 @@ class JobMinionResult extends React.Component {
       return (
         <div>
           <div className="col-lg-12">
-            <h1>{job.Function} on {job.Target} started {moment.unix(job.StartTime).fromNow()} by {job.User} <JobFollowStar job_id={job.jid}></JobFollowStar></h1>
+            <h1>
+              {job.Function} on {job.Target} started {moment.unix(job.StartTime).fromNow()} by {job.User} <JobFollowStar job_id={job.jid} />
+            </h1>
 
             <h2>
               <button className="btn btn-primary btn-sm" onClick={this.copyJob}>
-                <i className="fa fa-copy"></i> Copy job parameters
+                <i className="fa fa-copy" /> Copy job parameters
               </button>
 
               <button className="btn btn-primary btn-sm" style={{marginLeft: "10px"}} onClick={this.redoJob}>
-                <i className="fa fa-refresh"></i> Redo job with same parameters
+                <i className="fa fa-refresh" /> Redo job with same parameters
               </button>
             </h2>
 
             <h3>Minions:</h3>
-            <MinionList job={job}/>
+            <MinionList job={job} />
           </div>
-          <MinionResult job={job}/>
+          <MinionResult job={job} />
         </div>
       )
     }

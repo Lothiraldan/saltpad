@@ -23,7 +23,9 @@ class JobRunNotification extends React.Component {
     return(
       <div className="desc">
         <div className="thumb">
-          <span className="badge bg-theme"><i className={className}></i></span>
+          <span className="badge bg-theme">
+            <i className={className} />
+          </span>
         </div>
         <div className="details">
           <p><muted>{moment.unix(this.props.job.StartTime).fromNow()}</muted><br/>
@@ -46,14 +48,14 @@ class Notification extends React.Component {
       let last_runned_jobs = _.map(runned_jobs,
           (job_id) => {
             let JobRunNotifHEC = SingleJobStoreHEC(JobRunNotification, "job_id");
-            return <JobRunNotifHEC job_id={job_id} key={job_id}></JobRunNotifHEC>;
+            return <JobRunNotifHEC job_id={job_id} key={job_id} />;
           });
 
       let followed_jobs = _.sortBy(this.props.session['followed_jobs'], (jid) => -1 * jid);
       let last_followed_jobs = _.map(followed_jobs,
           (job_id) => {
             let JobRunNotifHEC = SingleJobStoreHEC(JobRunNotification, "job_id");
-            return <JobRunNotifHEC job_id={job_id} key={job_id}></JobRunNotifHEC>;
+            return <JobRunNotifHEC job_id={job_id} key={job_id} />;
           });
 
       return (

@@ -17,7 +17,7 @@ export function SessionHEC(DecoratedComponent) {
         }
 
         render = () => {
-            return <DecoratedComponent {...this.props} session={this.state}></DecoratedComponent>;
+            return <DecoratedComponent {...this.props} session={this.state} />;
         }
     }
 

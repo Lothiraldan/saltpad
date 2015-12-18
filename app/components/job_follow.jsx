@@ -27,7 +27,7 @@ class JobFollowStar extends Component {
         }
 
         return (
-            <i className={className} style={{cursor: 'pointer'}} onClick={this.onClick}></i>
+            <i className={className} style={{cursor: 'pointer'}} onClick={this.onClick} />
         )
     }
 }

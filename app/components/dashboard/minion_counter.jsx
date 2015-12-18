@@ -18,7 +18,7 @@ class MinionCounterWidget extends React.Component {
       return (
         <div className="col-md-3 col-sm-3 box0">
           <div className="box1">
-            <span className="fa fa-cubes" style={{color: color}}></span>
+            <span className="fa fa-cubes" style={{color: color}} />
             <h3>{_.size(up_minions)} / {_.size(minions)}</h3>
           </div>
           <p>On {_.size(minions)} minions detected on the platform, {_.size(up_minions)} minions were alive recently.</p>

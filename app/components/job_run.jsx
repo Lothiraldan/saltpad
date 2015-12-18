@@ -95,7 +95,7 @@ class JobDoc extends React.Component {
     }
 
     if(this.props.moduleFunction.doc == undefined) {
-      return <pre><i className="fa fa-refresh fa-spin"></i> Loading function doc</pre>;
+      return <pre><i className="fa fa-refresh fa-spin" /> Loading function doc</pre>;
     }
 
     return (
@@ -128,11 +128,11 @@ class JobArguments extends React.Component {
   render() {
 
     if(this.props.moduleFunctionName == undefined) {
-      return <span></span>;
+      return <span />;
     }
 
     if(this.props.moduleFunction.argspec == undefined) {
-      return <span><i className="fa fa-refresh fa-spin"></i> Loading function arguments</span>;
+      return <span><i className="fa fa-refresh fa-spin" /> Loading function arguments</span>;
     }
 
     let [mandatory, optional] = this.props.moduleFunction.argspec;
@@ -140,11 +140,11 @@ class JobArguments extends React.Component {
     let form_state = this.props.form_state;
 
     let mandatory_inputs = _.map(mandatory, (arg_name) => {
-      return <JobArgInput arg_name={arg_name} key={arg_name} arg_value={_.get(form_state, arg_name)} ArgumentChanger={ArgumentChanger(arg_name)}></JobArgInput>;
+      return <JobArgInput arg_name={arg_name} key={arg_name} arg_value={_.get(form_state, arg_name)} ArgumentChanger={ArgumentChanger(arg_name)} />;
     });
 
     let optional_inputs = _.map(_.pairs(optional), ([arg_name, arg_value]) => {
-      return <JobArgInput arg_name={arg_name} arg_value={_.get(form_state, arg_name, arg_value)} key={arg_name} ArgumentChanger={ArgumentChanger(arg_name)}></JobArgInput>;
+      return <JobArgInput arg_name={arg_name} arg_value={_.get(form_state, arg_name, arg_value)} key={arg_name} ArgumentChanger={ArgumentChanger(arg_name)} />;
     });
 
     return (
@@ -252,15 +252,15 @@ class JobRun extends React.Component {
 
 
                   <MatcherSelect matcher={this.state.matcher} matchers={matchers}
-                    matcherChanger={matcherChanger}></MatcherSelect>
+                    matcherChanger={matcherChanger} />
 
                   <TargetSelect target={this.state.target} minions={minions}
-                    targetChanger={targetChanger}></TargetSelect>
+                    targetChanger={targetChanger} />
 
                   <FunctionSelect function={this.state.moduleFunction} functions={moduleFunctions}
-                    functionChanger={functionChanger}></FunctionSelect>
+                    functionChanger={functionChanger} />
 
-                  <FunctionArguments ArgumentChanger={ArgumentChanger} form_state={this.state.arguments} key="FunctionArguments"></FunctionArguments>
+                  <FunctionArguments ArgumentChanger={ArgumentChanger} form_state={this.state.arguments} key="FunctionArguments" />
 
                   <div className="form-group">
                     <div className="col-sm-12 controls">
@@ -274,7 +274,7 @@ class JobRun extends React.Component {
             </div>
 
             <div className="col-md-7">
-              <FunctionDoc key="FunctionDoc"></FunctionDoc>
+              <FunctionDoc key="FunctionDoc" />
             </div>
 
           </div>

@@ -33,7 +33,7 @@ export default function(DecoratedComponent) {
         }
 
         render = () => {
-            return <DecoratedComponent jobs={this.state} {...this.props} ></DecoratedComponent>
+            return <DecoratedComponent jobs={this.state} {...this.props} />
         }
     }
 
@@ -103,7 +103,7 @@ export function SingleJobStoreHEC(DecoratedComponent, job_id_param) {
         }
 
         render = () => {
-            return <DecoratedComponent {...this.props} job={this.state}></DecoratedComponent>;
+            return <DecoratedComponent {...this.props} job={this.state} />;
         }
     }
 
@@ -144,7 +144,7 @@ export function ModuleFunctionsStoreHEC(DecoratedComponent) {
         }
 
         render = () => {
-            return <DecoratedComponent {...this.props} moduleFunctions={this.state}></DecoratedComponent>;
+            return <DecoratedComponent {...this.props} moduleFunctions={this.state} />;
         }
     }
 
@@ -200,7 +200,7 @@ export function ModuleFunctionStoreHEC(DecoratedComponent, moduleFunctionName, d
         }
 
         render = () => {
-            return <DecoratedComponent {...this.props} moduleFunction={this.state} moduleFunctionName={moduleFunctionName} key={"ModuleFunctionStoreHEC"}></DecoratedComponent>;
+            return <DecoratedComponent {...this.props} moduleFunction={this.state} moduleFunctionName={moduleFunctionName} key={"ModuleFunctionStoreHEC"} />;
         }
     }
 

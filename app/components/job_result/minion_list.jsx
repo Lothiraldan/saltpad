@@ -41,15 +41,14 @@ class MinionList extends React.Component {
           if(_.has(job.Result, minion)) {
 
               if(job.Function == 'state.highstate') {
-                return <MinionHighstateHeader minion={minion} job={job}></MinionHighstateHeader>;
+                return <MinionHighstateHeader minion={minion} job={job} key={minion} />
               } else {
-                return <MinionHeader minion={minion}></MinionHeader>
+                return <MinionHeader minion={minion} key={minion} />
               }
           } else {
               return <li key={minion} className="list-group-item list-group-item-warning">
                 <span className="badge">
-                  <i className="fa fa-spinner fa-spin">
-                  </i>
+                  <i className="fa fa-spinner fa-spin" />
                 </span>
                 {minion} (pending)
               </li>;

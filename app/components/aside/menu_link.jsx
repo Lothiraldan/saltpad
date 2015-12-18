@@ -8,7 +8,7 @@ class MenuLink extends React.Component {
         return (
           <li className>
             <Link to={this.props.link}>
-              <i className={`fa fa-${this.props.icon}`}></i>
+              <i className={`fa fa-${this.props.icon}`} />
               <span>{this.props.title}</span>
             </Link>
           </li>

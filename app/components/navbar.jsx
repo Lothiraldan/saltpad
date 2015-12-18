@@ -8,7 +8,7 @@ export default class NavBar extends React.Component {
       return (
         <header className="header black-bg">
           <div className="sidebar-toggle-box">
-              <div className="fa fa-bars tooltips" data-placement="right" data-original-title="Toggle Navigation"></div>
+              <div className="fa fa-bars tooltips" data-placement="right" data-original-title="Toggle Navigation" />
           </div>
 
           <Link to="/" className="logo"><b>SALTPAD</b></Link>

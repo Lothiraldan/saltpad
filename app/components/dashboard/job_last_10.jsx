@@ -13,7 +13,7 @@ class JobGroupItem extends React.Component {
         return (
           <li key={job_id} className="list-group-item">
             <span className="badge">{moment.unix(job.StartTime).fromNow()}</span>
-            <i className="fa fa-calendar"></i> <Link to={link}>[{job_id}] {job.Function} on "{job.Target}"</Link>
+            <i className="fa fa-calendar" /> <Link to={link}>[{job_id}] {job.Function} on "{job.Target}"</Link>
           </li>
         )
     }
@@ -27,14 +27,14 @@ class JobsLast10Widget extends React.Component {
         jobs = _.take(jobs, 10);
         jobs = _.map(jobs, function(job) {
             let [job_id, job_data] = job;
-            return <JobGroupItem key={job_id} job_id={job_id} job={job_data}></JobGroupItem>;
+            return <JobGroupItem key={job_id} job_id={job_id} job={job_data} />;
         });
 
         return (
           <div className="col-lg-12">
             <div className="panel panel-primary">
               <div className="panel-heading">
-                <h3 className="panel-title"><i className="fa fa-clock-o"></i> Recent Jobs</h3>
+                <h3 className="panel-title"><i className="fa fa-clock-o" /> Recent Jobs</h3>
               </div>
               <div className="panel-body">
                 <div className="list-group">
@@ -43,7 +43,7 @@ class JobsLast10Widget extends React.Component {
                   </ul>
 
                   <div className="text-right">
-                    <Link to="/jobs">View All Jobs <i className="fa fa-arrow-circle-right"></i></Link>
+                    <Link to="/jobs">View All Jobs <i className="fa fa-arrow-circle-right" /></Link>
                   </div>
                 </div>
               </div>
