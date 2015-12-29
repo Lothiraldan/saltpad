@@ -89,8 +89,8 @@ export function HighstateReturnParser(jobReturn) {
 export function gradientBackground(chunks) {
     let green = _.size(_.get(chunks, 'Success'));
     let blue = _.size(_.get(chunks, 'Changes'));
-    let orange = _.size(_.get(chunks, 'Warning'));
-    let red = _.size(_.get(chunks, 'Error')) + _.size(_.get(chunks, 'Dependency failed'));
+    let orange = _.size(_.get(chunks, 'Warning')) + _.size(_.get(chunks, 'Dependency failed'));
+    let red = _.size(_.get(chunks, 'Error'));
 
     let gradient_data = [
         {name: "success", value: green, color: "#d8ffc9"},

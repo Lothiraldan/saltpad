@@ -1,7 +1,20 @@
 {
-  "name": "miniflux-todomvc",
-  "description": "Demonstrating a simple Flux implementation",
-  "author": "Jorin Vogel",
+  "name": "saltpad",
+  "description": "SaltPad is web GUI for SaltStack",
+  "author": "Boris Feld",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tinyclues/saltpad.git"
+  },
+  "dependencies": {
+    "react": "0.14.3",
+    "react-dom": "0.14.2",
+    "react-router": "1.0.1",
+    "lodash": "",
+    "baobab": "",
+    "axios": "",
+    "urijs": ""
+  },
   "devDependencies": {
     "babel": "^5.6.14",
     "babel-core": "^5.6.15",
@@ -9,24 +22,20 @@
     "babel-loader": "^5.2.2",
     "babel-runtime": "",
     "babel-plugin-react-transform": "^1.1.1",
+    "babel-preset-es2015": "",
+    "babel-preset-react": "",
     "classnames": "^2.1.2",
     "es6-promise": "^2.3.0",
     "node-libs-browser": "^0.5.2",
     "node-uuid": "^1.4.3",
-    "react": "0.14.3",
-    "react-dom": "0.14.2",
-    "react-hot-loader": "^1.2.7",
-    "react-router": "1.0.1",
     "react-transform-catch-errors": "^1.0.0",
-    "react-transform-hmr": "^1.0.0",
-    "redbox-react": "^1.0.1",
+    "react-transform-hmr": "^1.0.1",
+    "redbox-react": "^1.1.1",
     "react-bootstrap-table": "1.2.5",
     "react-select": "1.0.0-beta6",
     "history": "1.13.0",
-    "lodash": "",
     "react-mixin": "",
     "react-addons-linked-state-mixin": "",
-    "baobab": "",
     "baobab-react": "",
     "standard": "^4.3.1",
     "tap-spec": "^4.0.2",
@@ -37,7 +46,6 @@
     "style-loader": "",
     "url-loader": "",
     "file-loader": "",
-    "axios": "",
     "mapify": "",
     "bower": "",
     "moment": "",
@@ -49,13 +57,15 @@
     "form-urlencoded": "",
     "html-webpack-plugin": "",
     "extract-text-webpack-plugin": "",
-    "urijs": ""
+    "cosmos-js": "^0.7.0",
+    "yargs": "^3.30.0"
   },
   "scripts": {
     "clean": "rimraf dist",
     "build:webpack": "NODE_ENV=production ./node_modules/webpack/bin/webpack.js --config webpack.config.prod.js",
     "build": "npm run clean && npm run build:webpack",
     "start": "node devServer.js",
+    "playground": "node devServer.js --env playground",
     "lint": "eslint src"
   },
   "standard": {

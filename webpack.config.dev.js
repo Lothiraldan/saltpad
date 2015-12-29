@@ -1,6 +1,5 @@
-var path = require('path')
-var webpack = require('webpack')
-var WebpackDevServer = require('webpack-dev-server')
+var path = require('path');
+var webpack = require('webpack');
 
 module.exports = {
   devtool: 'eval',
@@ -10,12 +9,11 @@ module.exports = {
   ],
   output: {
     path: path.join(__dirname, 'dist'),
-    filename: 'bundle.js',
-    publicPath: '/static/'
+    filename: 'app.js'
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoErrorsPlugin()
+    new webpack.NoErrorsPlugin(),
   ],
   resolve: {
     extensions: ['', '.js', '.jsx', '.css'],
@@ -26,8 +24,25 @@ module.exports = {
     loaders: [
       {
         test: /\.jsx?$/,
-        loaders: ['react-hot', 'babel?optional[]=runtime&stage=0'],
-        include: path.join(__dirname, 'app')
+        loader: 'babel',
+        include: path.join(__dirname, 'app'),
+        query: {
+          optional: ['runtime'],
+          stage: 0,
+          plugins: ['react-transform'],
+          extra: {
+            'react-transform': {
+              transforms: [{
+                transform: 'react-transform-hmr',
+                imports: ['react'],
+                locals: ['module']
+              }, {
+                transform: 'react-transform-catch-errors',
+                imports: ['react', 'redbox-react']
+              }]
+            }
+          }
+        }
       },
       {
         test: /\.css$/, loader: "style-loader!css-loader"

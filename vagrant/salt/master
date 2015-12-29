@@ -11,17 +11,21 @@ file_roots:
   - /srv/salt
 fileserver_backend:
 - roots
+
 master_roots:
   base:
   - /srv/salt-master
 pillar_roots:
   base:
   - /srv/pillar
-pki_dir: /etc/salt/pki/master
-rest_cherrypy:
+
+rest_tornado:
   debug: true
   disable_ssl: true
   port: 8000
-salt_transport: zeromq
-timeout: 5
-worker_threads: 5
+  host: 0.0.0.0
+  websockets: True
+  cors_origin: '*'
+
+gitfs_remotes:
+  - https://github.com/saltstack-formulas/nginx-formula

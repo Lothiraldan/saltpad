@@ -7,14 +7,14 @@ SaltPad is a GUI tool to manage SaltStack deployments + orchestration. It's stil
 
 .. image:: screenshots/highstate_result.png
 
-A walkthrough using screenshots is available in the screenshots directory.
+A walkthrough using screenshots is available in the screenshots directory (not up-to-date).
 
 SaltPad compatibility
 =====================
 
-SaltPad is mainly coded in Python and is compatible with python2.X and python3.4.
+SaltPad is mainly coded in Javascript and should be compatible with all modern browsers.
 
-SaltPad communicate with Salt through the salt-api. The salt-api format / specification is not stable, for now so SaltPad could only provides limited compatibility with salt-api. The salt-api format depends on 3 variables, salt version, the netapi used (cherrypy or tornado) and the master_job_cache used for storing and retrieving jobs results. We aim to provide maximum compatibility with the most frequent combinaison but while the format is not clearly specified, each combinaison would require an huge amount of work. Here is the compatibility table to quickly see if your configuration is supported or not:
+SaltPad communicate with Salt through the salt-api and thus requires access to the salt-api from the browser. If it's an issue, please drop an comment on [this issue](http://github.com/tinyclues/saltpad) to discuss about the possible solutions. The salt-api format / specification is not stable, for now so SaltPad could only provides limited compatibility with salt-api. The salt-api format depends on 3 variables, salt version, the netapi used (cherrypy or tornado) and the master_job_cache used for storing and retrieving jobs results. We aim to provide maximum compatibility with the most frequent combinaison but while the format is not clearly specified, each combinaison would require an huge amount of work. Here is the compatibility table to quickly see if your configuration is supported or not:
 
 +--------------+---------------+------------------+------------+-----------------------------------+
 | Salt Version | Netapi        | Master_job_cache | Supported? | Issue if not supported            |
@@ -34,50 +34,12 @@ Here is the list of issues about the salt-api format standardisation that would 
 Installation
 ============
 
-SaltPad is not yet available on Pypi, so you can clone it here: git@github.com:tinyclues/saltpad.git.
-
-.. code-block:: bash
-
-    git clone git@github.com:tinyclues/saltpad.git
-
-The recommended way to install saltpad is to create a dedicated virtualenv to isolate saltpad's dependencies from the system one (https://pypi.python.org/pypi/virtualenv/):
-
-.. code-block:: bash
-
-    cd saltpad
-    virtualenv venv
-
-On you create the virtualenv, you should see in the beginning of your terminal "(venv)", it means the virtualenv has been activated and that you will use the local python and local python packages. If "(venv)" is not printed, try running this command:
-
-.. code-block:: bash
-
-    source venv/bin/activate
-
-Once you are in your virtualenv, you can now install all the dependencies, for easing the copy/paste, I omit the "(venv)"" in the start of the line:
-
-    pip install -r requirements.txt
-
-You're now ready to configure the salt-api, saltpad and starting playing with it! Please be sure to follow the next part of the Readme or you will not be able to connect to the salt-api.
-
-Werkzeug dependency
--------------------
-
-There is known issues with werkzeug:
-
-- On windows platform, it raises strange errors about `_winreg` module, it's a known issue solved in the six project (https://bitbucket.org/gutworth/six/issue/99/six-and-inspect-importerror-_winreg-module) but not available right now. The fix is to use werkzeug version 0.9.4.
-- On all platforms, werkzeug fails with python version 2.7.7, see https://github.com/mitsuhiko/werkzeug/issues/537. The fix is to use werkzeug version 0.9.6 and superior.
-
-Due to this two conflictings problems, we can't fix the minimal werkzeug version and need to wait for the six release.
-
-SaltPad Web GUI configuration
-=============================
-
-The Web GUI uses the HTTP Api of SaltStack to interract with the Salt-Master. You should first install the Salt-Api on your Salt-Master. You can find the documentation in the `SaltStack documentation`_.
-
-If you just want to test SaltPad, you can use the Vagrantfile provided in vagrant directory. Just follow README in the same repository and have fun!
+You have several solutions to install saltpad but before installing saltpad, you need to install and configure salt-api.
 
 Install salt-api
 ----------------
+
+The Web GUI uses the HTTP Api of SaltStack to interract with the Salt-Master. You should first install the Salt-Api on your Salt-Master. You can find the documentation in the `SaltStack documentation`_.
 
 The Salt-Api project has been merged into SaltStack in release 2014.7.0, so you can use the salt-api with SaltStack 2014.7.0 release or install salt-api with previous releases, you can install it using pip:
 
@@ -91,7 +53,7 @@ Or if you're using a Debian-derived linux:
 
     sudo apt-get install salt-api
 
-The salt-api requires some configuration too. Salt-api supports multiple implementation, but the rest_cherrypy implementation is the more mature and the recommended one when using saltpad. If you want to run salt-api and saltpad on the same host, you can configuration salt-api as followed in the file /etc/salt/master:
+The salt-api requires some configuration too. Salt-api supports multiple implementation, but the rest_tornado implementation is the more mature and the recommended one when using saltpad. If you want to run salt-api and saltpad on the same host, you can configuration salt-api as followed in the file /etc/salt/master:
 
 .. code:: yaml
 
@@ -99,6 +61,8 @@ The salt-api requires some configuration too. Salt-api supports multiple impleme
       port: 8000
       host: 127.0.0.1
       disable_ssl: true
+      websockets: True
+      cors_origin: '*'
 
 Warning, this configuration disable ssl as it only listens to localhost, if you want to expose the salt-api to the network, you should really deploy it behind nginx with ssl, do not change the host to 0.0.0.0 without ssl!
 
@@ -108,12 +72,16 @@ Then you can launch the API using the following command:
 
 .. code:: bash
 
-    salt-api -d
+    sudo /etc/init.d/salt-api restart
 
-Or using a wsgi server, see the doc for more informations.
+Or if you want to launch salt-api by hand.
 
-Configure authentication
-------------------------
+.. code:: bash
+
+    salt-api
+
+Configure salt-api authentication
+---------------------------------
 
 You'll also need to `configure the external auth`_ in your salt master. For example in master config:
 
@@ -127,6 +95,96 @@ You'll also need to `configure the external auth`_ in your salt master. For exam
           - '@wheel'
 
 Currently SaltPad requires exactly these permissions, for various reasons. There is ongoing improvements on SaltStack part and in Saltpad to need less permissions. Saltpad will not allow you to connect if you don't have this set of permissions and will show you an error message.
+
+
+Check salt-api configuration
+----------------------------
+
+You can check you salt-api installation and configuration with this command on the salt-api host:
+
+
+.. code-block:: bash
+    curl -i -H accept=application/json -d username=USER -d password=PASSWORD -d eauth=pam http://localhost:8000/login
+
+
+In case of successful login you should have the response body that looks like that:
+
+.. code-block:: bash
+    {"return": [{"perms": [".*", "@runner", "@wheel"], "start": 1431010274.426576, "token": "70604a26facfe2aa14038b9abf37b639c32902bd", "expire": 1431053474.426576, "user": "salt", "eauth": "pam"}]}
+
+If the output includes "HTTP/1.1 401 Unauthorized", double-check the salt-api config in salt-master config file.
+
+Install saltpad
+---------------
+
+You can install a release version of saltpad on a web server with nginx or apache to serve it.
+
+Releases versions are available on github (https://github.com/tinyclues/saltpad/releases). Download the distribution zip:
+
+.. code-block:: bash
+
+    wget https://github.com/tinyclues/saltpad/releases/0.1/dist.zip
+
+Unzip it on your webserver where you want:
+
+.. code-block:: bash
+
+    cp dist.zip /opt/saltpad
+    cd /opt/saltpad
+    unzip dist.zip
+
+Then point your favorite webserver on the directory. For example, for an unsecured (HTTP) saltpad install with nginx, the configuration will be:
+
+.. code-block:: nginx
+
+    server {
+        listen 80 default_server;
+        listen [::]:80 default_server ipv6only=on;
+
+        root /opt/saltpad/;
+        index index.html;
+
+        server_name SALTPAD.YOURDNS;
+
+        location / {
+                try_files $uri /index.html;
+        }
+    }
+
+You can put this configuration and replace the content of the file "/etc/nginx/sites-enabled/default" or ask your system administrator to configure Nginx or Apache.
+
+Now reload the webserver:
+
+.. code-block:: bash
+
+    sudo /etc/init.d/nginx reload
+
+And now, saltpad should be available on the web server, you can check with this command:
+
+.. code-block:: bash
+
+    curl http://localhost
+
+THe output should looks like:
+
+.. code-block::
+
+    <!doctype html>
+    <html lang="en" data-framework="react">
+      <head>
+        <meta charset="utf-8">
+        <title>SaltPad</title>
+      <link href="/styles.css" rel="stylesheet"></head>
+      <body>
+        <div class="app"></div>
+      <script src="/vendors.js"></script><script src="/app.js"></script></body>
+    </html>
+
+SaltPad Web GUI configuration
+=============================
+
+If you just want to test SaltPad, you can use the Vagrantfile provided in vagrant directory. Just follow README in the same repository and have fun!
+
 
 Configure SaltPad
 -----------------

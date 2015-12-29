@@ -7,7 +7,7 @@ import {HidingHEC, HidingPanel} from '../shared/hiding';
 import {If} from '../shared/templates';
 
 
-var statusMap = {"Error": "danger", "Dependency failed": "danger", "Changes": "info",
+var statusMap = {"Error": "danger", "Dependency failed": "warning", "Changes": "info",
                  "Success": "success"}
 
 class SingleChunkResult extends React.Component {

@@ -12,7 +12,7 @@ module.exports = {
   },
   output: {
     path: path.join(__dirname, 'dist'),
-    filename: "[name].js"
+    filename: "/[name].js"
   },
   plugins: [
     new webpack.optimize.OccurenceOrderPlugin(),
@@ -30,7 +30,7 @@ module.exports = {
       template: 'index.html',
       inject: true
     }),
-    new ExtractTextPlugin("styles.css"),
+    new ExtractTextPlugin("/styles.css"),
   ],
   resolve: {
     extensions: ['', '.js', '.jsx'],

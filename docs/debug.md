@@ -19,7 +19,7 @@ In case of successful login you should have the response body that looks like th
 {"return": [{"perms": [".*", "@runner", "@wheel"], "start": 1431010274.426576, "token": "70604a26facfe2aa14038b9abf37b639c32902bd", "expire": 1431053474.426576, "user": "salt", "eauth": "pam"}]}
 ```
 
-Double-checks your permissions (`perms`field) and if everything is fine, the issue is likely to be on saltpad side, please [open an issue](https://github.com/tinyclues/saltpad/issues), we will fix it.
+Double-checks your permissions (`perms` field) and if everything is fine, the issue is likely to be on saltpad side, please [open an issue](https://github.com/tinyclues/saltpad/issues), we will fix it.
 
 In case of a bad username and/or password, the output looks like:
 
