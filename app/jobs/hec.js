@@ -65,6 +65,10 @@ export function SingleJobStoreHEC(DecoratedComponent, job_id_param) {
                 var job_id = this.getJobId();
             }
 
+            if(job_id == null) {
+                job_id = undefined;
+            }
+
             var job = store.get(["jobs", job_id]) || {};
 
             var runner_job = false;

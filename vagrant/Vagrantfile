@@ -12,7 +12,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.network "forwarded_port", guest: 8000, host: 8050
   config.vm.network "forwarded_port", guest: 8001, host: 8051
   config.vm.network "forwarded_port", guest: 80, host: 8080
-  config.vm.synced_folder "../", "/opt/saltpad"
+  config.vm.synced_folder "../", "/opt/saltpad-dev"
 
   config.vm.provider "virtualbox" do |vb|
     vb.customize ["modifyvm", :id, "--memory", "1024"]
