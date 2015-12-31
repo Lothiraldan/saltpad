@@ -8,7 +8,7 @@ let R = RegExp;
 var EVENT_MAP = new Map([
     ['salt/run/(\\d*)/new', [JobReturn]],
     ['salt/job/(\\d*)/new', [JobReturn]],
-    ['salt/job/(\\d*)/ret/(\\w*)', [newJobReturn, MinionStatusOnJobReturn,
+    ['salt/job/(\\d*)/ret/(.*)', [newJobReturn, MinionStatusOnJobReturn,
                                     UpdateModuleFunctionDoc, UpdateModuleFunctionList,
                                     UpdateModuleFunctionArgSpec]],
     ['salt/auth', [auth_minion]],
