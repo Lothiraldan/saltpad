@@ -121,11 +121,40 @@ Configure SaltPad
 
 If your checklist is done, you can now configure SaltPad.
 
-Get into the saltpad directory, copy the file named "settings.json.sample" as "settings.py". You'll need to edit it. Set your API_URL if your salt-master is not local and if your salt-api is served over SSL, set the SECURE_HTTP key to true. You can also configure job templates in this file, see the corresponding part for more details.
+Get into the saltpad directory, copy the file named "settings.json.sample" as "settings.py". You'll need to edit it. Set your API_URL if your salt-master is not local and if your salt-api is served over SSL, set the SECURE_HTTP key to true. You can also configure job templates in this file, see the corresponding part for more details. You'll need to strip comments from the file.
+
+Here is an example of a settings.json file:
+
+.. code-block:: json
+
+    {
+        "API_URL": "localhost:8050",
+        "SECURE_HTTP": false,
+        "templates": {
+            "basic": {
+                "description": "Basic template",
+                "matcher": "glob",
+                "target": "*",
+                "moduleFunction": "test.fib",
+                "arguments": {
+                    "num": 10
+                }
+            },
+
+            "version": {
+                "description": "Basic version",
+                "matcher": "glob",
+                "target": "Celeste",
+                "moduleFunction": "test.version",
+                "arguments": {}
+            }
+        }
+    }
 
 
-Install saltpad
----------------
+
+Install saltpad for production
+------------------------------
 
 You can install a release version of saltpad on a web server with nginx or apache to serve it.
 
@@ -142,6 +171,8 @@ Unzip it on your webserver where you want:
     cp dist.zip /opt/saltpad
     cd /opt/saltpad
     unzip dist.zip
+
+You also need to create the file settings.json in the same directory, the filename will be /opt/saltpad/settings.json. You can use the file settings.json.sample as a base.
 
 Then point your favorite webserver on the directory. For example, for an unsecured (HTTP) saltpad install with nginx, the configuration will be:
 
@@ -160,6 +191,8 @@ Then point your favorite webserver on the directory. For example, for an unsecur
                 try_files $uri /index.html;
         }
     }
+
+Warning, this nginx configuration IS NOT SUITABLE for production, for configuring a ssl enabled site with nginx or apache, you can use the excellent [Mozilla SSL Configuration Generator](https://mozilla.github.io/server-side-tls/ssl-config-generator/). Configuring a website in a secure manner is a job by itself, please ask the more qualified person to do it.
 
 You can put this configuration and replace the content of the file "/etc/nginx/sites-enabled/default" or ask your system administrator to configure Nginx or Apache.
 
@@ -201,6 +234,7 @@ If you want to hack on saltpad and start the dev environnement, go on the reposi
 
     npm install # install javascript dependencies
     ./node_modules/bower/bin/bower install # install browser dependencies
+    cp settings.json.sample settings.json
 
 You can now launch the dev environnement:
 
@@ -209,63 +243,6 @@ You can now launch the dev environnement:
     npm start
 
 SaltPad will be available on localhost:3333(localhost:3333).
-
-Launch SaltPad
---------------
-
-For testing purpose
-___________________
-
-When you just want to test saltpad in a local non-production environment, you can use the embedded webserver but be aware that this solution is not suitable for production environment with multiple users and where encryption is mandatory. You can start SaltPad with this command, note that you should be in the saltpad directory:
-
-.. code:: bash
-
-    / $> python run.py
-     * Running on http://127.0.0.1:5000/
-     * Restarting with reloader
-
-Now go on http://127.0.0.1:5000 in your browser, login using SaltStack external auth and enjoy!
-
-In production environment
-_________________________
-
-You should deploy saltpad using a wsgi server behind a real webserver like nginx or haproxy.
-
-For example you can use chaussette (https://chaussette.readthedocs.org/en/latest/) to launch saltpad. In the saltpad repository root:
-
-.. code:: bash
-
-    saltpad/ $> chaussette saltpad.app:app
-    2015-04-05 12:34:04 [58304] [INFO] Application is <Flask 'SaltPad'>
-    2015-04-05 12:34:04 [58304] [INFO] Serving on localhost:8080
-    2015-04-05 12:34:04 [58304] [INFO] Using <class chaussette.backend._wsgiref.ChaussetteServer at 0x102f267a0> as a backend
-
-You can also serve the wsgi app with the wsgi server of your choice. The wsgi path is "saltpad.app:app" and you should launch the wsgi server in the root of this repository.
-
-Now configure your favorite webserver to listen on the port 443 with tls enabled. For example with nginx:
-
-
-.. code::
-
-    http {
-        server {
-            listen 443 ssl;
-            server_name YOURDNS.EXTENSION;
-            ssl_certificate /etc/pki/tls/certs/wildcard.saltpad.net.crt;
-            ssl_certificate_key /etc/pki/tls/certs/wildcard.saltpad.net.pem;
-
-            location / {
-                proxy_pass http://localhost:8080/;
-                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-                proxy_set_header Host $http_host;
-                proxy_set_header X-Real-IP $remote_addr;
-            }
-        }
-    }
-
-Be sure to change the server_name and check that your ssl certificate paths are corrects.
-
-Then restart nginx, go to https://YOURDNS.EXTENSION/ and enjoy!
 
 Features
 --------
