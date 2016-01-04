@@ -14,20 +14,17 @@ SaltPad compatibility
 
 SaltPad is mainly coded in Javascript and should be compatible with all modern browsers.
 
-SaltPad communicate with Salt through the salt-api and thus requires access to the salt-api from the browser. If it's an issue, please drop an comment on [this issue](http://github.com/tinyclues/saltpad) to discuss about the possible solutions. The salt-api format / specification is not stable, for now so SaltPad could only provides limited compatibility with salt-api. The salt-api format depends on 3 variables, salt version, the netapi used (cherrypy or tornado) and the master_job_cache used for storing and retrieving jobs results. We aim to provide maximum compatibility with the most frequent combinaison but while the format is not clearly specified, each combinaison would require an huge amount of work. Here is the compatibility table to quickly see if your configuration is supported or not:
+SaltPad communicate with Salt through the salt-api and thus requires access to the salt-api from the browser. If it's an issue, please drop an comment on [this issue](http://github.com/tinyclues/saltpad) to discuss about the possible solutions. The salt-api format / specification is not stable, for now so SaltPad could only provides limited compatibility with salt-api. The salt-api format depends on 3 variables, salt version, the netapi used (cherrypy or tornado) and the master_job_cache used for storing and retrieving jobs results. SaltPad required some upgrade on salt-api side (for CORS support mainly) and will only works with a dev version
 
 +--------------+---------------+------------------+------------+-----------------------------------+
 | Salt Version | Netapi        | Master_job_cache | Supported? | Issue if not supported            |
 +--------------+---------------+------------------+------------+-----------------------------------+
-| 2014.7.X     | *             | *                | NO         | Format incompatible with 2015.5.X |
-+--------------+---------------+------------------+------------+-----------------------------------+
-| 2015.5.2     | rest_cherrypy | local (default)  | YES        |                                   |
+| 2014.8.dev   | rest_tornado  | *                | YES        |                                   |
 +--------------+---------------+------------------+------------+-----------------------------------+
 
 Here is the list of issues about the salt-api format standardisation that would make the saltpad job much much easier:
 
 * https://github.com/saltstack/salt/issues/23131
-* https://github.com/saltstack/salt/issues/22713
 * https://github.com/saltstack/salt/issues/19018
 * https://github.com/saltstack/salt/issues/13698
 
@@ -57,7 +54,7 @@ The salt-api requires some configuration too. Salt-api supports multiple impleme
 
 .. code:: yaml
 
-    rest_cherrypy:
+    rest_tornado:
       port: 8000
       host: 127.0.0.1
       disable_ssl: true
@@ -113,6 +110,19 @@ In case of successful login you should have the response body that looks like th
     {"return": [{"perms": [".*", "@runner", "@wheel"], "start": 1431010274.426576, "token": "70604a26facfe2aa14038b9abf37b639c32902bd", "expire": 1431053474.426576, "user": "salt", "eauth": "pam"}]}
 
 If the output includes "HTTP/1.1 401 Unauthorized", double-check the salt-api config in salt-master config file.
+
+SaltPad Web GUI configuration
+=============================
+
+If you just want to test SaltPad, you can use the Vagrantfile provided in vagrant directory. Just follow README in the same repository and have fun!
+
+Configure SaltPad
+-----------------
+
+If your checklist is done, you can now configure SaltPad.
+
+Get into the saltpad directory, copy the file named "settings.json.sample" as "settings.py". You'll need to edit it. Set your API_URL if your salt-master is not local and if your salt-api is served over SSL, set the SECURE_HTTP key to true. You can also configure job templates in this file, see the corresponding part for more details.
+
 
 Install saltpad
 ---------------
@@ -180,18 +190,25 @@ THe output should looks like:
       <script src="/vendors.js"></script><script src="/app.js"></script></body>
     </html>
 
-SaltPad Web GUI configuration
-=============================
+There is a beggining of deployment formula located here (https://github.com/tinyclues/saltpad/blob/saltpad_v2/vagrant/salt/roots/salt/saltpad.sls), I still try to make the cleanest integration possible with the nginx-formula (https://github.com/saltstack-formulas/nginx-formula).
 
-If you just want to test SaltPad, you can use the Vagrantfile provided in vagrant directory. Just follow README in the same repository and have fun!
+Hack on saltpad
+---------------
 
+If you want to hack on saltpad and start the dev environnement, go on the repository root and launch these commands:
 
-Configure SaltPad
------------------
+.. code-block:: sh
 
-If your checklist is done, you can now configure SaltPad.
+    npm install # install javascript dependencies
+    ./node_modules/bower/bin/bower install # install browser dependencies
 
-Get into the saltpad directory, copy the file named "local_settings.sample.py" as "local_settings.py". You'll need to edit it. Set your API_URL if your salt-master is not local and generate a secret key if you want to avoid to reconnect each time your restart SaltPad.
+You can now launch the dev environnement:
+
+.. code-block:: sh
+
+    npm start
+
+SaltPad will be available on localhost:3333(localhost:3333).
 
 Launch SaltPad
 --------------

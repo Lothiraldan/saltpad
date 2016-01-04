@@ -46,3 +46,5 @@ venv/
 node_modules/
 bower_components/
 dist/
+
+settings.json
