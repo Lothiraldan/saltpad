@@ -9,6 +9,8 @@ SaltPad is a GUI tool to manage SaltStack deployments + orchestration. It's stil
 
 A walkthrough using screenshots is available in the screenshots directory (not up-to-date).
 
+**This version of saltpad is a full-rewrite as a single app page. The old version in python is still available in the `saltpad_v1 branch`_. If you cannot use this version, please open an issue to ease migration and see Changelog_.**
+
 SaltPad compatibility
 =====================
 
@@ -210,7 +212,7 @@ Then point your favorite webserver on the directory. For example, for an unsecur
         }
     }
 
-Warning, this nginx configuration IS NOT SUITABLE for production, for configuring a ssl enabled site with nginx or apache, you can use the excellent [Mozilla SSL Configuration Generator](https://mozilla.github.io/server-side-tls/ssl-config-generator/). Configuring a website in a secure manner is a job by itself, please ask the more qualified person to do it.
+Warning, this nginx configuration IS NOT SUITABLE for production, for configuring a ssl enabled site with nginx or apache, you can use the excellent `Mozilla SSL Configuration Generator`_. Configuring a website in a secure manner is a job by itself, please ask the more qualified person to do it.
 
 You can put this configuration and replace the content of the file "/etc/nginx/sites-enabled/default" or ask your system administrator to configure Nginx or Apache.
 
@@ -276,9 +278,11 @@ Features
 
 .. _SaltStack documentation: http://docs.saltstack.com/en/latest/ref/netapi/all/salt.netapi.rest_cherrypy.html
 .. _configure the external auth: http://docs.saltstack.com/en/latest/topics/eauth/index.html
+.. _saltpad_v1 branch: https://github.com/tinyclues/saltpad/tree/saltpad_v1
+.. _Mozilla SSL Configuration Generator: https://mozilla.github.io/server-side-tls/ssl-config-generator/
+.. _Changelog: https://github.com/tinyclues/saltpad/Changelog.md
 
 Known issues
 ------------
 
 * When getting single job output, SaltStack render it even if it's not necessary. This can cause severe slowdown and so slow the interface. It's a known issue in SaltStack (https://github.com/saltstack/salt/issues/18518) and it's should be solved in next release. If it's a problem, you can comment this line https://github.com/saltstack/salt/blob/v2014.7.0/salt/runners/jobs.py#L102 and this line https://github.com/saltstack/salt/blob/v2014.7.0/salt/runners/jobs.py#L81 in your salt master to speed up the job retrieval system.
-* In 2015.5.X version, the job result miss some important informations like the arguments of the job, the target of the job and the target-type (glob, compound...) making job result page less usefull and making the redo-job button unusable. See this issue in SatlStack (https://github.com/saltstack/salt/issues/21496#event-339068972).
