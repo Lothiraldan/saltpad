@@ -160,7 +160,7 @@ Job templates are now defined in the configuration file directly instead of stor
 
     "basic": { # Template name
         "description": "Basic template", # Template description
-        "matcher": "glob", # Matcher, one of salt target-type
+        "matcher": "glob", # Matcher, one of salt matcher (see salt --help, Target Options)
         "target": "*", # The target
         "moduleFunction": "test.fib", # Which function
         "arguments": { # The function arguments
