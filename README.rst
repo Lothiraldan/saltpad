@@ -151,6 +151,24 @@ Here is an example of a settings.json file:
         }
     }
 
+Job templates
+-------------
+
+Job templates are now defined in the configuration file directly instead of storing them in salt master configuration file. They're are stored under the "templates" key and their format are the following:
+
+.. code-block:: json
+
+    "basic": { # Template name
+        "description": "Basic template", # Template description
+        "matcher": "glob", # Matcher, one of salt target-type
+        "target": "*", # The target
+        "moduleFunction": "test.fib", # Which function
+        "arguments": { # The function arguments
+            "num": 10
+        }
+    }
+
+You can add as many templates as you want, but they need to have distinct name.
 
 
 Install saltpad for production
