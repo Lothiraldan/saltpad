@@ -1,0 +1,23 @@
+{
+    "API_URL": "localhost:8050", # The API URL
+    "SECURE_HTTP": false, # Is the API protected by HTTPS?
+    "templates": { # Templates sample
+        "basic": { # Template name
+            "description": "Basic template", # Template description
+            "matcher": "glob",
+            "target": "*",
+            "moduleFunction": "test.fib",
+            "arguments": {
+                "num": 10
+            }
+        },
+
+        "version": {
+            "description": "Basic version",
+            "matcher": "glob",
+            "target": "Celeste",
+            "moduleFunction": "test.version",
+            "arguments": {}
+        }
+    }
+}

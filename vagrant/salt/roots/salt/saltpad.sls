@@ -1,27 +1,36 @@
-git:
-    pkg.installed:
-        - module_refresh: True
+nginx:
+    pkg:
+        - installed
+    service.running:
+        - enable: True
+        - reload: True
+    file.absent:
+        - name: /etc/nginx/sites-enabled/default
+        - watch_in:
+            - service: nginx
 
-saltpad_git:
-    git.latest:
-        - name: https://github.com/tinyclues/saltpad.git
-        - target: '/home/vagrant/saltpad'
-
-saltpad_requirements:
-    pip.installed:
-        - requirements: /home/vagrant/saltpad/requirements.txt
+saltpad:
+    archive.extracted:
+        - name: /opt/saltpad
+        - source: https://github.com/tinyclues/saltpad/releases/download/v0.1/dist.zip
+        - source_hash: md5=8dc18a0821e0a745cc5dc425e2ea05a6
+        - archive_format: zip
+        - user: www-data
+        - if_missing: /opt/saltpad/inexistent
         - require:
-            - sls: saltapi
-            - git: saltpad_git
+            - pkg: nginx
 
-chaussette:
-    pip.installed:
+saltpad_config:
+    file.managed:
+        - name: /opt/saltpad/settings.json
+        - source: salt://settings.json
         - require:
-            - sls: saltapi
+            - archive: saltpad
 
-run_saltad:
-    cmd.run:
-        - name: "setsid chaussette saltpad.app:app --host 0.0.0.0 --port 5000 >/tmp/saltpad.log 2>&1 < /dev/null &"
-        - cwd: "/home/vagrant/saltpad"
-        - require:
-            - pip: saltpad_requirements
+saltpad_site:
+    file.managed:
+        - name: /etc/nginx/sites-enabled/saltpad
+        - source: salt://saltpad.site
+        - template: jinja
+        - watch_in:
+            - service: nginx
