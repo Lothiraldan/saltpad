@@ -9,6 +9,9 @@ SaltPad is a GUI tool to manage SaltStack deployments + orchestration. It's stil
 
 A walkthrough using screenshots is available in the screenshots directory.
 
+
+**A new version of saltpad is now available, it's a fill rewrite as a single app page and is much more responsive. Please see the master branch, https://github.com/tinyclues/saltpad**
+
 SaltPad compatibility
 =====================
 
