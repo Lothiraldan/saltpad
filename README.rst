@@ -3,7 +3,7 @@ What is SaltPad?
 ===============================
 
 
-SaltPad is a GUI tool to manage SaltStack deployments + orchestration. It's still very young and it's should be considered as Alpha.
+SaltPad is a GUI tool to manage SaltStack deployments + orchestration. It's still very young and it should be considered as Alpha.
 
 .. image:: screenshots/highstate_result.png
 
@@ -16,7 +16,7 @@ SaltPad compatibility
 
 SaltPad is mainly coded in Javascript and should be compatible with all modern browsers.
 
-SaltPad communicate with Salt through the salt-api and thus requires access to the salt-api from the browser. If it's an issue, please drop an comment on [this issue](http://github.com/tinyclues/saltpad) to discuss about the possible solutions. The salt-api format / specification is not stable, for now so SaltPad could only provides limited compatibility with salt-api. The salt-api format depends on 3 variables, salt version, the netapi used (cherrypy or tornado) and the master_job_cache used for storing and retrieving jobs results. SaltPad required some upgrade on salt-api side (for CORS support mainly) and will only works with a dev version
+SaltPad communicate with Salt through the salt-api and thus requires access to the salt-api from the browser. If it's an issue, please drop a comment on [this issue](http://github.com/tinyclues/saltpad) to discuss the possible solutions. The salt-api format / specification is not stable, for now so SaltPad could only provide limited compatibility with salt-api. The salt-api format depends on 3 variables, salt version, the netapi used (cherrypy or tornado) and the master_job_cache used for storing and retrieving jobs results. SaltPad required some upgrade on salt-api side (for CORS support mainly) and will only work with a dev version
 
 +--------------+---------------+------------------+------------+-----------------------------------+
 | Salt Version | Netapi        | Master_job_cache | Supported? | Issue if not supported            |
@@ -24,7 +24,7 @@ SaltPad communicate with Salt through the salt-api and thus requires access to t
 | 2014.8.dev   | rest_tornado  | * (all)          | YES        |                                   |
 +--------------+---------------+------------------+------------+-----------------------------------+
 
-Here is the list of issues about the salt-api format standardisation that would make the saltpad job much much easier:
+Here is the list of issues about the salt-api format standardization that would make the saltpad job much much easier:
 
 * https://github.com/saltstack/salt/issues/23131
 * https://github.com/saltstack/salt/issues/19018
@@ -33,12 +33,12 @@ Here is the list of issues about the salt-api format standardisation that would 
 Installation
 ============
 
-You have several solutions to install saltpad but before installing saltpad, you need to install and configure salt-api.
+You have several solutions to install saltpad, but before installing saltpad, you need to install and configure salt-api.
 
 Install salt-api
 ----------------
 
-The Web GUI uses the HTTP Api of SaltStack to interract with the Salt-Master. You should first install the Salt-Api on your Salt-Master. You can find the documentation in the `SaltStack documentation`_.
+The Web GUI uses the HTTP Api of SaltStack to interact with the Salt-Master. You should first install the Salt-Api on your Salt-Master. You can find the documentation in the `SaltStack documentation`_.
 
 The Salt-Api project has been merged into SaltStack in release 2014.7.0, so you can use the salt-api with SaltStack 2014.7.0 release or install salt-api with previous releases, you can install it using pip:
 
@@ -82,7 +82,7 @@ Or if you want to launch salt-api by hand.
 Configure salt-api authentication
 ---------------------------------
 
-You'll also need to `configure the external auth`_ in your salt master. For example in master config:
+You will also need to `configure the external auth`_ in your salt master. For example in master config:
 
 .. code-block:: bash
 
@@ -93,7 +93,7 @@ You'll also need to `configure the external auth`_ in your salt master. For exam
           - '@runner'
           - '@wheel'
 
-Currently SaltPad requires exactly these permissions, for various reasons. There is ongoing improvements on SaltStack part and in Saltpad to need less permissions. Saltpad will not allow you to connect if you don't have this set of permissions and will show you an error message.
+Currently SaltPad requires exactly these permissions, for various reasons. There is ongoing improvements on SaltStack part and in Saltpad to require less permissions. Saltpad will not allow you to connect if you don't have this set of permissions and will show you an error message.
 
 
 Check salt-api configuration
@@ -123,7 +123,7 @@ Configure SaltPad
 
 If your checklist is done, you can now configure SaltPad.
 
-Get into the saltpad directory, copy the file named "settings.json.sample" as "settings.py". You'll need to edit it. Set your API_URL if your salt-master is not local and if your salt-api is served over SSL, set the SECURE_HTTP key to true. You can also configure job templates in this file, see the corresponding part for more details. You'll need to strip comments from the file.
+Get into the saltpad directory, copy the file named "settings.json.sample" as "settings.py". You will need to edit it. Set your API_URL if your salt-master is not local and if your salt-api is served over SSL, set the SECURE_HTTP key to `true`. You can also configure job templates in this file, see the corresponding part for more details. You will need to strip comments from the file.
 
 Here is an example of a settings.json file:
 
@@ -228,7 +228,7 @@ And now, saltpad should be available on the web server, you can check with this 
 
     curl http://localhost
 
-THe output should looks like:
+The output should look like:
 
 .. code-block::
 
@@ -243,12 +243,12 @@ THe output should looks like:
       <script src="/vendors.js"></script><script src="/app.js"></script></body>
     </html>
 
-There is a beggining of deployment formula located here (https://github.com/tinyclues/saltpad/blob/saltpad_v2/vagrant/salt/roots/salt/saltpad.sls), I still try to make the cleanest integration possible with the nginx-formula (https://github.com/saltstack-formulas/nginx-formula).
+There is a beginning of deployment formula located here (https://github.com/tinyclues/saltpad/blob/saltpad_v2/vagrant/salt/roots/salt/saltpad.sls), I still try to make the cleanest integration possible with the nginx-formula (https://github.com/saltstack-formulas/nginx-formula).
 
 Hack on saltpad
 ---------------
 
-If you want to hack on saltpad and start the dev environnement, go on the repository root and launch these commands:
+If you want to hack on saltpad and start the dev environment, go on the repository root and launch these commands:
 
 .. code-block:: sh
 
@@ -256,7 +256,7 @@ If you want to hack on saltpad and start the dev environnement, go on the reposi
     ./node_modules/bower/bin/bower install # install browser dependencies
     cp settings.json.sample settings.json
 
-You can now launch the dev environnement:
+You can now launch the dev environment:
 
 .. code-block:: sh
 
@@ -267,10 +267,10 @@ SaltPad will be available on localhost:3333(localhost:3333).
 Features
 --------
 
-* Get overview of all your minions.
+* Get overview of all your minion.
 * Get details about each minions, its Salt version.
 * Easy launch of state.highstate jobs with or without dry-run mode.
-* Manage minions keys.
+* Manage minion keys.
 * Launch jobs.
 * Access jobs details easily.
 * Save job configuration as templates and launch them with one click on a button.
