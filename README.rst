@@ -182,15 +182,15 @@ Releases versions are available on github (https://github.com/tinyclues/saltpad/
 
 .. code-block:: bash
 
-    wget https://github.com/tinyclues/saltpad/releases/0.1/dist.zip
+    wget https://github.com/tinyclues/saltpad/archive/v0.1.zip
 
 Unzip it on your webserver where you want:
 
 .. code-block:: bash
 
-    cp dist.zip /opt/saltpad
+    cp v0.1.zip /opt/saltpad
     cd /opt/saltpad
-    unzip dist.zip
+    unzip v0.1.zip
 
 You also need to create the file settings.json in the same directory, the filename will be /opt/saltpad/settings.json. You can use the file settings.json.sample as a base.
 
