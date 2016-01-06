@@ -123,7 +123,7 @@ Configure SaltPad
 
 If your checklist is done, you can now configure SaltPad.
 
-Get into the saltpad directory, copy the file named "settings.json.sample" as "settings.py". You will need to edit it. Set your API_URL if your salt-master is not local and if your salt-api is served over SSL, set the SECURE_HTTP key to `true`. You can also configure job templates in this file, see the corresponding part for more details. You will need to strip comments from the file.
+Get into the saltpad directory, copy the file named "settings.json.sample" as "settings.json". You will need to edit it. Set your API_URL if your salt-master is not local and if your salt-api is served over SSL, set the SECURE_HTTP key to `true`. You can also configure job templates in this file, see the corresponding part for more details. You will need to strip comments from the file.
 
 Here is an example of a settings.json file:
 
