@@ -190,7 +190,7 @@ Unzip it on your webserver where you want:
 
     cp v0.1.zip /opt/saltpad
     cd /opt/saltpad
-    unzip v0.1.tar.gz
+    unzip v0.1.zip
 
 You also need to create the file settings.json in the same directory, the filename will be /opt/saltpad/settings.json. You can use the file settings.json.sample as a base.
 
