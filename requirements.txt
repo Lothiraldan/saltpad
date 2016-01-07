@@ -1,2 +1,0 @@
--r _requirements.txt
-werkzeug

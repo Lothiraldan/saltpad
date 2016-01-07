@@ -1,0 +1,21 @@
+{
+  "name": "react-starter-template",
+  "version": "0.0.0",
+  "authors": [
+    "Boris FELD"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.5",
+    "jquery": "~2.1.2",
+    "font-awesome": "~4.4.0"
+  }
+}

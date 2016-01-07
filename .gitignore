@@ -41,3 +41,10 @@ nosetests.xml
 # we shoudnt need venv in git
 venv/
 .tox
+
+# JS
+node_modules/
+bower_components/
+dist/
+
+settings.json
