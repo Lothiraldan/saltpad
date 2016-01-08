@@ -1,5 +1,5 @@
 {
-    "API_URL": "localhost:8050",
+    "API_URL": "localhost:5417",
     "SECURE_HTTP": false,
     "templates": {
         "basic": {
