@@ -21,7 +21,7 @@ SaltPad communicate with Salt through the salt-api and thus requires access to t
 +--------------+---------------+------------------+------------+-----------------------------------+
 | Salt Version | Netapi        | Master_job_cache | Supported? | Issue if not supported            |
 +--------------+---------------+------------------+------------+-----------------------------------+
-| 2014.8.dev   | rest_tornado  | * (all)          | YES        |                                   |
+| 2015.8.dev   | rest_tornado  | * (all)          | YES        |                                   |
 +--------------+---------------+------------------+------------+-----------------------------------+
 
 Here is the list of issues about the salt-api format standardization that would make the saltpad job much much easier:
