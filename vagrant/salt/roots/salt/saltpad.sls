@@ -13,7 +13,7 @@ saltpad:
     archive.extracted:
         - name: /opt/saltpad
         - source: https://github.com/tinyclues/saltpad/releases/download/v0.1/dist.zip
-        - source_hash: md5=8dc18a0821e0a745cc5dc425e2ea05a6
+        - source_hash: md5=033298b717027f2b84b6180e7c973807
         - archive_format: zip
         - user: www-data
         - if_missing: /opt/saltpad/inexistent
