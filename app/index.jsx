@@ -11,12 +11,8 @@ function render() {
       <Router history={history} >
         {routes}
       </Router>,
-      document.getElementsByClassName('app')[0]
+      document.getElementById('app')
     )
 }
-
-history.listen(location => {
-    render();
-})
 
 render();
