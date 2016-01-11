@@ -1,6 +1,9 @@
 import store from '../store';
 import auth_minion, {MinionStatusOnJobReturn} from '../minions/actions';
+import {LogoutUser} from '../login/LoginActions';
+import {PushError} from '../errors/actions';
 import URI from 'urijs';
+import _ from 'lodash';
 import {newJobReturn, JobReturn, UpdateModuleFunctionDoc, UpdateModuleFunctionList, UpdateModuleFunctionArgSpec} from '../jobs/actions';
 
 let R = RegExp;
@@ -14,6 +17,11 @@ var EVENT_MAP = new Map([
     ['salt/auth', [auth_minion]],
 ]);
 
+
+var INVALID_WEBSOCKET_TERMINATION = [
+    1006
+];
+
 export default function connect_ws() {
     let token = store.get(['auth', 'token']);
     let settings = store.get('settings');
@@ -25,11 +33,18 @@ export default function connect_ws() {
     var url = URI("")
       .host(settings.API_URL)
       .scheme(`${settings.SECURE_HTTP ? 'wss' : 'ws'}`)
-      .segment(['all_events', token]);
+      .segment(['all_events', token.split('').reverse().join('')]);
 
     var source = new WebSocket(url);
 
-    source.onerror = function(e) { console.error('error!', e); };
+    source.onclose = function(e) {
+        if(_.includes(INVALID_WEBSOCKET_TERMINATION, e.code)) {
+            let errMsg = `Websocket connection was abnormally closed, logout! Reason: ${e.reason}, code: ${e.code}`;
+            console.error(errMsg);
+            PushError(errMsg);
+            LogoutUser();
+        }
+    }
     source.onmessage = e => {
         let raw_data = e.data.replace("data: ", "");
         let data = JSON.parse(raw_data);
