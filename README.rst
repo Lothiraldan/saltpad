@@ -16,7 +16,7 @@ SaltPad compatibility
 
 SaltPad is mainly coded in Javascript and should be compatible with all modern browsers.
 
-SaltPad communicate with Salt through the salt-api and thus requires access to the salt-api from the browser. If it's an issue, please drop a comment on [this issue](http://github.com/tinyclues/saltpad) to discuss the possible solutions. The salt-api format / specification is not stable, for now so SaltPad could only provide limited compatibility with salt-api. The salt-api format depends on 3 variables, salt version, the netapi used (cherrypy or tornado) and the master_job_cache used for storing and retrieving jobs results. SaltPad required some upgrade on salt-api side (for CORS support mainly) and will only work with a dev version
+SaltPad communicate with Salt through the salt-api and thus requires access to the salt-api from the browser. If this is an issue, please drop a comment on [this issue](http://github.com/tinyclues/saltpad) to discuss the possible solutions. The salt-api format / specification is not yet stable, so SaltPad could only provide limited compatibility with salt-api. The salt-api format depends on 3 variables, salt version, the netapi used (cherrypy or tornado) and the master_job_cache used for storing and retrieving jobs results. SaltPad required some upgrade on salt-api side (for CORS support mainly) and will only work with a dev version
 
 +--------------+---------------+------------------+------------+-----------------------------------+
 | Salt Version | Netapi        | Master_job_cache | Supported? | Issue if not supported            |
@@ -57,13 +57,13 @@ The salt-api requires some configuration too. Salt-api supports multiple impleme
 .. code:: yaml
 
     rest_tornado:
-      port: 8000
+      port: 5417
       host: 127.0.0.1
       disable_ssl: true
       websockets: True
       cors_origin: '*'
 
-Warning, this configuration disable ssl as it only listens to localhost, if you want to expose the salt-api to the network, you should really deploy it behind nginx with ssl, do not change the host to 0.0.0.0 without ssl!
+Warning, this configuration has ssl disabled and it only listens to localhost, if you want to expose the salt-api to the network, you should really deploy it behind nginx with ssl, do not change the host to 0.0.0.0 without proper ssl support as well!
 
 With this salt-api configuration, the saltpad default configuration should work, if the salt-api and saltpad are not located on your device, you either could change the HOST settings in saltpad (but only for testing purposes, it will not use tls so all your data will be sent in clear text) or deploy it behind nginx with ssl configured.
 
@@ -103,7 +103,7 @@ You can check you salt-api installation and configuration with this command on t
 
 
 .. code-block:: bash
-    curl -i -H accept=application/json -d username=USER -d password=PASSWORD -d eauth=pam http://localhost:8000/login
+    curl -i -H accept=application/json -d username=USER -d password=PASSWORD -d eauth=pam http://localhost:5417/login
 
 
 In case of successful login you should have the response body that looks like that:
@@ -123,14 +123,14 @@ Configure SaltPad
 
 If your checklist is done, you can now configure SaltPad.
 
-Get into the saltpad directory, copy the file named "settings.json.sample" as "settings.json". You will need to edit it. Set your API_URL if your salt-master is not local and if your salt-api is served over SSL, set the SECURE_HTTP key to `true`. You can also configure job templates in this file, see the corresponding part for more details. You will need to strip comments from the file.
+Get into the saltpad directory, copy the file named "settings.json.sample" as "settings.json". You will need to edit it. Set your API_URL if your salt-master is not local and if your salt-api is served over SSL, set the SECURE_HTTP key to `true`. You can also configure job templates in this file, see the corresponding part for more details. You will need to strip all comments starting with '#' from the file.
 
 Here is an example of a settings.json file:
 
 .. code-block:: json
 
     {
-        "API_URL": "localhost:8050",
+        "API_URL": "localhost:5417",
         "SECURE_HTTP": false,
         "templates": {
             "basic": {
@@ -156,7 +156,7 @@ Here is an example of a settings.json file:
 Job templates
 -------------
 
-Job templates are now defined in the configuration file directly instead of storing them in salt master configuration file. They're are stored under the "templates" key and their format are the following:
+Job templates are now defined in the configuration file directly instead of storing them in salt master configuration file. They are stored under the "templates" key and their format are the following:
 
 .. code-block:: json
 
@@ -170,7 +170,7 @@ Job templates are now defined in the configuration file directly instead of stor
         }
     }
 
-You can add as many templates as you want, but they need to have distinct name.
+You can add as many templates as you want, but they need to have a distinct name.
 
 
 Install saltpad for production
@@ -192,7 +192,7 @@ Unzip it on your webserver where you want:
     cd /opt/saltpad
     unzip dist.zip
 
-You also need to create the file settings.json in the same directory, the filename will be /opt/saltpad/settings.json. You can use the file settings.json.sample as a base.
+You also need to create the file settings.json in the same directory, the filename will be /opt/saltpad/settings.json. You can use the file settings.json.sample as a base. Remember that you will need to strip all comments starting with '#' from the file.
 
 Then point your favorite webserver on the directory. For example, for an unsecured (HTTP) saltpad install with nginx, the configuration will be:
 
@@ -285,4 +285,4 @@ Features
 Known issues
 ------------
 
-* When getting single job output, SaltStack render it even if it's not necessary. This can cause severe slowdown and so slow the interface. It's a known issue in SaltStack (https://github.com/saltstack/salt/issues/18518) and it's should be solved in next release. If it's a problem, you can comment this line https://github.com/saltstack/salt/blob/v2014.7.0/salt/runners/jobs.py#L102 and this line https://github.com/saltstack/salt/blob/v2014.7.0/salt/runners/jobs.py#L81 in your salt master to speed up the job retrieval system.
+* When getting single job output, SaltStack renders it even if it's not necessary. This can cause severe slowdown and so slow the interface. It's a known issue in SaltStack (https://github.com/saltstack/salt/issues/18518) and it's should be solved in next release. If it's a problem, you can comment this line https://github.com/saltstack/salt/blob/v2014.7.0/salt/runners/jobs.py#L102 and this line https://github.com/saltstack/salt/blob/v2014.7.0/salt/runners/jobs.py#L81 in your salt master to speed up the job retrieval system.
