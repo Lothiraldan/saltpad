@@ -68,7 +68,7 @@ class Notification extends React.Component {
             {last_followed_jobs}
           </If>
 
-          <h3>YOUR LAST RUNNED JOBS</h3>
+          <h3>LAST LAUNCHED JOBS</h3>
 
           {last_runned_jobs}
 
