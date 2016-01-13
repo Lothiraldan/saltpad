@@ -182,7 +182,7 @@ Releases versions are available on github (https://github.com/tinyclues/saltpad/
 
 .. code-block:: bash
 
-    wget https://github.com/tinyclues/saltpad/releases/v0.1/dist.zip
+    wget https://github.com/tinyclues/saltpad/releases/download/v0.1/dist.zip
 
 Unzip it on your webserver where you want:
 
