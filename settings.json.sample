@@ -1,9 +1,9 @@
 {
-    "API_URL": "localhost:5417", # The API URL
-    "SECURE_HTTP": false, # Is the API protected by HTTPS?
-    "templates": { # Templates sample
-        "basic": { # Template name
-            "description": "Basic template", # Template description
+    "API_URL": "http://url.to.salt.api:5417",
+    "SECURE_HTTP": false,
+    "templates": {
+        "basic": {
+            "description": "Basic template",
             "matcher": "glob",
             "target": "*",
             "moduleFunction": "test.fib",
