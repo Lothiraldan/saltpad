@@ -188,6 +188,7 @@ Unzip it on your webserver where you want:
 
 .. code-block:: bash
 
+    mkdir /opt/saltpad
     cp dist.zip /opt/saltpad
     cd /opt/saltpad
     unzip dist.zip
