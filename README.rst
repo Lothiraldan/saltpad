@@ -212,8 +212,29 @@ Then point your favorite webserver on the directory. For example, for an unsecur
                 try_files $uri /index.html;
         }
     }
-
-Warning, this nginx configuration IS NOT SUITABLE for production, for configuring a ssl enabled site with nginx or apache, you can use the excellent `Mozilla SSL Configuration Generator`_. Configuring a website in a secure manner is a job by itself, please ask the more qualified person to do it.
+    
+.. code-block:: apache
+    
+    <VirtualHost *:80>
+      ServerName saltpad.example.com
+      ServerAdmin webmaster@example.com
+      LogLevel warn
+      DocumentRoot /opt/saltpad
+      <Directory "/opt/saltpad">
+        RewriteEngine On
+        RewriteBase /
+        RewriteCond %{REQUEST_FILENAME} !-f
+        RewriteCond %{REQUEST_FILENAME} !-d
+        RewriteCond %{REQUEST_URI} !index
+        RewriteRule (.*) /index.html [L]
+        #FallbackResource /index.html
+      </Directory>
+      ErrorLog "/var/log/apache2/saltpad-error.log"
+      CustomLog "/var/log/apache2/saltpad-access.log" combined
+    </VirtualHost>
+    
+Note: the much simpler 'FallbackResource' which does not require mod_rewrite, requires apache/httpd version >= 2.2.16.
+Warning, these example configurations ARE NOT SUITABLE for production, for configuring a ssl enabled site with nginx or apache, you can use the excellent `Mozilla SSL Configuration Generator`_. Configuring a website in a secure manner is a job by itself, please ask the more qualified person to do it.
 
 You can put this configuration and replace the content of the file "/etc/nginx/sites-enabled/default" or ask your system administrator to configure Nginx or Apache.
 
