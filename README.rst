@@ -103,12 +103,14 @@ You can check you salt-api installation and configuration with this command on t
 
 
 .. code-block:: bash
+
     curl -i -H accept=application/json -d username=USER -d password=PASSWORD -d eauth=pam http://localhost:5417/login
 
 
 In case of successful login you should have the response body that looks like that:
 
 .. code-block:: bash
+
     {"return": [{"perms": [".*", "@runner", "@wheel"], "start": 1431010274.426576, "token": "70604a26facfe2aa14038b9abf37b639c32902bd", "expire": 1431053474.426576, "user": "salt", "eauth": "pam"}]}
 
 If the output includes "HTTP/1.1 401 Unauthorized", double-check the salt-api config in salt-master config file.
