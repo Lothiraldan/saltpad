@@ -178,23 +178,21 @@ You can add as many templates as you want, but they need to have a distinct name
 Install saltpad for production
 ------------------------------
 
-You can install a release version of saltpad on a web server with nginx or apache to serve it.
+You can install a release version of saltpad with a web server like nginx or apache.
 
-Releases versions are available on github (https://github.com/tinyclues/saltpad/releases). Download the distribution zip:
-
-.. code-block:: bash
-
-    wget https://github.com/tinyclues/saltpad/releases/0.1/dist.zip
-
-Unzip it on your webserver where you want:
+Released versions are available on github (https://github.com/tinyclues/saltpad/releases). Download the distribution zip:
 
 .. code-block:: bash
 
-    cp dist.zip /opt/saltpad
-    cd /opt/saltpad
-    unzip dist.zip
+    wget https://github.com/tinyclues/saltpad/releases/download/v0.1/dist.zip
 
-You also need to create the file settings.json in the same directory, the filename will be /opt/saltpad/settings.json. You can use the file settings.json.sample as a base. Remember that you will need to strip all comments starting with '#' from the file.
+Unzip to a location of your choosing:
+
+.. code-block:: bash
+
+    unzip dist.zip -d /opt/saltpad
+
+You will also need to create the file settings.json in the same directory that you have unzipped to, e.g. `/opt/saltpad/settings.json`. You can use the example settings.json found above (https://github.com/tinyclues/saltpad#configure-saltpad).
 
 Then point your favorite webserver on the directory. For example, for an unsecured (HTTP) saltpad install with nginx, the configuration will be:
 
