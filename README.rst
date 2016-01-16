@@ -194,7 +194,11 @@ Unzip to a location of your choosing:
 
 You will also need to create the file settings.json in the same directory that you have unzipped to, e.g. `/opt/saltpad/settings.json`. You can use the example settings.json found above (https://github.com/tinyclues/saltpad#configure-saltpad).
 
-Then point your favorite webserver on the directory. For example, for an unsecured (HTTP) saltpad install with nginx, the configuration will be:
+Then point your favorite webserver at the saltpad directory. 
+
+Warning, the following example configurations ARE NOT SUITABLE for production, for configuring a ssl enabled site with nginx or apache, you can use the excellent `Mozilla SSL Configuration Generator`_. Configuring a website in a secure manner is a job by itself, please ask the more qualified person to do it.
+
+For example, for an unsecured (HTTP) saltpad install with nginx, the configuration will be:
 
 .. code-block:: nginx
 
@@ -211,9 +215,7 @@ Then point your favorite webserver on the directory. For example, for an unsecur
                 try_files $uri /index.html;
         }
     }
-
-Warning, this nginx configuration IS NOT SUITABLE for production, for configuring a ssl enabled site with nginx or apache, you can use the excellent `Mozilla SSL Configuration Generator`_. Configuring a website in a secure manner is a job by itself, please ask the more qualified person to do it.
-
+    
 You can put this configuration and replace the content of the file "/etc/nginx/sites-enabled/default" or ask your system administrator to configure Nginx or Apache.
 
 Now reload the webserver:
@@ -221,7 +223,37 @@ Now reload the webserver:
 .. code-block:: bash
 
     sudo /etc/init.d/nginx reload
+    
+For an equivalent apache config on debian place the following in /etc/apache2/sites-available/saltpad.conf
 
+.. code-block:: apache
+    
+    <VirtualHost *:80>
+      ServerName saltpad.example.com
+      ServerAdmin webmaster@example.com
+      LogLevel warn
+      DocumentRoot /opt/saltpad
+      <Directory "/opt/saltpad">
+        RewriteEngine On
+        RewriteBase /
+        RewriteCond %{REQUEST_FILENAME} !-f
+        RewriteCond %{REQUEST_FILENAME} !-d
+        RewriteCond %{REQUEST_URI} !index
+        RewriteRule (.*) /index.html [L]
+        #FallbackResource /index.html
+      </Directory>
+      ErrorLog "/var/log/apache2/saltpad-error.log"
+      CustomLog "/var/log/apache2/saltpad-access.log" combined
+    </VirtualHost>
+
+Note: the much simpler 'FallbackResource' which does not require mod_rewrite, requires apache/httpd version >= 2.2.16.
+
+Enable the site and reload apache
+.. code-block:: bash
+
+    sudo a2ensite saltpad
+    sudo service apache2 reload
+    
 And now, saltpad should be available on the web server, you can check with this command:
 
 .. code-block:: bash
