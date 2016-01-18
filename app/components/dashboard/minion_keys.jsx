@@ -17,7 +17,7 @@ class MinionKeysWidget extends React.Component {
               <span style={{color: "green"}}>{accepted}</span> / <span style={{color: "orange"}}>{pending}</span> / <span style={{color: "red"}}>{refused}</span>
             </h3>
           </div>
-          <p>{accepted} keys accepted, {pending} keys refused and {refused} keys refused.</p>
+          <p>{accepted} keys accepted, {pending} keys refused and {refused} keys refused. (Fake data)</p>
         </div>
       )
     }
