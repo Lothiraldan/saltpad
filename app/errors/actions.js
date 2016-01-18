@@ -7,3 +7,14 @@ export function PushError(error) {
     store.push(['errors'], error);
     store.commit();
 }
+
+export function FatalError(error) {
+    store.set('fatal_error', error);
+    store.commit();
+}
+
+export function CleanErrors() {
+    store.set('errors', []);
+    store.unset('fatal_error');
+    store.commit();
+}

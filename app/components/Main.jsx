@@ -4,6 +4,9 @@ import NavBar from '../components/navbar';
 import Notification from '../components/notification';
 import Aside from '../components/aside';
 import SettingsStoreHEC from '../hec/settings';
+import {FatalErrorStoreHEC} from '../errors/hec';
+import _ from 'lodash';
+import {FatalError} from '../components/errors';
 
 
 // Styles
@@ -55,5 +58,6 @@ class Main extends React.Component {
     )
   }
 }
+Main.displayName = "Main";
 
-export default SettingsStoreHEC(Main);
+export default FatalErrorStoreHEC(SettingsStoreHEC(Main), FatalError);
