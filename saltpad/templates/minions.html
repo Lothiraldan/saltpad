@@ -34,7 +34,7 @@
             <td>{{ minion_data.state }}</td>
             <td>{{ minion_data.saltversioninfo|join('.') }}</td>
             <td><ul>
-              {% for role in minion_data.roles %}<li>{{ role }}</li>{% endfor %}
+              {% for role in minion_data.roles|default([], true) %}<li>{{ role }}</li>{% endfor %}
             </ul></td>
             <td>{% if jobs.get(minion) %}
               <ul class="list-group">
