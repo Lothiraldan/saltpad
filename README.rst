@@ -16,12 +16,12 @@ SaltPad compatibility
 
 SaltPad is mainly coded in Javascript and should be compatible with all modern browsers.
 
-SaltPad communicate with Salt through the salt-api and thus requires access to the salt-api from the browser. If this is an issue, please drop a comment on [this issue](http://github.com/tinyclues/saltpad) to discuss the possible solutions. The salt-api format / specification is not yet stable, so SaltPad could only provide limited compatibility with salt-api. The salt-api format depends on 3 variables, salt version, the netapi used (cherrypy or tornado) and the master_job_cache used for storing and retrieving jobs results. SaltPad required some upgrade on salt-api side (for CORS support mainly) and will only work with a dev version
+SaltPad communicate with Salt through the salt-api and thus requires access to the salt-api from the browser. If this is an issue, please drop a comment on [this issue](http://github.com/tinyclues/saltpad) to discuss the possible solutions. The salt-api format / specification is not yet stable, so SaltPad could only provide limited compatibility with salt-api. The salt-api format depends on 3 variables, salt version, the netapi used (cherrypy or tornado) and the master_job_cache used for storing and retrieving jobs results. SaltPad required some upgrade on salt-api side (for CORS support mainly) and will only work with a develop version of saltstack. It should land hopefully on SaltStack version 2015.8.4.
 
 +--------------+---------------+------------------+------------+-----------------------------------+
 | Salt Version | Netapi        | Master_job_cache | Supported? | Issue if not supported            |
 +--------------+---------------+------------------+------------+-----------------------------------+
-| 2015.8.dev   | rest_tornado  | * (all)          | YES        |                                   |
+| develop      | rest_tornado  | * (all)          | YES        |                                   |
 +--------------+---------------+------------------+------------+-----------------------------------+
 
 Here is the list of issues about the salt-api format standardization that would make the saltpad job much much easier:
@@ -194,7 +194,7 @@ Unzip to a location of your choosing:
 
 You will also need to create the file settings.json in the same directory that you have unzipped to, e.g. `/opt/saltpad/settings.json`. You can use the example settings.json found above (https://github.com/tinyclues/saltpad#configure-saltpad).
 
-Then point your favorite webserver at the saltpad directory. 
+Then point your favorite webserver at the saltpad directory.
 
 Warning, the following example configurations ARE NOT SUITABLE for production, for configuring a ssl enabled site with nginx or apache, you can use the excellent `Mozilla SSL Configuration Generator`_. Configuring a website in a secure manner is a job by itself, please ask the more qualified person to do it.
 
@@ -215,7 +215,7 @@ For example, for an unsecured (HTTP) saltpad install with nginx, the configurati
                 try_files $uri /index.html;
         }
     }
-    
+
 You can put this configuration and replace the content of the file "/etc/nginx/sites-enabled/default" or ask your system administrator to configure Nginx or Apache.
 
 Now reload the webserver:
@@ -223,11 +223,11 @@ Now reload the webserver:
 .. code-block:: bash
 
     sudo /etc/init.d/nginx reload
-    
+
 For an equivalent apache config on debian place the following in /etc/apache2/sites-available/saltpad.conf
 
 .. code-block:: apache
-    
+
     <VirtualHost *:80>
       ServerName saltpad.example.com
       ServerAdmin webmaster@example.com
@@ -253,7 +253,7 @@ Enable the site and reload apache
 
     sudo a2ensite saltpad
     sudo service apache2 reload
-    
+
 And now, saltpad should be available on the web server, you can check with this command:
 
 .. code-block:: bash
