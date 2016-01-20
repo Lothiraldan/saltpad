@@ -296,6 +296,19 @@ You can now launch the dev environment:
 
 SaltPad will be available on localhost:3333(localhost:3333).
 
+Release saltpad
+---------------
+
+If an any time you want to generate a new release and as a reminder for core-developper, here is how you can generate a dist.zip:
+
+.. code-block:: sh
+
+    npm run build
+
+It should generate a dist.zip file with every required file, the dist.zip.md5 file which contains the md5sum of the dist.zip file and the dist.zip.sha1 which contains the sha1sum of the dist.zip file.
+
+Please note that you need first to follow the Hack on saltpad instructions to have the required dependencies.
+
 Features
 --------
 
