@@ -26,8 +26,8 @@ window.store = tree;
 
 // Save tree
 window.addEventListener("beforeunload", function(e){
-    tree.unset("settings");
-    localStorage.setItem("state", JSON.stringify(tree.get()));
+    let savedTree = _.pick(tree.get(), "auth", "session");
+    localStorage.setItem("state", JSON.stringify(savedTree));
 }, false);
 
 export default tree;
