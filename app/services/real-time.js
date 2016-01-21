@@ -33,7 +33,7 @@ export default function connect_ws() {
     var url = URI("")
       .host(settings.API_URL)
       .scheme(`${settings.SECURE_HTTP ? 'wss' : 'ws'}`)
-      .segment(['all_events', token.split('').reverse().join('')]);
+      .segment(['all_events', token]);
 
     var source = new WebSocket(url);
 

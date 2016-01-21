@@ -2,6 +2,10 @@ import React from 'react';
 import LinkedStateMixin from 'react-addons-linked-state-mixin';
 import ReactMixin from 'react-mixin';
 import AuthService from './AuthService';
+import {CleanErrors} from '../errors/actions';
+import {ErrorStoreHec} from '../errors/hec';
+import {ErrorMessage} from '../components/errors';
+import _ from 'lodash';
 
 class Login extends React.Component {
 
@@ -15,6 +19,7 @@ class Login extends React.Component {
 
   login(e) {
     e.preventDefault();
+    CleanErrors();
     AuthService.login(this.state.username, this.state.password)
       .then(logged => {
         if(logged) {
@@ -24,14 +29,20 @@ class Login extends React.Component {
   }
 
   render() {
+
+    let errors = _.map(this.props.errors, (error, index) => <ErrorMessage message={error} key={index}/>);
+
     return (
       <div style={{marginTop: "50px"}} className="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+
+        {errors}
+
         <div className="panel panel-info" >
           <div className="panel-heading">
               <div className="panel-title">SaltPad</div>
           </div>
 
-          <div style={{paddingTop: "30px"}} className="panel-body" >
+          <div style={{paddingTop: "30px"}} className="panel-body">
 
             <form id="loginform" className="form-horizontal" role="form">
               <div style={{marginBotton: "25px"}} className="input-group">
@@ -62,6 +73,6 @@ Login.contextTypes = {
   location: React.PropTypes.object.isRequired,
   history: React.PropTypes.object.isRequired
 }
-export default Login;
+export default ErrorStoreHec(Login);
 
 ReactMixin(Login.prototype, LinkedStateMixin);
