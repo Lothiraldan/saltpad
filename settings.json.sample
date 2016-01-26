@@ -19,5 +19,6 @@
             "moduleFunction": "test.version",
             "arguments": {}
         }
-    }
+    },
+    "EAUTH": "pam" # The configured external_auth system
 }

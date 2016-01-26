@@ -1,5 +1,9 @@
 # Change Log
 
+## [0.3](https://github.com/tinyclues/saltpad/tree/0.3) (2016-YY-ZZ)
+
+- Make the external_auth configurable in the settings. It is optional and the default value is 'pam'.
+
 ## [0.2](https://github.com/tinyclues/saltpad/tree/0.2) (2016-01-22)
 
 This release focus on error reporting and fixing the few issues that were found by early testers:

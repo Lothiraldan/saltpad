@@ -2,12 +2,15 @@ import axios from 'axios';
 import {LoginUser} from './LoginActions';
 import BaseService from '../services/base_service';
 import {PushError} from '../errors/actions';
+import store from '../store';
+import _ from 'lodash';
 
 class AuthService extends BaseService {
 
   login = (username, password) => {
+    let eauth = _.get(store.get('settings'), 'EAUTH', 'pam');
     let query = this.post(['login'],
-      {username, password, "eauth": "pam"}
+      {username, password, "eauth": eauth}
     );
     return this.handleAuth(query);
   }

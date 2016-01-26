@@ -152,7 +152,8 @@ Here is an example of a settings.json file:
                 "moduleFunction": "test.version",
                 "arguments": {}
             }
-        }
+        },
+        "EAUTH": "pam"
     }
 
 Job templates
