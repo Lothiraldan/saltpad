@@ -63,52 +63,63 @@ export class StateResultStatusMinion extends React.Component {
   }
 }
 
-
 export class StateResultMinion extends React.Component  {
     render() {
 
         let minion = this.props.minion;
         let job_data = this.props.job_data;
 
-        let grouped_chunks = _.groupBy(_.pairs(job_data.return), (chunk) => {
+        // If job return is a String, it's likely an error
+        if(typeof(job_data.return[0]) == 'string') {
 
-            if(chunk[1] == undefined) {
-                return "Undefined";
-            }
+          let data = job_data.return[0];
 
-            if (_.get(chunk[1], 'comment', '').includes('requisite failed')) {
-                return "Dependency failed";
-            }
+          var heading = `${minion} encountered an error`;
+          var chunks = <div>{data}</div>;
+          var status = statusMap["Error"];
 
-            if (_.size(chunk[1].changes)) {
-                return "Changes";
-            }
+        } else {
 
-            if (chunk[1].result === true) {
-                return "Success";
-            }
+          let grouped_chunks = _.groupBy(_.pairs(job_data.return), (chunk) => {
 
-            if (chunk[1].result === false) {
-                return "Error";
-            }
-        });
+              if(chunk[1] == undefined) {
+                  return "Undefined";
+              }
 
-        let status_order = ["Error", "Dependency failed", "Changes", "Success"]
+              if (_.get(chunk[1], 'comment', '').includes('requisite failed')) {
+                  return "Dependency failed";
+              }
 
-        var chunk_number = _.size(job_data.return);
-        var heading = `${minion} - ${chunk_number} steps: ${_.size(grouped_chunks["Error"])} in errors, ${_.size(grouped_chunks["Dependency failed"])} requirements failed, ${_.size(grouped_chunks["Changes"])} changes and ${_.size(grouped_chunks["Success"])} in success.`;
+              if (_.size(chunk[1].changes)) {
+                  return "Changes";
+              }
 
-        for(let status_id in status_order) {
-            let status_label = status_order[status_id];
-            if(grouped_chunks[status_label]) {
-                var status = statusMap[status_label];
-                break;
-            }
+              if (chunk[1].result === true) {
+                  return "Success";
+              }
+
+              if (chunk[1].result === false) {
+                  return "Error";
+              }
+          });
+
+          let status_order = ["Error", "Dependency failed", "Changes", "Success"]
+
+          var chunk_number = _.size(job_data.return);
+          var heading = `${minion} - ${chunk_number} steps: ${_.size(grouped_chunks["Error"])} in errors, ${_.size(grouped_chunks["Dependency failed"])} requirements failed, ${_.size(grouped_chunks["Changes"])} changes and ${_.size(grouped_chunks["Success"])} in success.`;
+
+          for(let status_id in status_order) {
+              let status_label = status_order[status_id];
+              if(grouped_chunks[status_label]) {
+                  var status = statusMap[status_label];
+                  break;
+              }
+          }
+
+          var chunks = _.map(status_order, (status) => {
+              return <StateResultStatusMinion key={status} status={status} jobs={grouped_chunks[status]} chunk_number={chunk_number} />;
+          });
         }
-
-        let chunks = _.map(status_order, (status) => {
-            return <StateResultStatusMinion key={status} status={status} jobs={grouped_chunks[status]} chunk_number={chunk_number} />;
-        });
 
         return (
           <HidingPanel heading={heading} status={status} default_open={true}>

@@ -58,7 +58,7 @@ export var HighstateStatusLabel = {"Error": "danger", "Dependency failed": "dang
 
 export function HighstateReturnParser(jobReturn) {
     let grouped_chunks = _.groupBy(_.pairs(jobReturn), (chunk) => {
-        if (chunk[1].comment.includes('requisite failed')) {
+        if (_.get(chunk[1], 'comment', '').includes('requisite failed')) {
             return "Dependency failed";
         }
 
@@ -73,6 +73,8 @@ export function HighstateReturnParser(jobReturn) {
         if (chunk[1].result === false) {
             return "Error";
         }
+
+        return "Error";
     });
 
     for(let status_id in HighstateStatusOrder) {
