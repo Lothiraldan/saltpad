@@ -171,7 +171,7 @@ class JobRun extends React.Component {
         // If we want to copy an existing job, initialize state to job params
         if(_.get(this.props.location.state, "copy_job") != undefined) {
           let job = this.props.location.state.copy_job;
-          this.state = {"matcher": job['TargetType'], "target": job['Target'],
+          this.state = {"matcher": job['Target-type'], "target": job['Target'],
                         "moduleFunction": job['Function'], "arguments": job['Arguments']}
         } else {
           this.state = {"matcher": "glob", "target": undefined,

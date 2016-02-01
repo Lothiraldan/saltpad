@@ -58,7 +58,7 @@ class JobRunnerResult extends React.Component {
 
     redoJob = (e) => {
         let job = this.props.job;
-        RunJob(job['TargetType'], job['Target'], job['Function'], job['Arguments'])
+        RunJob(job['Target-type'], job['Target'], job['Function'], job['Arguments'])
           .then(job_id => {
             if(job_id) {
               this.context.history.pushState(null, `/job_result/${job_id}`, null);
@@ -99,7 +99,7 @@ class JobMinionResult extends React.Component {
 
     redoJob = (e) => {
         let job = this.props.job;
-        RunJob(job['TargetType'], job['Target'], job['Function'], ArgParser(job['Arguments']))
+        RunJob(job['Target-type'], job['Target'], job['Function'], ArgParser(job['Arguments']))
           .then(job_id => {
             if(job_id) {
               this.context.history.pushState(null, `/job_result/${job_id}`, null);

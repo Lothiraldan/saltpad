@@ -12,7 +12,7 @@ class JobTemplates extends Component {
 
     CopyTemplate = (template_name, e) => {
         let template = this.props.settings.templates[template_name];
-        let formatted_template = {'TargetType': template.matcher,
+        let formatted_template = {'Target-type': template.matcher,
                                   'Target': template.target,
                                   'Function': template.moduleFunction,
                                   'Arguments': template.arguments}
@@ -21,7 +21,7 @@ class JobTemplates extends Component {
 
     redoJob = (e) => {
         let job = this.props.job;
-        RunJob(job['TargetType'], job['Target'], job['Function'], job['Arguments'])
+        RunJob(job['Target-type'], job['Target'], job['Function'], job['Arguments'])
           .then(job_id => {
             if(job_id) {
               this.context.history.pushState(null, `/job_result/${job_id}`, null);
