@@ -5,9 +5,11 @@ import BaseService from '../services/base_service';
 
 class MinionsService extends BaseService {
     ListMinions = () => {
-        let query = this.get(['minions'], {
-            headers: {"X-Auth-Token": store.get(['auth', 'token'])}
-        });
+        let params = {client: 'local_async', fun: 'test.ping', tgt: '*'};
+        let query = this.post('', [params],
+                        {headers: {"X-Auth-Token": store.get(['auth', 'token']),
+                                   "Content-Type": "application/json"}
+                        });
         return query;
     }
 }

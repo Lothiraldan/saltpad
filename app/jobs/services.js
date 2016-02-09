@@ -6,15 +6,22 @@ import {ArgFormatter} from './utils';
 
 class JobsService extends BaseService {
     ListJobs = () => {
-        let query = this.get(['jobs'], {
-            headers: {"X-Auth-Token": store.get(['auth', 'token'])}
-        });
+        let params = {client: 'runner', fun: 'jobs.list_jobs'};
+        let query = this.post('', [params],
+                        {headers: {"X-Auth-Token": store.get(['auth', 'token']),
+                                   "Content-Type": "application/json"}
+                        });
         return query;
     }
 
     GetJobDetails = (job_id) => {
-        let query = this.get(['jobs', job_id], {
-            headers: {"X-Auth-Token": store.get(['auth', 'token'])}
+        let params = [
+            {client: 'runner', fun: 'jobs.list_job', jid: job_id},
+            // {client: 'runner', fun: 'jobs.lookup_jid', jid: job_id}
+        ];
+        let query = this.post('', params, {
+            headers: {"X-Auth-Token": store.get(['auth', 'token']),
+                      "Content-Type": "application/json"}
         });
         return query;
     }

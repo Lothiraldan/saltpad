@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import store from '../store';
-import {ListMinions} from './actions';
 
 export default function(DecoratedComponent) {
     class MinionsStoreHEC extends Component {
