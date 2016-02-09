@@ -1,0 +1,19 @@
+version: '2'
+services:
+  salt-api:
+    build:
+      context: "."
+      dockerfile: SaltApiDockerfile
+    ports:
+      - 8000:8000
+      - 5417:5417
+    volumes:
+      - ./dist:/code
+  saltpad:
+    build:
+      context: "."
+      dockerfile: Dockerfile
+    ports:
+      - 3333:3333
+    volumes:
+      - .:/usr/src/app

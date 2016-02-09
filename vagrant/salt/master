@@ -19,13 +19,15 @@ pillar_roots:
   base:
   - /srv/pillar
 
-rest_tornado:
+rest_cherrypy:
+#rest_tornado:
   debug: true
   disable_ssl: true
   port: 5417
   host: 0.0.0.0
   websockets: True
   cors_origin: '*'
+  app: /opt/saltpad-dev/dist/
 
 gitfs_remotes:
   - https://github.com/saltstack-formulas/nginx-formula

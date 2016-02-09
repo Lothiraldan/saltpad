@@ -26,7 +26,7 @@ export var ArgSpecParser = function(argspec) {
 
 export function ArgFormatter(args) {
     let [poargs, kwargs] = args;
-    let formatted_kwargs = _.map(_.pairs(kwargs), ([arg_key, arg_value]) => {
+    let formatted_kwargs = _.map(_.toPairs(kwargs), ([arg_key, arg_value]) => {
         return {__kwarg__: true, [arg_key]: arg_value}
     });
     return _.union(poargs, formatted_kwargs);

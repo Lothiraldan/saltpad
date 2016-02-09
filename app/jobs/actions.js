@@ -56,7 +56,7 @@ export function UpdateModuleFunctionList(job_id, minion, job) {
 
 export function UpdateModuleFunctionDoc(job_id, minion, job) {
     if(job.data['fun'] == 'sys.doc') {
-        _.map(_.pairs(job.data.return), ([moduleFunctionName, moduleFunctionDoc]) => {
+        _.map(_.toPairs(job.data.return), ([moduleFunctionName, moduleFunctionDoc]) => {
             store.set(['moduleFunctions', moduleFunctionName, 'doc'], moduleFunctionDoc);
         });
     }
@@ -64,7 +64,7 @@ export function UpdateModuleFunctionDoc(job_id, minion, job) {
 
 export function UpdateModuleFunctionArgSpec(job_id, minion, job) {
     if(job.data['fun'] == 'sys.argspec') {
-        _.map(_.pairs(job.data.return), ([moduleFunctionName, moduleFunctionArgspec]) => {
+        _.map(_.toPairs(job.data.return), ([moduleFunctionName, moduleFunctionArgspec]) => {
             store.set(['moduleFunctions', moduleFunctionName, 'argspec'], ArgSpecParser(moduleFunctionArgspec));
         });
     }

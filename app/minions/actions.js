@@ -17,7 +17,7 @@ export function ListMinions() {
 }
 
 export function UpdateMinionStatus(minion_status) {
-    _.map(_.pairs(minion_status), ([status, minions]) => _.map(minions, (minion) => store.set(['minions', minion, 'status'], status)));
+    _.map(_.toPairs(minion_status), ([status, minions]) => _.map(minions, (minion) => store.set(['minions', minion, 'status'], status)));
 }
 
 export function MinionStatusOnJobReturn(job_id, minion, job) {

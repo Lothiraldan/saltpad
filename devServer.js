@@ -13,7 +13,7 @@ app.use(require('webpack-dev-middleware')(compiler, {
 
 app.use(require('webpack-hot-middleware')(compiler));
 
-app.get('/settings.json', function(req, res) {
+app.get('/static/settings.json', function(req, res) {
   res.sendFile(path.join(__dirname, 'settings.json'));
 });
 
@@ -22,11 +22,11 @@ app.get('*', function(req, res) {
 });
 
 
-app.listen(3333, 'localhost', function(err) {
+app.listen(3333, '0.0.0.0', function(err) {
   if (err) {
     console.log(err);
     return;
   }
 
-  console.log('Listening at http://localhost:3333');
+  console.log('Listening at http://0.0.0.0:3333');
 });

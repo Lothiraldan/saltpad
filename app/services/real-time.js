@@ -32,10 +32,18 @@ export default function connect_ws() {
 
     var url = URI("")
       .host(settings.API_URL)
-      .scheme(`${settings.SECURE_HTTP ? 'wss' : 'ws'}`)
-      .segment(['all_events', token]);
+      .scheme(`${settings.SECURE_HTTP ? 'https' : 'http'}`)
+      .segment(['events'])
+      .search({'token': token});
 
-    var source = new WebSocket(url);
+    var source = new EventSource(url);
+    // var source = new WebSocket(url);
+
+    source.onerror = function(e) {
+        let errMsg = `Error while connecting to real-time endpoint: ${url}`;
+        PushError(errMsg);
+        LogoutUser();
+    }
 
     source.onclose = function(e) {
         if(_.includes(INVALID_WEBSOCKET_TERMINATION, e.code)) {
@@ -60,7 +68,7 @@ export default function connect_ws() {
     };
 
     source.onopen = () => {
-        source.send('websocket client ready');
+        console.log('websocket client ready');
     }
 
     // source.close();

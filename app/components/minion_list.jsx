@@ -10,7 +10,7 @@ import { Link } from 'react-router';
 class MinionList extends React.Component {
     render() {
 
-      var minions = _.map(_.pairs(this.props.minions),
+      var minions = _.map(_.toPairs(this.props.minions),
                           ([minion_id, minion_data]) => _.merge({id: minion_id}, minion_data));
 
       function DateFormatter(job_start_time, job){

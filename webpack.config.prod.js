@@ -12,7 +12,7 @@ module.exports = {
   },
   output: {
     path: path.join(__dirname, 'dist'),
-    filename: "/[name].js"
+    filename: "/static/[name].js"
   },
   plugins: [
     new webpack.optimize.OccurenceOrderPlugin(),
@@ -30,7 +30,7 @@ module.exports = {
       template: 'index-prod.html',
       inject: true
     }),
-    new ExtractTextPlugin("/styles.css"),
+    new ExtractTextPlugin("/static/styles.css"),
   ],
   resolve: {
     extensions: ['', '.js', '.jsx'],
@@ -47,11 +47,11 @@ module.exports = {
       {
         test: /\.css$/, loader: ExtractTextPlugin.extract("style-loader", "css-loader")
       },
-      { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, loader: "file?name=[name]-[hash].[ext]" },
-      { test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/, loader: "file?name=[name]-[hash].[ext]" },
-      { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: "file?name=[name]-[hash].[ext]" },
-      { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: "file?name=[name]-[hash].[ext]" },
-      { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: "file?name=[name]-[hash].[ext]" },
+      { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, loader: "file?name=/static/[name]-[hash].[ext]" },
+      { test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/, loader: "file?name=/static/[name]-[hash].[ext]" },
+      { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: "file?name=/static/[name]-[hash].[ext]" },
+      { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: "file?name=/static/[name]-[hash].[ext]" },
+      { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: "file?name=/static/[name]-[hash].[ext]" },
       { test: /\.jpg$/, loader: "file?name=[name]-[hash].[ext]" },
       { test: /\.png$/, loader: "file?name=[name]-[hash].[ext]" },
     ]
