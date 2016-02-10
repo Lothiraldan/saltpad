@@ -1,6 +1,9 @@
 import axios from 'axios';
 import store from '../store';
 import URI from 'urijs';
+import _ from 'lodash';
+
+axios.defaults.headers.common['Accept'] = 'application/json';
 
 export default class BaseService {
     baseUrl() {
@@ -15,7 +18,7 @@ export default class BaseService {
         return axios.get(this.baseUrl().segment(segment), ...params);
     }
 
-    post(segment, ...params) {
-        return axios.post(this.baseUrl().segment(segment), ...params);
+    post(segment, data, ...params) {
+        return axios.post(this.baseUrl().segment(segment), data, ...params);
     }
 }
