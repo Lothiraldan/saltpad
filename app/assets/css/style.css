@@ -238,6 +238,7 @@ ul.top-menu > li > .logout {
 }
 
 #sidebar ul li {
+    list-style-type: none;
     position: relative;
 }
 
