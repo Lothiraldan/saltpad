@@ -1,3 +1,7 @@
+salt-api:
+    pkg:
+        - installed
+
 git:
     pkg.installed:
         - module_refresh: True
