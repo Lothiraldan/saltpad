@@ -9,7 +9,7 @@ var RunnerJobEventToJobStore = function(job) {
 
 export var JobEventToJobStore = function(job) {
     let new_job = {'Function': job['fun'], 'jid': job['jid'], 'User': job['user'],
-                   'StartTime': moment(job['_stamp']).unix(), 'Target': job['tgt'],
+                   'StartTime': moment(job['_stamp'], moment.ISO_8601).unix(), 'Target': job['tgt'],
                    'Target-type': job['tgt_type'], 'Arguments': ArgParser(job['arg']),
                    'Minions': job['minions'], 'Return': job['return']}
     return _.omit(new_job, _.isUndefined);
