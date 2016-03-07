@@ -1,3 +1,6 @@
+# Mac os X
+*.DS_Store
+
 *.py[cod]
 
 # C extensions
@@ -48,3 +51,9 @@ bower_components/
 dist/
 
 settings.json
+
+# Dist
+dist.*
+
+# Vagrant
+vagrant/.vagrant/
