@@ -13,11 +13,11 @@ RUN pip install https://github.com/saltstack/salt/archive/develop.zip cherrypy t
 
 VOLUME /code
 
-ADD docker_config/run_salt_master.sh /run_salt_master.sh
+ADD config/run_salt_master.sh /run_salt_master.sh
 
-ADD docker_config/master.d/api.conf /etc/salt/master
+ADD config/master /etc/salt/master
 
-ADD docker_config/minion/minion /etc/salt/minion
+ADD config/minion /etc/salt/minion
 
 EXPOSE 8000
 

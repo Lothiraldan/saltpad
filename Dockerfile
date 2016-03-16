@@ -10,8 +10,10 @@ COPY package.json .
 RUN npm install
 COPY bower.json .
 RUN ./node_modules/bower/bin/bower install --allow-root
+
 COPY . /usr/src/app
-COPY settings.json settings.json
+
+VOLUME /usr/src/app
 
 EXPOSE 3333
 CMD npm start

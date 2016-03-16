@@ -2,6 +2,6 @@
 set -e
 set -x
 
-salt-minion -d -l debug
+salt-minion -d
 salt-master -d
 salt-api -l debug
