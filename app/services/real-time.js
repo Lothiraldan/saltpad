@@ -22,7 +22,37 @@ var INVALID_WEBSOCKET_TERMINATION = [
     1006
 ];
 
-export default function connect_ws() {
+
+function real_time_factory() {
+    let token = store.get(['auth', 'token']);
+    let settings = store.get('settings');
+    let flavour = settings.FLAVOUR;
+
+    if (token == undefined || settings == undefined) {
+        return;
+    }
+
+    if(flavour == 'rest_cherrypy') {
+        var url = URI("")
+            .host(settings.API_URL)
+            .scheme(`${settings.SECURE_HTTP ? 'https' : 'http'}`)
+            .segment(['events'])
+            .search({'token': token});
+        var source = new EventSource(url);
+    } else {
+        var url = URI("")
+            .host(settings.API_URL)
+            .scheme(`${settings.SECURE_HTTP ? 'wss' : 'ws'}`)
+            .segment(['all_events', token]);
+
+        var source = new WebSocket(url);
+    }
+
+    return source;
+}
+
+
+export default function connect_real_time() {
     let token = store.get(['auth', 'token']);
     let settings = store.get('settings');
 
@@ -30,14 +60,7 @@ export default function connect_ws() {
         return;
     }
 
-    var url = URI("")
-      .host(settings.API_URL)
-      .scheme(`${settings.SECURE_HTTP ? 'https' : 'http'}`)
-      .segment(['events'])
-      .search({'token': token});
-
-    var source = new EventSource(url);
-    // var source = new WebSocket(url);
+    var source = real_time_factory();
 
     source.onerror = function(e) {
         let errMsg = `Error while connecting to real-time endpoint: ${url}`;
@@ -68,15 +91,18 @@ export default function connect_ws() {
     };
 
     source.onopen = () => {
-        console.log('websocket client ready');
+        if(settings.FLAVOUR == 'rest_cherrypy') {
+            console.log('sse client ready');
+        } else if (settings.FLAVOUR == 'rest_tornado') {
+            source.send('websocket client ready');
+            console.log('websocket client ready');
+        }
     }
-
-    // source.close();
 }
 
-store.select(['auth', 'token']).on('update', connect_ws);
-store.select('settings').on('update', connect_ws);
+store.select(['auth', 'token']).on('update', connect_real_time);
+store.select('settings').on('update', connect_real_time);
 
 if(store.get(['auth', 'token']) != undefined && store.get('settings') != undefined) {
-    connect_ws();
+    connect_real_time();
 }

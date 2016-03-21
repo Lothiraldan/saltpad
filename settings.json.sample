@@ -20,5 +20,6 @@
             "arguments": {}
         }
     },
-    "EAUTH": "pam" # The configured external_auth system
+    "EAUTH": "pam", # The configured external_auth system,
+    "FLAVOUR": "rest_cherrypy" # The netapi implementation configured on salt-master
 }

@@ -25,6 +25,8 @@ SaltPad communicate with Salt through the salt-api and thus requires access to t
 +--------------+---------------+------------------+------------+-----------------------------------+
 | develop      | rest_tornado  | * (all)          | YES        |                                   |
 +--------------+---------------+------------------+------------+-----------------------------------+
+| develop      | rest_cherrypy | * (all)          | YES        |                                   |
++--------------+---------------+------------------+------------+-----------------------------------+
 
 Here is the list of issues about the salt-api format standardization that would make the saltpad job much much easier:
 
@@ -155,8 +157,45 @@ Here is an example of a settings.json file:
                 "arguments": {}
             }
         },
-        "EAUTH": "pam"
+        "EAUTH": "pam",
+        "FLAVOUR": "rest_cherrypy"
     }
+
+Salt-api flavour
+----------------
+
+Depending on the salt-api implementation configured in salt-master, you need to set the same name in the `FLAVOUR` key.
+
+If you have a salt-master configuration like that:
+
+.. code-block:: ini
+
+    rest_cherrypy:
+      port: 8000
+      host: 0.0.0.0
+
+You need to put `rest_cherrypy` in the configuration file.
+
+If you have a salt-master configuration like that:
+
+.. code-block:: ini
+
+    rest_cherrypy:
+      port: 8000
+      host: 0.0.0.0
+
+You need to put `rest_cherrypy` in the configuration file.
+
+.. code-block:: ini
+
+    rest_tornado:
+      port: 5417
+      host: 0.0.0.0
+
+You need to put `rest_cherrypy` in the configuration file.
+
+Please be aware that depending on the salt-api implementation you use, saltpad may requires a different version of salt on the master side, please refer to the table at the beginning of the Readme.
+
 
 Job templates
 -------------
