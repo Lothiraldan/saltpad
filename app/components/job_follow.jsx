@@ -15,7 +15,7 @@ class JobFollowStar extends Component {
     }
 
     isJobFollowed = () => {
-        return _.contains(this.props.session['followed_jobs'], this.props.job_id);
+        return _.includes(this.props.session['followed_jobs'], this.props.job_id);
     }
 
     render() {

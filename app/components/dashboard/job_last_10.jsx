@@ -22,7 +22,7 @@ class JobGroupItem extends React.Component {
 class JobsLast10Widget extends React.Component {
     render() {
 
-        var jobs = _.pairs(this.props.jobs);
+        var jobs = _.toPairs(this.props.jobs);
         jobs = _.sortBy(jobs, (job) => -1 * job[0]);
         jobs = _.take(jobs, 10);
         jobs = _.map(jobs, function(job) {

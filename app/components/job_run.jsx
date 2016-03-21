@@ -66,14 +66,33 @@ class FunctionSelect extends React.Component {
 
   render() {
 
+    var fonctions = this.props.functions;
+
+    var async_options = (input, callback) => {
+        console.log("Job Input", input);
+
+        let options = _.filter(fonctions, (fonction) => _.includes(fonction.value, input));
+        console.log("Options", options);
+        callback(null, {
+            options: options,
+            // CAREFUL! Only set this to true when there are no more options,
+            // or more specific queries will not be sent to the server.
+            complete: false
+        });
+    }
+
+    console.log("Function", this.props.function);
+    var cache = [{label: this.props.function, value: this.props.function}];
+    console.log("Cache", cache);
+
     return (
       <div className="form-group">
         <label htmlFor="form-function-name" className="col-sm-2 control-label">Function</label>
         <div className="col-sm-10">
-          <Select
+          <Select.Async
               name="form-function-name"
-              options={this.props.functions}
-              searchable={true}
+              loadOptions={async_options}
+              minimumInput={3}
               value={this.props.function}
               onChange={this.props.functionChanger}
           />
@@ -143,7 +162,7 @@ class JobArguments extends React.Component {
       return <JobArgInput arg_name={arg_name} key={arg_name} arg_value={_.get(form_state, arg_name)} ArgumentChanger={ArgumentChanger(arg_name)} />;
     });
 
-    let optional_inputs = _.map(_.pairs(optional), ([arg_name, arg_value]) => {
+    let optional_inputs = _.map(_.toPairs(optional), ([arg_name, arg_value]) => {
       return <JobArgInput arg_name={arg_name} arg_value={_.get(form_state, arg_name, arg_value)} key={arg_name} ArgumentChanger={ArgumentChanger(arg_name)} />;
     });
 
@@ -212,7 +231,7 @@ class JobRun extends React.Component {
           return {value: minion, label: minion}
       });
 
-      var moduleFunctions = _.map(_.pairs(this.props.moduleFunctions), ([module_name, _]) => {
+      var moduleFunctions = _.map(_.toPairs(this.props.moduleFunctions), ([module_name, _]) => {
           return {value: module_name, label: module_name}
       });
       var moduleFunctions = _.sortBy(moduleFunctions, (module_name) => module_name.value);

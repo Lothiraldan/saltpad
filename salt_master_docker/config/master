@@ -1,0 +1,24 @@
+auto_accept: True
+external_auth:
+  pam:
+    vagrant:
+      - .*
+      - '@runner'
+      - '@wheel'
+      - '@jobs'
+rest_cherrypy:
+  port: 8000
+  host: 0.0.0.0
+  disable_ssl: True
+  static: /code
+  static_path: /assets
+  app: /code
+  app_path: /code
+rest_tornado:
+  debug: true
+  disable_ssl: true
+  port: 5417
+  host: 0.0.0.0
+  websockets: True
+  cors_origin: '*'
+  app: /opt/saltpad-dev/dist/

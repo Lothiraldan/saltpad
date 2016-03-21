@@ -55,7 +55,7 @@ class Fatal extends ExtendableError {
 }
 
 // Load settings
-axios.get('/settings.json')
+axios.get('/static/settings.json')
     .then(result => result.data)
     .then(settings => {
         if(!(settings instanceof Object)) {

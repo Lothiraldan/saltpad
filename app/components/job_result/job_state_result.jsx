@@ -21,7 +21,7 @@ class SingleChunkResult extends React.Component {
       let chunk_function = `${package_name}.${package_function}`;
       let className=`list-group-item list-group-item-${statusMap[status]}`
 
-      let content = _.map(_.pairs(this.props.chunk), (chunk) => {
+      let content = _.map(_.toPairs(this.props.chunk), (chunk) => {
           return <li key={chunk[0]}>{chunk[0]}: <pre>{JSON.stringify(chunk[1])}</pre></li>;
       });
 
@@ -80,7 +80,7 @@ export class StateResultMinion extends React.Component  {
 
         } else {
 
-          let grouped_chunks = _.groupBy(_.pairs(job_data.return), (chunk) => {
+          let grouped_chunks = _.groupBy(_.toPairs(job_data.return), (chunk) => {
 
               if(chunk[1] == undefined) {
                   return "Undefined";

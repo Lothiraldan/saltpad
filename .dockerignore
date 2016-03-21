@@ -1,0 +1,8 @@
+.git
+build
+bower_components
+node_modules
+vagrant
+salt_master_docker
+screenshots
+docs

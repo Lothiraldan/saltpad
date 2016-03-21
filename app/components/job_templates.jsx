@@ -46,7 +46,7 @@ class JobTemplates extends Component {
             return <div>No template defined, why not starting now?</div>;
         }
 
-        let templates = _.map(_.pairs(this.props.settings.templates),
+        let templates = _.map(_.toPairs(this.props.settings.templates),
             ([template_name, template_body]) => _.merge({name: template_name}, template_body)
         );
 

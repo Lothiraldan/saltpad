@@ -9,7 +9,7 @@ import { Link } from 'react-router';
 class JobHistory extends React.Component {
     render() {
 
-      var jobs = _.pairs(this.props.jobs)
+      var jobs = _.toPairs(this.props.jobs)
       jobs = _.sortBy(jobs, (job) => -1 * job[0]);
       jobs = _.map(jobs, (job) => job[1]);
 
