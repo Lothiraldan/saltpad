@@ -166,7 +166,7 @@ Salt-api flavour
 
 Depending on the salt-api implementation configured in salt-master, you need to set the same name in the `FLAVOUR` key.
 
-If you have a salt-master configuration like that:
+If you have a salt-master configuration like this:
 
 .. code-block:: ini
 
@@ -176,15 +176,7 @@ If you have a salt-master configuration like that:
 
 You need to put `rest_cherrypy` in the configuration file.
 
-If you have a salt-master configuration like that:
-
-.. code-block:: ini
-
-    rest_cherrypy:
-      port: 8000
-      host: 0.0.0.0
-
-You need to put `rest_cherrypy` in the configuration file.
+If you have a salt-master configuration like this:
 
 .. code-block:: ini
 
@@ -192,7 +184,7 @@ You need to put `rest_cherrypy` in the configuration file.
       port: 5417
       host: 0.0.0.0
 
-You need to put `rest_cherrypy` in the configuration file.
+You need to put `rest_tornado` in the configuration file.
 
 Please be aware that depending on the salt-api implementation you use, saltpad may requires a different version of salt on the master side, please refer to the table at the beginning of the Readme.
 
@@ -222,11 +214,11 @@ Install saltpad for production
 
 You can install a release version of saltpad with a web server like nginx or apache.
 
-Released versions are available on github (https://github.com/tinyclues/saltpad/releases). Download the distribution zip:
+Released versions are available on github (https://github.com/Lothiraldan/saltpad/releases). Download the distribution zip:
 
 .. code-block:: bash
 
-    wget https://github.com/tinyclues/saltpad/releases/download/v0.1/dist.zip
+    wget https://github.com/Lothiraldan/saltpad/releases/download/v0.2/dist.zip
 
 Unzip to a location of your choosing:
 
