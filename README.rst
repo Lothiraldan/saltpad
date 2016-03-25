@@ -222,11 +222,11 @@ Install saltpad for production
 
 You can install a release version of saltpad with a web server like nginx or apache.
 
-Released versions are available on github (https://github.com/tinyclues/saltpad/releases). Download the distribution zip:
+Released versions are available on github (https://github.com/Lothiraldan/saltpad/releases). Download the distribution zip:
 
 .. code-block:: bash
 
-    wget https://github.com/tinyclues/saltpad/releases/download/v0.1/dist.zip
+    wget https://github.com/Lothiraldan/saltpad/releases/download/v0.2/dist.zip
 
 Unzip to a location of your choosing:
 
