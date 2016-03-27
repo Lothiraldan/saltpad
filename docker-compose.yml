@@ -3,7 +3,8 @@ services:
   salt-api:
     build:
       context: "salt_master_docker"
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile # Salt-api develop, comment of need salt-api stable
+      # dockerfile: Dockerfile # Uncomment for salt-api stable
     ports:
       - 8000:8000
       - 5417:5417

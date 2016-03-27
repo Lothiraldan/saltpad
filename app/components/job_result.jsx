@@ -10,6 +10,7 @@ import JobEmptyResult from './job_result/job_empty_result';
 import JobFollowStar from './job_follow';
 import {RunJob} from '../jobs/actions';
 import {ArgParser} from '../jobs/utils';
+import gen_path from '../path_utils';
 
 
 class MinionResult extends React.Component {
@@ -53,7 +54,7 @@ class JobRunnerResult extends React.Component {
 
     copyJob = (e) => {
         let job = this.props.job;
-        this.context.history.pushState({copy_job: job}, '/job/run/', null);
+        this.context.history.pushState({copy_job: job}, gen_path('/job/run/'), null);
     }
 
     redoJob = (e) => {
@@ -61,7 +62,7 @@ class JobRunnerResult extends React.Component {
         RunJob(job['Target-type'], job['Target'], job['Function'], job['Arguments'])
           .then(job_id => {
             if(job_id) {
-              this.context.history.pushState(null, `/job_result/${job_id}`, null);
+              this.context.history.pushState(null, gen_path(`/job_result/${job_id}`), null);
             }
           });
     }
@@ -94,7 +95,7 @@ class JobMinionResult extends React.Component {
     copyJob = (e) => {
         let job = this.props.job;
         job['Arguments'] = ArgParser(job['Arguments'])[1];
-        this.context.history.pushState({copy_job: job}, '/job/run/', null);
+        this.context.history.pushState({copy_job: job}, gen_path('/job/run/'), null);
     }
 
     redoJob = (e) => {
@@ -102,7 +103,7 @@ class JobMinionResult extends React.Component {
         RunJob(job['Target-type'], job['Target'], job['Function'], ArgParser(job['Arguments']))
           .then(job_id => {
             if(job_id) {
-              this.context.history.pushState(null, `/job_result/${job_id}`, null);
+              this.context.history.pushState(null, gen_path(`/job_result/${job_id}`), null);
             }
           });
     }

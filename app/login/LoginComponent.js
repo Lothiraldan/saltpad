@@ -5,6 +5,7 @@ import AuthService from './AuthService';
 import {CleanErrors} from '../errors/actions';
 import {ErrorStoreHec} from '../errors/hec';
 import {ErrorMessage} from '../components/errors';
+import gen_path from '../path_utils';
 import _ from 'lodash';
 
 class Login extends React.Component {
@@ -23,7 +24,8 @@ class Login extends React.Component {
     AuthService.login(this.state.username, this.state.password)
       .then(logged => {
         if(logged) {
-          this.context.history.pushState(null, '/', null);
+          let path = gen_path('/');
+          this.context.history.pushState(null, path, null);
         }
       });
   }

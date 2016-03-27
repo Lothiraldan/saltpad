@@ -18,7 +18,9 @@ SaltPad is mainly coded in Javascript and should be compatible with all modern b
 
 SaltPad communicate with Salt through the salt-api and thus requires access to the salt-api from the browser. If this is an issue, please drop a comment on [this issue](http://github.com/tinyclues/saltpad) to discuss the possible solutions. The salt-api format / specification is not yet stable, so SaltPad could only provide limited compatibility with salt-api. The salt-api format depends on 3 variables, salt version, the netapi used (cherrypy or tornado) and the master_job_cache used for storing and retrieving jobs results.
 
-**SaltPad required some upgrade on salt-api side (for CORS support mainly) and will only work with a develop version of saltstack.**
+**SaltPad required some upgrade on salt-api side (for CORS support mainly) and will only work with a develop version of saltstack if deployed apart.**
+
+**SaltPad could be deployed via rest_cherrypy (see Rest_cherrypy single-app page deployment part below) and should works with a stable version but consider it beta for the moment.**
 
 +--------------+---------------+------------------+------------+-----------------------------------+
 | Salt Version | Netapi        | Master_job_cache | Supported? | Issue if not supported            |
@@ -26,6 +28,8 @@ SaltPad communicate with Salt through the salt-api and thus requires access to t
 | develop      | rest_tornado  | * (all)          | YES        |                                   |
 +--------------+---------------+------------------+------------+-----------------------------------+
 | develop      | rest_cherrypy | * (all)          | YES        |                                   |
++--------------+---------------+------------------+------------+-----------------------------------+
+| 2015.8.8     | rest_cherrypy | * (all)          | YES        | Only via embedded rest_cherrypy   |
 +--------------+---------------+------------------+------------+-----------------------------------+
 
 Here is the list of issues about the salt-api format standardization that would make the saltpad job much much easier:
@@ -158,7 +162,8 @@ Here is an example of a settings.json file:
             }
         },
         "EAUTH": "pam",
-        "FLAVOUR": "rest_cherrypy"
+        "FLAVOUR": "rest_cherrypy",
+        "PATH_PREFIX": "/"
     }
 
 Salt-api flavour
@@ -188,6 +193,41 @@ You need to put `rest_tornado` in the configuration file.
 
 Please be aware that depending on the salt-api implementation you use, saltpad may requires a different version of salt on the master side, please refer to the table at the beginning of the Readme.
 
+Rest_cherrypy single-app page deployment
+----------------------------------------
+
+The rest_cherrypy flavour allow the deployment of single-app pages directly by the salt-api. The salt-api needs to be configured this way:
+
+.. code-block:: ini
+
+    rest_cherrypy:
+      port: 8000
+      static: /code/static
+      static_path: /static
+      app: /code/index.html
+      app_path: /saltpad
+
+This configuration is valid for a deployment of saltpad release archive on /code. The `index.html` file needs to be accessible on path `/code/index.html` and readable by salt-api. The `app_path` setting key must be different than `/` and must_correspond to the `PATH_PREFIX` saltpad configuration key. Here is the corresponding saltpad configuration file:
+
+.. code-block:: json
+
+    {
+        "API_URL": "localhost:8000",
+        "SECURE_HTTP": false,
+        "templates": {},
+        "EAUTH": "pam",
+        "FLAVOUR": "rest_cherrypy",
+        "PATH_PREFIX": "/saltpad/"
+    }
+
+The `FLAVOUR` key must be `rest_cherrypy` and the `API_URL` must be the URL of salt-api accessible to your browser.
+
+This deployment option is quite new and should be considered beta.
+
+Path prefix
+-----------
+
+While `PATH_PREFIX` was developped mainly for the embedded rest_cherrypy deployment, it can also be used to serve saltpad on a different url root. Configure your web server to serve saltpad on each path starting with `/saltpad/` and put the same value in `PATH_PREFIX`.
 
 Job templates
 -------------

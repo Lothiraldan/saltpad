@@ -5,6 +5,7 @@ import {ReactBootstrapTableStyle} from '../../node_modules/react-bootstrap-table
 
 import SettingsStoreHEC from '../hec/settings';
 import {RunJob} from '../jobs/actions';
+import gen_path from '../path_utils';
 
 
 class JobTemplates extends Component {
@@ -16,7 +17,7 @@ class JobTemplates extends Component {
                                   'Target': template.target,
                                   'Function': template.moduleFunction,
                                   'Arguments': template.arguments}
-        this.context.history.pushState({copy_job: formatted_template}, '/job/run/', null);
+        this.context.history.pushState({copy_job: formatted_template}, gen_path('/job/run/'), null);
     }
 
     redoJob = (e) => {
@@ -24,7 +25,7 @@ class JobTemplates extends Component {
         RunJob(job['Target-type'], job['Target'], job['Function'], job['Arguments'])
           .then(job_id => {
             if(job_id) {
-              this.context.history.pushState(null, `/job_result/${job_id}`, null);
+              this.context.history.pushState(null, gen_path(`/job_result/${job_id}`), null);
             }
           });
     }
@@ -35,7 +36,7 @@ class JobTemplates extends Component {
                template['moduleFunction'], [[], template['arguments']])
           .then(job_id => {
             if(job_id) {
-              this.context.history.pushState(null, `/job_result/${job_id}`, null);
+              this.context.history.pushState(null, gen_path(`/job_result/${job_id}`), null);
             }
           });
 

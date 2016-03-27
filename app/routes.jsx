@@ -1,5 +1,6 @@
 import React from 'react'
 import { Route } from 'react-router'
+import axios from 'axios';
 
 import Main from './components/Main'
 import Dashboard from './components/dashboard'
@@ -14,14 +15,22 @@ import loginRequired from './login/middleware'
 // We need to specify the route handler twice
 // to catch the case without option specified
 
-export default (
-  <Route component={Main}>
-    <Route path='/login' component={Login} />
-    <Route path='/' component={Dashboard} onEnter={loginRequired}/>
-    <Route path="/jobs" component={JobHistory} onEnter={loginRequired}/>
-    <Route path="/job_result/:job_id" component={JobResult} onEnter={loginRequired}/>
-    <Route path="/minions" component={MinionList} onEnter={loginRequired}/>
-    <Route path="/job/run" component={JobRun} onEnter={loginRequired}/>
-    <Route path="/job/templates" component={JobTemplates} onEnter={loginRequired}/>
-  </Route>
-)
+export default axios.get('/static/settings.json')
+    .then(result => result.data)
+    .then(result => {
+        function path_with_prefix(path) {
+            return `${result.PATH_PREFIX}${path}`;
+        }
+
+        return (
+          <Route component={Main}>
+            <Route path={path_with_prefix('/')} component={Dashboard} onEnter={loginRequired}/>
+            <Route path={path_with_prefix('/login')} component={Login} />
+            <Route path={path_with_prefix('/jobs')} component={JobHistory} onEnter={loginRequired}/>
+            <Route path={path_with_prefix('/job_result/:job_id')} component={JobResult} onEnter={loginRequired}/>
+            <Route path={path_with_prefix('/minions')} component={MinionList} onEnter={loginRequired}/>
+            <Route path={path_with_prefix('/job/run')} component={JobRun} onEnter={loginRequired}/>
+            <Route path={path_with_prefix('/job/templates')} component={JobTemplates} onEnter={loginRequired}/>
+          </Route>
+        )
+    });

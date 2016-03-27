@@ -12,8 +12,8 @@
     "react-router": "^1.0.3",
     "history": "^1.17.0",
     "lodash": "^4.4.0",
-    "baobab": "",
-    "axios": "",
+    "baobab": "^2.3.3",
+    "axios": "^0.9.1",
     "urijs": "^1.17.0"
   },
   "devDependencies": {

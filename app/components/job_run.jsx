@@ -11,6 +11,7 @@ import {HidingPanel} from './shared/hiding';
 import {If} from './shared/templates';
 import JobsService from '../jobs/services';
 import {RunJob} from '../jobs/actions';
+import gen_path from '../path_utils';
 
 class MatcherSelect extends React.Component {
 
@@ -208,7 +209,7 @@ class JobRun extends React.Component {
         RunJob(state.matcher, state.target, state.moduleFunction, [[], state.arguments])
           .then(job_id => {
             if(job_id) {
-              this.context.history.pushState(null, `/job_result/${job_id}`, null);
+              this.context.history.pushState(null, gen_path(`/job_result/${job_id}`), null);
             }
           });
     }

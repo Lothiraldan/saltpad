@@ -5,6 +5,7 @@ import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 import {ReactBootstrapTableStyle} from '../../node_modules/react-bootstrap-table/css/react-bootstrap-table.min.css';
 import moment from 'moment';
 import { Link } from 'react-router';
+import gen_path from '../path_utils';
 
 
 class MinionList extends React.Component {
@@ -18,7 +19,7 @@ class MinionList extends React.Component {
       }
 
       function JidOutputLink(jid, job){
-        let link = `/job_result/${jid}`;
+        let link = gen_path(`/job_result/${jid}`);
         return <Link to={link}>Output</Link>;
       }
 
