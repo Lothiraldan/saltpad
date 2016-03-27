@@ -18,9 +18,9 @@ SaltPad is mainly coded in Javascript and should be compatible with all modern b
 
 SaltPad communicate with Salt through the salt-api and thus requires access to the salt-api from the browser. If this is an issue, please drop a comment on [this issue](http://github.com/tinyclues/saltpad) to discuss the possible solutions. The salt-api format / specification is not yet stable, so SaltPad could only provide limited compatibility with salt-api. The salt-api format depends on 3 variables, salt version, the netapi used (cherrypy or tornado) and the master_job_cache used for storing and retrieving jobs results.
 
-**SaltPad required some upgrade on salt-api side (for CORS support mainly) and will only work with a develop version of saltstack if deployed apart.**
+**SaltPad depends on some upgrades in salt-api (for CORS support mainly) and will only work with a develop version of saltstack until those upgrades will be merged in a stable release.**
 
-**SaltPad could be deployed via rest_cherrypy (see Rest_cherrypy single-app page deployment part below) and should works with a stable version but consider it beta for the moment.**
+**Otherwise, SaltPad can use the rest_cherrypy API (and so, a stable version of saltstack), but this should still be considered in beta. See Rest_cherrypy single-app page deployment for more infos.**
 
 +--------------+---------------+------------------+------------+-----------------------------------+
 | Salt Version | Netapi        | Master_job_cache | Supported? | Issue if not supported            |
@@ -101,7 +101,7 @@ You will also need to `configure the external auth`_ in your salt master. For ex
           - '@runner'
           - '@wheel'
 
-Currently SaltPad requires exactly these permissions, for various reasons. There is ongoing improvements on SaltStack part and in Saltpad to require less permissions. Saltpad will not allow you to connect if you don't have this set of permissions and will show you an error message.
+Currently SaltPad requires exactly these permissions, for various reasons. There is ongoing improvements on SaltStack part and in Saltpad to require less permissions. Saltpad will not allows you to connect if you don't have this set of permissions and will show you an error message.
 
 
 Check salt-api configuration
@@ -196,7 +196,7 @@ Please be aware that depending on the salt-api implementation you use, saltpad m
 Rest_cherrypy single-app page deployment
 ----------------------------------------
 
-The rest_cherrypy flavour allow the deployment of single-app pages directly by the salt-api. The salt-api needs to be configured this way:
+The rest_cherrypy flavour allows the deployment of single-app pages directly by the salt-api. The salt-api needs to be configured this way:
 
 .. code-block:: ini
 
@@ -207,7 +207,7 @@ The rest_cherrypy flavour allow the deployment of single-app pages directly by t
       app: /code/index.html
       app_path: /saltpad
 
-This configuration is valid for a deployment of saltpad release archive on /code. The `index.html` file needs to be accessible on path `/code/index.html` and readable by salt-api. The `app_path` setting key must be different than `/` and must_correspond to the `PATH_PREFIX` saltpad configuration key. Here is the corresponding saltpad configuration file:
+This configuration is valid for a deployment of saltpad release archive on /code. The `index.html` file needs to be accessible on path `/code/index.html` and readable by salt-api. The `app_path` setting key must be different than `/` and must correspond to the saltpad configuration key `PATH_PREFIX`. Here is the corresponding saltpad configuration file:
 
 .. code-block:: json
 
