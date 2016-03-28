@@ -4,16 +4,16 @@ export function SessionHEC(DecoratedComponent) {
     class SessionHEC extends Component {
 
         updateState = () => {
-            this.setState(store.get(["session"]) || {});
+            this.setState(store.get("session") || {});
         }
 
         componentWillMount = () => {
             this.updateState();
-            store.select(['session']).on('update', this.updateState);
+            store.select('session').on('update', this.updateState);
         }
 
         componentWillUnmount = () => {
-            store.select(['session']).off(this.updateState);
+            store.select('session').off(this.updateState);
         }
 
         render = () => {

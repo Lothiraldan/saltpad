@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 import _ from 'lodash';
 import JobsStoreHEC from '../../jobs/hec'
 import moment from 'moment';
+import gen_path from '../../path_utils';
 
 
 class JobGroupItem extends React.Component {
@@ -13,7 +14,7 @@ class JobGroupItem extends React.Component {
         return (
           <li key={job_id} className="list-group-item">
             <span className="badge">{moment.unix(job.StartTime).fromNow()}</span>
-            <i className="fa fa-calendar" /> <Link to={link}>[{job_id}] {job.Function} on "{job.Target}"</Link>
+            <i className="fa fa-calendar" /> <Link to={gen_path(link)}>[{job_id}] {job.Function} on "{job.Target}"</Link>
           </li>
         )
     }
@@ -43,7 +44,7 @@ class JobsLast10Widget extends React.Component {
                   </ul>
 
                   <div className="text-right">
-                    <Link to="/jobs">View All Jobs <i className="fa fa-arrow-circle-right" /></Link>
+                    <Link to={gen_path("/jobs")}>View All Jobs <i className="fa fa-arrow-circle-right" /></Link>
                   </div>
                 </div>
               </div>

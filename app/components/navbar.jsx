@@ -1,6 +1,7 @@
 import React from 'react';
 import {LogoutUser} from '../login/LoginActions';
 import { Link } from 'react-router';
+import gen_path from '../path_utils';
 
 export default class NavBar extends React.Component {
     render() {
@@ -11,7 +12,7 @@ export default class NavBar extends React.Component {
               <div className="fa fa-bars tooltips" data-placement="right" data-original-title="Toggle Navigation" />
           </div>
 
-          <Link to="/" className="logo"><b>SALTPAD</b></Link>
+          <Link to={gen_path("/")} className="logo"><b>SALTPAD</b></Link>
 
           <div className="top-menu">
             <ul className="nav pull-right top-menu">

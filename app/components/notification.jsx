@@ -6,6 +6,7 @@ import {Link} from 'react-router';
 import {SessionHEC} from '../hec/session';
 import {SingleJobStoreHEC} from '../jobs/hec';
 import {If} from './shared/templates';
+import gen_path from '../path_utils';
 
 class JobRunNotification extends React.Component {
   render() {
@@ -29,7 +30,7 @@ class JobRunNotification extends React.Component {
         </div>
         <div className="details">
           <p><muted>{moment.unix(this.props.job.StartTime).fromNow()}</muted><br/>
-             <Link to={`/job_result/${this.props.job.jid}`}>{this.props.job.Function} on {this.props.job.Target}</Link><br/>
+             <Link to={gen_path(`/job_result/${this.props.job.jid}`)}>{this.props.job.Function} on {this.props.job.Target}</Link><br/>
              <i className="fa fa-users"> {ResultNumber}/{MinionsNumber}</i><br/>
              {this.props.job.jid}<br/>
           </p>

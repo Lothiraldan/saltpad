@@ -6,7 +6,9 @@ import connect_ws from './services/real-time'
 import auto_updater from './services/auto_updater'
 import history from './history'
 
-function render() {
+console.debug("Saltpad started!");
+
+function render(routes) {
     ReactDom.render(
       <Router history={history} >
         {routes}
@@ -15,4 +17,4 @@ function render() {
     )
 }
 
-render();
+routes.then(routes => render(routes));

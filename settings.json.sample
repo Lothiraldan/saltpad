@@ -21,5 +21,6 @@
         }
     },
     "EAUTH": "pam", # The configured external_auth system,
-    "FLAVOUR": "rest_cherrypy" # The netapi implementation configured on salt-master
+    "FLAVOUR": "rest_cherrypy" # The netapi implementation configured on salt-master,
+    "path_prefix": "/" # The prefix of saltpad url
 }
