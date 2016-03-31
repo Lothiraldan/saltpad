@@ -1,6 +1,7 @@
-import React from 'react'
-import { Route } from 'react-router'
+import React from 'react';
+import { Route } from 'react-router';
 import axios from 'axios';
+import _ from 'lodash';
 
 import Main from './components/Main'
 import Dashboard from './components/dashboard'
@@ -19,7 +20,8 @@ export default axios.get('/static/settings.json')
     .then(result => result.data)
     .then(result => {
         function path_with_prefix(path) {
-            return `${result.PATH_PREFIX}${path}`;
+            let path_prefix = _.get(result, 'PATH_PREFIX', '');
+            return `${path_prefix}${path}`;
         }
 
         return (
