@@ -70,10 +70,7 @@ class FunctionSelect extends React.Component {
     var fonctions = this.props.functions;
 
     var async_options = (input, callback) => {
-        console.log("Job Input", input);
-
         let options = _.filter(fonctions, (fonction) => _.includes(fonction.value, input));
-        console.log("Options", options);
         callback(null, {
             options: options,
             // CAREFUL! Only set this to true when there are no more options,
@@ -82,9 +79,13 @@ class FunctionSelect extends React.Component {
         });
     }
 
-    console.log("Function", this.props.function);
-    var cache = [{label: this.props.function, value: this.props.function}];
-    console.log("Cache", cache);
+    if(this.props.function === undefined) {
+        var value = undefined;
+    } else {
+        var value = {label: this.props.function, value: this.props.function};
+    }
+
+    console.log("Function", value);
 
     return (
       <div className="form-group">
@@ -94,7 +95,7 @@ class FunctionSelect extends React.Component {
               name="form-function-name"
               loadOptions={async_options}
               minimumInput={3}
-              value={this.props.function}
+              value={value}
               onChange={this.props.functionChanger}
           />
           <span className="help-block">
