@@ -12,7 +12,7 @@ export var JobEventToJobStore = function(job) {
                    'StartTime': moment(job['_stamp'], moment.ISO_8601).unix(), 'Target': job['tgt'],
                    'Target-type': job['tgt_type'], 'Arguments': ArgParser(job['arg']),
                    'Minions': job['minions'], 'Return': job['return']}
-    return _.omit(new_job, _.isUndefined);
+    return _.omitBy(new_job, _.isUndefined);
 }
 
 export var ArgSpecParser = function(argspec) {
