@@ -1,8 +1,13 @@
 # Change Log
 
-## [0.3](https://github.com/tinyclues/saltpad/tree/0.3) (2016-YY-ZZ)
+## [0.3](https://github.com/tinyclues/saltpad/tree/0.3) (2016-03-03)
 
 - Make the external_auth configurable in the settings. It is optional and the default value is 'pam'.
+- Better support for highstate with minions in error.
+- Fix some style issues for Firefox.
+- Add beta support for rest-cherrypy with embedded single-app page deployment.
+- Add support for prefix configuration required by the support for embedded single-app page deployment but could be usefull in other cases.
+- Update the docker environment and add a docker-compose with salt-api linked container.
 
 ## [0.2](https://github.com/tinyclues/saltpad/tree/0.2) (2016-01-22)
 
