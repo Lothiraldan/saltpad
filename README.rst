@@ -133,7 +133,7 @@ Configure SaltPad
 
 If your checklist is done, you can now configure SaltPad.
 
-Get into the saltpad directory, copy the file named "settings.json.sample" as "settings.json". You will need to edit it. Set your API_URL if your salt-master is not local and if your salt-api is served over SSL, set the SECURE_HTTP key to `true`. You can also configure job templates in this file, see the corresponding part for more details. You will need to strip all comments starting with '#' from the file.
+Get into the saltpad directory, copy the file named "settings.json.sample" as "settings.json" in the "config" directory. You will need to edit it. Set your API_URL if your salt-master is not local and if your salt-api is served over SSL, set the SECURE_HTTP key to `true`. You can also configure job templates in this file, see the corresponding part for more details. You will need to strip all comments starting with '#' from the file.
 
 Here is an example of a settings.json file:
 
@@ -266,7 +266,7 @@ Unzip to a location of your choosing:
 
     unzip dist.zip -d /opt/saltpad
 
-You will also need to create the file settings.json in the same directory that you have unzipped to, e.g. `/opt/saltpad/settings.json`. You can use the example settings.json found above (https://github.com/tinyclues/saltpad#configure-saltpad).
+You will also need to create the file settings.json in the "config" directory that you have unzipped to, e.g. `/opt/saltpad/config/settings.json`. You can use the example settings.json found above (https://github.com/tinyclues/saltpad#configure-saltpad).
 
 Then point your favorite webserver at the saltpad directory.
 
