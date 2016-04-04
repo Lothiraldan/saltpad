@@ -359,7 +359,7 @@ If you want to hack on saltpad and start the dev environment, go on the reposito
 .. code-block:: sh
 
     npm install # install javascript dependencies
-    ./node_modules/bower/bin/bower install # install browser dependencies
+    ./node_modules/bower/bin/bower install # install bowser dependencies
     cp settings.json.sample settings.json
 
 You can now launch the dev environment:
