@@ -1,10 +1,11 @@
 import React from 'react';
-import {LogoutUser} from '../login/LoginActions';
 import { Link } from 'react-router';
 import gen_path from '../path_utils';
 
 export default class NavBar extends React.Component {
+
     render() {
+      console.log("NavBar", this.props);
 
       return (
         <header className="header black-bg">
@@ -16,7 +17,7 @@ export default class NavBar extends React.Component {
 
           <div className="top-menu">
             <ul className="nav pull-right top-menu">
-                  <li><a className="logout" onClick={LogoutUser}>Logout</a></li>
+                  <li><a className="logout" onClick={this.props.signOutUser}>Logout</a></li>
             </ul>
           </div>
         </header>

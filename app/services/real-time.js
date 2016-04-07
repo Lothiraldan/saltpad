@@ -23,9 +23,8 @@ var INVALID_WEBSOCKET_TERMINATION = [
 ];
 
 
-function real_time_factory() {
-    let token = store.get(['auth', 'token']);
-    let settings = store.get('settings');
+function real_time_factory(token) {
+    let settings = window.settings;
     let flavour = settings.FLAVOUR;
 
     if (token == undefined || settings == undefined) {
@@ -52,15 +51,14 @@ function real_time_factory() {
 }
 
 
-export default function connect_real_time() {
-    let token = store.get(['auth', 'token']);
-    let settings = store.get('settings');
+export default function connect_real_time(token) {
+    let settings = window.settings;
 
     if (token == undefined || settings == undefined) {
         return;
     }
 
-    var source = real_time_factory();
+    var source = real_time_factory(token);
 
     source.onerror = function(e) {
         let errMsg = `Error while connecting to real-time endpoint: ${url}`;
@@ -69,6 +67,7 @@ export default function connect_real_time() {
     }
 
     source.onclose = function(e) {
+        console.debug("Real-time source was closed");
         if(_.includes(INVALID_WEBSOCKET_TERMINATION, e.code)) {
             let errMsg = `Websocket connection was abnormally closed, logout! Reason: ${e.reason}, code: ${e.code}`;
             console.error(errMsg);
@@ -79,6 +78,8 @@ export default function connect_real_time() {
     source.onmessage = e => {
         let raw_data = e.data.replace("data: ", "");
         let data = JSON.parse(raw_data);
+
+        console.log("Msg", data);
 
         for(let entry of EVENT_MAP) {
             let match = data.tag.match(new R(entry[0]));
@@ -98,11 +99,6 @@ export default function connect_real_time() {
             console.log('websocket client ready');
         }
     }
-}
 
-store.select(['auth', 'token']).on('update', connect_real_time);
-store.select('settings').on('update', connect_real_time);
-
-if(store.get(['auth', 'token']) != undefined && store.get('settings') != undefined) {
-    connect_real_time();
+    return source;
 }

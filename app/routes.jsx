@@ -3,15 +3,16 @@ import { Route } from 'react-router';
 import axios from 'axios';
 import _ from 'lodash';
 
-import Main from './components/Main'
+import Main from './pages/Main'
 import Dashboard from './components/dashboard'
 import JobHistory from './components/job_history'
 import JobResult from './components/job_result'
 import MinionList from './components/minion_list'
 import JobRun from './components/job_run'
 import JobTemplates from './components/job_templates'
-import Login from './login/LoginComponent'
-import loginRequired from './login/middleware'
+import Login from './pages/login'
+import loginRequired, {UserIsAuthenticated} from './login/middleware'
+import PageStructure from './components/PageStructure'
 
 // We need to specify the route handler twice
 // to catch the case without option specified
@@ -26,8 +27,8 @@ export default axios.get('/static/settings.json')
 
         return (
           <Route component={Main}>
-            <Route path={path_with_prefix('/')} component={Dashboard} onEnter={loginRequired}/>
             <Route path={path_with_prefix('/login')} component={Login} />
+            <Route path={path_with_prefix('/')} component={UserIsAuthenticated(PageStructure(Dashboard))} />
             <Route path={path_with_prefix('/jobs')} component={JobHistory} onEnter={loginRequired}/>
             <Route path={path_with_prefix('/job_result/:job_id')} component={JobResult} onEnter={loginRequired}/>
             <Route path={path_with_prefix('/minions')} component={MinionList} onEnter={loginRequired}/>

@@ -1,6 +1,6 @@
 import axios from 'axios';
-import {LoginUser} from './LoginActions';
-import BaseService from '../services/base_service';
+import {LoginUser} from '../login/LoginActions';
+import BaseService from './base_service';
 import {PushError} from '../errors/actions';
 import store from '../store';
 import _ from 'lodash';
@@ -8,11 +8,19 @@ import _ from 'lodash';
 class AuthService extends BaseService {
 
   login = (username, password) => {
-    let eauth = _.get(store.get('settings'), 'EAUTH', 'pam');
+    let eauth = _.get(window.settings.settings, 'EAUTH', 'pam');
     let query = this.post(['login'],
       {username, password, "eauth": eauth}
     );
     return this.handleAuth(query);
+  }
+
+  new_login = (username, password) => {
+    let eauth = _.get(window.settings.settings, 'EAUTH', 'pam');
+    let query = this.post(['login'],
+      {username, password, "eauth": eauth}
+    );
+    return query;
   }
 
   logout() {
@@ -26,7 +34,7 @@ class AuthService extends BaseService {
         var token = _return.token;
         var user  = _return.user;
         LoginUser(token, user);
-        return true;
+        return [token, user];
       })
       .catch(response => {
         if(response instanceof Error) {

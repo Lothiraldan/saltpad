@@ -5,16 +5,6 @@ import _ from 'lodash';
 
 import {PushError, FatalError} from './errors/actions';
 
-
-// Facets
-
-let facets = {non_runner_jobs: {
-    cursors: {jobs: ['jobs']},
-    get: function(data) {
-        //
-    }
-}}
-
 // Load tree
 var local_state = localStorage.state;
 
@@ -71,7 +61,10 @@ axios.get('/static/settings.json')
         }
         return settings;
     })
-    .then(settings => tree.set("settings", settings))
+    .then(settings => {
+      window.settings = settings;
+      tree.set("settings", settings)
+    })
     .catch(response => {
         if (response instanceof Fatal) {
           // Something happened in setting up the request that triggered an Error
@@ -90,3 +83,23 @@ axios.get('/static/settings.json')
           }
         }
     });
+
+
+// Redux store
+import { createStore, applyMiddleware, compose } from 'redux';
+import rootReducer from './reducers';
+import promiseMiddleware from 'redux-promise';
+import { routerReducer, syncHistoryWithStore, routerActions, routerMiddleware } from 'react-router-redux'
+import handleTransitions from 'redux-history-transitions';
+
+export function configureStore(browserHistory) {
+  const transitions_enhancer = handleTransitions(browserHistory)
+  const store = createStore(rootReducer, {}, compose(
+    applyMiddleware(promiseMiddleware),
+    applyMiddleware(routerMiddleware(browserHistory)),
+    transitions_enhancer,
+    window.devToolsExtension ? window.devToolsExtension() : f => f
+  ));
+  const history = syncHistoryWithStore(browserHistory, store);
+  return {store: store, history: history}
+};

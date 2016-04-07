@@ -1,18 +1,23 @@
 import React from 'react'
 import ReactDom from 'react-dom'
 import {Router} from 'react-router'
+import { Provider } from 'react-redux';
 import routes from './routes'
 import connect_ws from './services/real-time'
 import auto_updater from './services/auto_updater'
-import history from './history'
+import browserHistory from './history'
 
-console.debug("Saltpad started!");
+import {configureStore} from './store';
+
+var {store, history} = configureStore(browserHistory);
+
+console.debug("Saltpad started!", store, history);
 
 function render(routes) {
     ReactDom.render(
-      <Router history={history} >
-        {routes}
-      </Router>,
+      <Provider store={store}>
+          <Router history={history} routes={routes} />
+      </Provider>,
       document.getElementById('app')
     )
 }

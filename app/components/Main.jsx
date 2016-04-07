@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import Login from '../login/LoginComponent';
+import Login from './login';
 import NavBar from '../components/navbar';
 import Notification from '../components/notification';
 import Aside from '../components/aside';
@@ -16,48 +16,60 @@ import {responsive} from '../assets/css/style-responsive.css';
 import {style} from '../assets/css/style.css';
 import store from '../store';
 
-class Main extends React.Component {
+// class Main extends React.Component {
 
-  render = () => {
-    let settings = this.props.settings;
+//   render = () => {
 
-    if (settings == undefined) {
-        return <div />;
-    }
+//     let settings = this.props.settings;
 
-    let login_children = this.props.children.type == Login;
+//     if (settings == undefined) {
+//         return <div />;
+//     }
 
-    if(login_children == true) {
-        var navbar = undefined;
-        var aside = undefined;
-        var notification = undefined;
-    } else {
-        var navbar = <NavBar />;
-        var aside = <Aside />;
-        var notification = <Notification />;
-    }
+//     let login_children = this.props.children.type == Login;
 
+//     if(login_children == true) {
+//         var navbar = undefined;
+//         var aside = undefined;
+//         var notification = undefined;
+//     } else {
+//         var navbar = <NavBar />;
+//         var aside = <Aside />;
+//         var notification = <Notification />;
+//     }
+
+//     return (
+//       <div>
+//         {navbar}
+//         {aside}
+
+//         <section id="main-content">
+//           <section className="wrapper">
+//             <div className="row">
+//               <div className="col-lg-9">
+//                 {this.props.children}
+//               </div>
+//               <div className="col-lg-3">
+//                 {notification}
+//               </div>
+//             </div>
+//           </section>
+//         </section>
+//       </div>
+//     )
+//   }
+// }
+// Main.displayName = "Main";
+
+// export default FatalErrorStoreHEC(SettingsStoreHEC(Main), FatalError);
+
+export default class Main extends React.Component {
+
+  render() {
     return (
       <div>
-        {navbar}
-        {aside}
-
-        <section id="main-content">
-          <section className="wrapper">
-            <div className="row">
-              <div className="col-lg-9">
-                {this.props.children}
-              </div>
-              <div className="col-lg-3">
-                {notification}
-              </div>
-            </div>
-          </section>
-        </section>
+        {this.props.children}
       </div>
     )
   }
 }
-Main.displayName = "Main";
-
-export default FatalErrorStoreHEC(SettingsStoreHEC(Main), FatalError);

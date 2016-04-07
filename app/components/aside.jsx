@@ -11,7 +11,7 @@ class Aside extends React.Component {
           <div id="sidebar" className="nav-collapse ">
             <ul className="sidebar-menu" id="nav-accordion">
 
-              <UserPart />
+              <UserPart user={this.props.user} />
 
               <MenuLink link="/" icon="dashboard" title="Dashboard" />
 

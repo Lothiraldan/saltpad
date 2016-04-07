@@ -1,3 +1,6 @@
 import createBrowserHistory from 'history/lib/createBrowserHistory'
 
-export default createBrowserHistory();
+var history = createBrowserHistory();
+history.id = 'saltpad';
+
+export default history;
