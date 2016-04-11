@@ -59,7 +59,7 @@ const validateAndSignInUser = (values, dispatch) => {
         if(response.payload.status != 200) {
           //let other components know of error by updating the redux` state
           dispatch(signInUserFailure(response.payload));
-          reject(data); //this is for redux-form itself
+          reject({_error: "Invalid credentials"}); //this is for redux-form itself
         } else {
           let user_payload = {token: data.return[0].token, username: data.return[0].user}
           //let other components know that we got user and things are fine by updating the redux` state
@@ -73,7 +73,6 @@ const validateAndSignInUser = (values, dispatch) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-   validateAndSignInUser_old: _.curryRight(old_login)(dispatch),
    signInUser: validateAndSignInUser
   }
 }

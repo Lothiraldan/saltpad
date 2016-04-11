@@ -28,11 +28,9 @@ module.exports = {
         loader: 'babel',
         include: path.join(__dirname, 'app'),
         query: {
-          optional: ['runtime'],
-          stage: 0,
-          plugins: ['react-transform'],
-          extra: {
-            'react-transform': {
+          presets: ['react', 'es2015', "stage-0"],
+          plugins: [
+            ['react-transform', {
               transforms: [{
                 transform: 'react-transform-hmr',
                 imports: ['react'],
@@ -41,8 +39,8 @@ module.exports = {
                 transform: 'react-transform-catch-errors',
                 imports: ['react', 'redbox-react']
               }]
-            }
-          }
+            }],
+          ]
         }
       },
       {

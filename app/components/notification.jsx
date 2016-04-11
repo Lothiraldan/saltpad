@@ -8,7 +8,7 @@ import {SingleJobStoreHEC} from '../jobs/hec';
 import {If} from './shared/templates';
 import gen_path from '../path_utils';
 
-class JobRunNotification extends React.Component {
+export class JobRunNotification extends React.Component {
   render() {
 
     const job = this.props.job;
@@ -42,7 +42,7 @@ class JobRunNotification extends React.Component {
 JobRunNotification.displayName = 'JobRunNotification';
 
 
-class Notification extends React.Component {
+export class Notification extends React.Component {
     render() {
 
       let runned_jobs = _.sortBy(this.props.session['runned_jobs'], (jid) => -1 * jid);
