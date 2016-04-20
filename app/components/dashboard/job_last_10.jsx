@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router';
 import _ from 'lodash';
-import JobsStoreHEC from '../../jobs/hec'
 import moment from 'moment';
 import gen_path from '../../path_utils';
 
@@ -54,4 +53,4 @@ class JobsLast10Widget extends React.Component {
     }
 }
 
-export default JobsStoreHEC(JobsLast10Widget);
+export default JobsLast10Widget;

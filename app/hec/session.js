@@ -5,7 +5,6 @@ export function SessionHEC(DecoratedComponent) {
     class SessionHEC extends Component {
 
         updateState = () => {
-            console.log("Store", store);
             this.setState(store.get("session") || {});
         }
 

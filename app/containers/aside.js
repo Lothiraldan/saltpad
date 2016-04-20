@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import UserPart from './aside_user';
 import Aside from '../components/aside';
-import _ from 'lodash';
 
 
 function mapStateToProps(state) {
   return {
-    user: state.user.user,
+    UserPart: UserPart,
   };
 };
 

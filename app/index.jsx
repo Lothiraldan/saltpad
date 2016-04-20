@@ -4,14 +4,11 @@ import {Router} from 'react-router'
 import { Provider } from 'react-redux';
 import routes from './routes'
 import connect_ws from './services/real-time'
-import auto_updater from './services/auto_updater'
 import browserHistory from './history'
 
-import {configureStore} from './store';
+import {store, history} from './store';
 
-var {store, history} = configureStore(browserHistory);
-
-console.debug("Saltpad started!", store, history);
+console.log("Store index", store);
 
 function render(routes) {
     ReactDom.render(

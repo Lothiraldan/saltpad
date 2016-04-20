@@ -4,37 +4,37 @@ import _ from 'lodash';
 
 var RunnerJobEventToJobStore = function(job) {
     return {'Function': job['fun'], 'jid': job['jid'], 'User': job['user'],
-            'StartTime': job['_stamp']}
-}
+            'StartTime': job['_stamp']};
+};
 
 export var JobEventToJobStore = function(job) {
     let new_job = {'Function': job['fun'], 'jid': job['jid'], 'User': job['user'],
                    'StartTime': moment(job['_stamp'], moment.ISO_8601).unix(), 'Target': job['tgt'],
                    'Target-type': job['tgt_type'], 'Arguments': ArgParser(job['arg']),
-                   'Minions': job['minions'], 'Return': job['return']}
+                   'Minions': job['minions'], 'Return': job['return']};
     return _.omitBy(new_job, _.isUndefined);
-}
+};
 
 export var ArgSpecParser = function(argspec) {
     let default_args_size = _.size(argspec.defaults);
     let args_size = _.size(argspec.args);
     let mandatory_args = _.slice(argspec.args, 0, args_size - default_args_size);
     let default_args = _.zipObject(_.slice(argspec.args, args_size - default_args_size),
-                                   argspec.defaults)
+                                   argspec.defaults);
     return [mandatory_args, default_args];
-}
+};
 
 export function ArgFormatter(args) {
     let [poargs, kwargs] = args;
     let formatted_kwargs = _.map(_.toPairs(kwargs), ([arg_key, arg_value]) => {
-        return {__kwarg__: true, [arg_key]: arg_value}
+        return {__kwarg__: true, [arg_key]: arg_value};
     });
     return _.union(poargs, formatted_kwargs);
 }
 
 export function ArgParser(salt_formatted_args) {
 
-    if(salt_formatted_args == undefined) {
+    if(salt_formatted_args === undefined) {
         return undefined;
     }
 
@@ -54,7 +54,7 @@ export function ArgParser(salt_formatted_args) {
 
 export var HighstateStatusOrder = ["Error", "Dependency failed", "Changes", "Success"];
 export var HighstateStatusLabel = {"Error": "danger", "Dependency failed": "danger",
-                                   "Changes": "info", "Success": "success"}
+                                   "Changes": "info", "Success": "success"};
 
 export function HighstateReturnParser(jobReturn) {
     let grouped_chunks = _.groupBy(_.pairs(jobReturn), (chunk) => {
@@ -99,7 +99,7 @@ export function gradientBackground(chunks) {
         {name: "changes", value: blue, color: "#d9edf7"},
         {name: "warnings", value: orange, color: "#faebcc"},
         {name: "errors", value: red, color: "#f2dede"}
-    ]
+    ];
 
     return _gradientGenerator(gradient_data);
 }
@@ -113,13 +113,13 @@ function _gradientGenerator(data) {
         let total = accumulator.total;
         let iterationColorStop = [
             `${value.color} ${(total / fullTotal) * 100}%`,
-            `${value.color} ${((value.value + total)/ fullTotal) * 100}%`]
+            `${value.color} ${((value.value + total)/ fullTotal) * 100}%`];
 
         return {
             total: total + value.value,
             colorsStops: accumulator.colorsStops.concat(iterationColorStop)
-        }
-    }
+        };
+    };
 
     var colorsStops = _.reduce(data, iteratee, {total: 0, colorsStops: []}).colorsStops;
     return {backgroundImage: `linear-gradient(to right, ${colorsStops.join(', ')})`};

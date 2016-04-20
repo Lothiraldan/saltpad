@@ -1,10 +1,11 @@
-import store from '../store';
 import auth_minion, {MinionStatusOnJobReturn} from '../minions/actions';
 import {LogoutUser} from '../login/LoginActions';
 import {PushError} from '../errors/actions';
 import URI from 'urijs';
 import _ from 'lodash';
 import {newJobReturn, JobReturn, UpdateModuleFunctionDoc, UpdateModuleFunctionList, UpdateModuleFunctionArgSpec} from '../jobs/actions';
+import {newSaltJob} from '../actions/jobs';
+import {store} from '../store';
 
 let R = RegExp;
 
@@ -18,6 +19,11 @@ var EVENT_MAP = new Map([
 ]);
 
 
+var ACTION_MAP = new Map([
+    ['salt/job/(\\d*)/new', newSaltJob],
+]);
+
+
 var INVALID_WEBSOCKET_TERMINATION = [
     1006
 ];
@@ -27,7 +33,7 @@ function real_time_factory(token) {
     let settings = window.settings;
     let flavour = settings.FLAVOUR;
 
-    if (token == undefined || settings == undefined) {
+    if (token === undefined || settings === undefined) {
         return;
     }
 
@@ -53,8 +59,9 @@ function real_time_factory(token) {
 
 export default function connect_real_time(token) {
     let settings = window.settings;
+    var dispatch = store.dispatch;
 
-    if (token == undefined || settings == undefined) {
+    if (token === undefined || settings === undefined) {
         return;
     }
 
@@ -64,7 +71,7 @@ export default function connect_real_time(token) {
         let errMsg = `Error while connecting to real-time endpoint: ${url}`;
         PushError(errMsg);
         LogoutUser();
-    }
+    };
 
     source.onclose = function(e) {
         console.debug("Real-time source was closed");
@@ -74,19 +81,17 @@ export default function connect_real_time(token) {
             PushError(errMsg);
             LogoutUser();
         }
-    }
+    };
+
     source.onmessage = e => {
+        console.log("Dispatch", dispatch);
         let raw_data = e.data.replace("data: ", "");
         let data = JSON.parse(raw_data);
 
-        console.log("Msg", data);
-
-        for(let entry of EVENT_MAP) {
+        for(let entry of ACTION_MAP) {
             let match = data.tag.match(new R(entry[0]));
             if (match) {
-                for(let action of entry[1]) {
-                    action(...match.slice(1), data);
-                }
+                dispatch(entry[1](...match.slice(1), data));
             }
         }
     };
@@ -98,7 +103,7 @@ export default function connect_real_time(token) {
             source.send('websocket client ready');
             console.log('websocket client ready');
         }
-    }
+    };
 
     return source;
 }

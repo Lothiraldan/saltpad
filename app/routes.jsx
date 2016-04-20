@@ -4,7 +4,7 @@ import axios from 'axios';
 import _ from 'lodash';
 
 import Main from './pages/Main'
-import Dashboard from './components/dashboard'
+import Dashboard from './containers/dashboard'
 import JobHistory from './components/job_history'
 import JobResult from './components/job_result'
 import MinionList from './components/minion_list'
@@ -29,11 +29,11 @@ export default axios.get('/static/settings.json')
           <Route component={Main}>
             <Route path={path_with_prefix('/login')} component={Login} />
             <Route path={path_with_prefix('/')} component={UserIsAuthenticated(PageStructure(Dashboard))} />
-            <Route path={path_with_prefix('/jobs')} component={JobHistory} onEnter={loginRequired}/>
-            <Route path={path_with_prefix('/job_result/:job_id')} component={JobResult} onEnter={loginRequired}/>
-            <Route path={path_with_prefix('/minions')} component={MinionList} onEnter={loginRequired}/>
-            <Route path={path_with_prefix('/job/run')} component={JobRun} onEnter={loginRequired}/>
-            <Route path={path_with_prefix('/job/templates')} component={JobTemplates} onEnter={loginRequired}/>
+            <Route path={path_with_prefix('/jobs')} component={UserIsAuthenticated(PageStructure(JobHistory))} />
+            <Route path={path_with_prefix('/job_result/:job_id')} component={UserIsAuthenticated(PageStructure(JobResult))} />
+            <Route path={path_with_prefix('/minions')} component={UserIsAuthenticated(PageStructure(MinionList))} />
+            <Route path={path_with_prefix('/job/run')} component={UserIsAuthenticated(PageStructure(JobRun))} />
+            <Route path={path_with_prefix('/job/templates')} component={UserIsAuthenticated(PageStructure(JobTemplates))} />
           </Route>
         )
     });

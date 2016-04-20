@@ -91,10 +91,13 @@ import rootReducer from './reducers';
 import promiseMiddleware from 'redux-promise';
 import { routerReducer, syncHistoryWithStore, routerActions, routerMiddleware } from 'react-router-redux'
 import handleTransitions from 'redux-history-transitions';
+import authenticatedApiCall from './middlewares/api';
+import browserHistory from './history'
 
 export function configureStore(browserHistory) {
   const transitions_enhancer = handleTransitions(browserHistory)
   const store = createStore(rootReducer, {}, compose(
+    applyMiddleware(authenticatedApiCall),
     applyMiddleware(promiseMiddleware),
     applyMiddleware(routerMiddleware(browserHistory)),
     transitions_enhancer,
@@ -103,3 +106,5 @@ export function configureStore(browserHistory) {
   const history = syncHistoryWithStore(browserHistory, store);
   return {store: store, history: history}
 };
+
+export var {store, history} = configureStore(browserHistory);

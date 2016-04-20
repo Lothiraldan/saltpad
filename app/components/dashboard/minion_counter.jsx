@@ -27,4 +27,4 @@ class MinionCounterWidget extends React.Component {
     }
 }
 
-export default MinionStoreHEC(MinionCounterWidget);
+export default MinionCounterWidget;

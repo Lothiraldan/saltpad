@@ -5,7 +5,6 @@ import gen_path from '../path_utils';
 export default class NavBar extends React.Component {
 
     render() {
-      console.log("NavBar", this.props);
 
       return (
         <header className="header black-bg">

@@ -10,7 +10,9 @@ export default function(state = INITIAL_STATE, action) {
     switch(action.type) {
         case SIGNIN_USER_SUCCESS:
 
-            var source = connect_real_time(action.payload.token);
+            let token = action.payload.data.return[0].token;
+
+            var source = connect_real_time(token);
 
             return { ...state, connected: true, token: action.payload.token, source: source};
 

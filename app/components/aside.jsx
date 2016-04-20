@@ -6,12 +6,14 @@ import MenuLink from './aside/menu_link';
 class Aside extends React.Component {
     render() {
 
+      let {UserPart} = this.props;
+
       return (
         <aside>
           <div id="sidebar" className="nav-collapse ">
             <ul className="sidebar-menu" id="nav-accordion">
 
-              <UserPart user={this.props.user} />
+              <UserPart />
 
               <MenuLink link="/" icon="dashboard" title="Dashboard" />
 

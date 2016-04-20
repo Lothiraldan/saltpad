@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router';
-import JobsStoreHEC from '../../jobs/hec'
 
 class JobCounterWidget extends React.Component {
     render() {
@@ -17,4 +16,4 @@ class JobCounterWidget extends React.Component {
     }
 }
 
-export default JobsStoreHEC(JobCounterWidget);
+export default JobCounterWidget;
