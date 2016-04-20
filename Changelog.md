@@ -1,5 +1,10 @@
 # Change Log
 
+## [0.3.1](https://github.com/tinyclues/saltpad/tree/0.3.1) (2016-04-19)
+
+- Fix the dist.zip archive to correctly create the "static" directory. Sorry for the inconvenience.
+- The "settings.json" file should be located in the "static" directory and not in a "config" directory, documentation has been fixed.
+
 ## [0.3](https://github.com/tinyclues/saltpad/tree/0.3) (2016-03-03)
 
 - Make the external_auth configurable in the settings. It is optional and the default value is 'pam'.
