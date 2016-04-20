@@ -258,7 +258,7 @@ Released versions are available on github (https://github.com/Lothiraldan/saltpa
 
 .. code-block:: bash
 
-    wget https://github.com/Lothiraldan/saltpad/releases/download/v0.3/dist.zip
+    wget https://github.com/Lothiraldan/saltpad/releases/download/v0.3.1/dist.zip
 
 Unzip to a location of your choosing:
 
