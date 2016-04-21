@@ -4,7 +4,7 @@ import {PushError} from '../errors/actions';
 import URI from 'urijs';
 import _ from 'lodash';
 import {newJobReturn, JobReturn, UpdateModuleFunctionDoc, UpdateModuleFunctionList, UpdateModuleFunctionArgSpec} from '../jobs/actions';
-import {newSaltJob} from '../actions/jobs';
+import {newSaltJob, saltJobReturn} from '../actions/jobs';
 import {store} from '../store';
 
 let R = RegExp;
@@ -21,6 +21,7 @@ var EVENT_MAP = new Map([
 
 var ACTION_MAP = new Map([
     ['salt/job/(\\d*)/new', newSaltJob],
+    ['salt/job/(\\d*)/ret/(.*)', saltJobReturn]
 ]);
 
 
@@ -84,7 +85,6 @@ export default function connect_real_time(token) {
     };
 
     source.onmessage = e => {
-        console.log("Dispatch", dispatch);
         let raw_data = e.data.replace("data: ", "");
         let data = JSON.parse(raw_data);
 

@@ -61,7 +61,6 @@
     "form-urlencoded": "",
     "html-webpack-plugin": "",
     "extract-text-webpack-plugin": ">=1.0.1",
-    "cosmos-js": "^0.7.0",
     "yargs": "^3.30.0",
     "@kadira/storybook": ""
   },

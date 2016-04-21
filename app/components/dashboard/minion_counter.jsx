@@ -7,6 +7,7 @@ class MinionCounterWidget extends React.Component {
     render() {
 
       let minions = this.props.minions;
+      console.log("Minions", minions);
       let up_minions = _.filter(minions, (minion) => minion.status == 'up');
 
       if(_.size(minions) == _.size(up_minions) && _.size(minions) != 0) {
