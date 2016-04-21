@@ -1,11 +1,8 @@
-Debug
-===================
+# Debug
 
 This doc helps you to debug some common issues with saltpad and the salt-api.
 
-
-Login error
--------------
+## Login error
 
 Sometime, you cannot log to saltpad while it's working perfectly fine with the salt command line. Saltpad is based solely on salt-api for login so the issue is likely to be on salt-api side. You can try to login using curl:
 
