@@ -12,6 +12,6 @@ function mapStateToProps(state) {
     JobCounterWidget: JobCounterWidget,
     JobsLast10Widget: JobsLast10Widget
   };
-};
+}
 
 export default connect(mapStateToProps, null)(Dashboard);

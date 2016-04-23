@@ -1,21 +1,19 @@
 import React, {Component} from 'react';
 import _ from 'lodash';
 
-import {SessionHEC} from '../hec/session';
-import {FollowJob, UnfollowJob} from '../jobs/actions';
-
 class JobFollowStar extends Component {
 
     onClick = (e) => {
+        console.log("Onclik props", this.props);
         if(this.isJobFollowed()) {
-            UnfollowJob(this.props.job_id);
+            this.props.UnfollowJob(this.props.job_id);
         } else {
-            FollowJob(this.props.job_id);
+            this.props.FollowJob(this.props.job_id);
         }
     }
 
     isJobFollowed = () => {
-        return _.includes(this.props.session['followed_jobs'], this.props.job_id);
+        return _.includes(this.props.followed_jobs, this.props.job_id);
     }
 
     render() {
@@ -32,4 +30,4 @@ class JobFollowStar extends Component {
     }
 }
 
-export default SessionHEC(JobFollowStar);
+export default JobFollowStar;

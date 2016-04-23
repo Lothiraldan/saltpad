@@ -11,6 +11,8 @@ import gen_path from '../path_utils';
 class MinionList extends React.Component {
     render() {
 
+      console.log("Minions", this.props.minions);
+
       var minions = _.map(_.toPairs(this.props.minions),
                           ([minion_id, minion_data]) => _.merge({id: minion_id}, minion_data));
 
@@ -46,5 +48,5 @@ class MinionList extends React.Component {
 
 MinionList.displayName = "Dashboard";
 
-export default MinionsStoreHEC(MinionList);
+export default MinionList;
 

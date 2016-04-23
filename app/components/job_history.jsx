@@ -1,6 +1,5 @@
 import _ from 'lodash';
-import React, { PropTypes } from 'react'
-import JobsStoreHEC from '../jobs/hec'
+import React, { PropTypes } from 'react';
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 import {ReactBootstrapTableStyle} from '../../node_modules/react-bootstrap-table/css/react-bootstrap-table.min.css';
 import moment from 'moment';
@@ -10,7 +9,7 @@ import gen_path from '../path_utils';
 class JobHistory extends React.Component {
     render() {
 
-      var jobs = _.toPairs(this.props.jobs)
+      var jobs = _.toPairs(this.props.jobs);
       jobs = _.sortBy(jobs, (job) => -1 * job[0]);
       jobs = _.map(jobs, (job) => job[1]);
 
@@ -46,5 +45,5 @@ class JobHistory extends React.Component {
 
 JobHistory.displayName = "Dashboard";
 
-export default JobsStoreHEC(JobHistory);
+export default JobHistory;
 

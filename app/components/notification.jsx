@@ -45,18 +45,18 @@ JobRunNotification.displayName = 'JobRunNotification';
 export class Notification extends React.Component {
     render() {
 
-      let runned_jobs = _.sortBy(this.props.session['runned_jobs'], (jid) => -1 * jid);
+      console.log("Props", this.props);
+
+      let runned_jobs = _.sortBy(this.props.runned_jobs, (jid) => -1 * jid);
       let last_runned_jobs = _.map(runned_jobs,
           (job_id) => {
-            let JobRunNotifHEC = SingleJobStoreHEC(JobRunNotification, "job_id");
-            return <JobRunNotifHEC job_id={job_id} key={job_id} />;
+            return <JobRunNotification key={job_id} job={this.props.jobs[job_id]} />;
           });
 
-      let followed_jobs = _.sortBy(this.props.session['followed_jobs'], (jid) => -1 * jid);
+      let followed_jobs = _.sortBy(this.props.followed_jobs, (jid) => -1 * jid);
       let last_followed_jobs = _.map(followed_jobs,
           (job_id) => {
-            let JobRunNotifHEC = SingleJobStoreHEC(JobRunNotification, "job_id");
-            return <JobRunNotifHEC job_id={job_id} key={job_id} />;
+            return <JobRunNotification key={job_id} job={this.props.jobs[job_id]} />;
           });
 
       return (
@@ -78,4 +78,4 @@ export class Notification extends React.Component {
     }
 }
 
-export default SessionHEC(Notification);
+export default Notification;

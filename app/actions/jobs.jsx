@@ -14,7 +14,7 @@ export function newSaltJob(job_id, payload) {
 
 export function saltJobReturn(job_id, minion_id, payload) {
     let job = JobEventToJobStore(payload.data);
-    console.log("Job id", job_id, minion_id, payload.data, job);
+    job.minion_id = minion_id;
     return {
         type: SALT_JOB_RETURN,
         payload: job

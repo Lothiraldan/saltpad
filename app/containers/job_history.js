@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import JobCounterWidget from '../../components/dashboard/job_counter';
+import JobHistory from '../components/job_history';
 
 
 function mapStateToProps(state) {
@@ -9,4 +9,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, null)(JobCounterWidget);
+export default connect(mapStateToProps, null)(JobHistory);

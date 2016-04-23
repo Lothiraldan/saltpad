@@ -3,16 +3,16 @@ import { Route } from 'react-router';
 import axios from 'axios';
 import _ from 'lodash';
 
-import Main from './pages/Main'
-import Dashboard from './containers/dashboard'
-import JobHistory from './components/job_history'
-import JobResult from './components/job_result'
-import MinionList from './components/minion_list'
-import JobRun from './components/job_run'
-import JobTemplates from './components/job_templates'
-import Login from './pages/login'
-import loginRequired, {UserIsAuthenticated} from './login/middleware'
-import PageStructure from './components/PageStructure'
+import Main from './pages/Main';
+import Dashboard from './containers/dashboard';
+import JobHistory from './containers/job_history';
+import JobResult from './containers/job_result';
+import MinionList from './containers/minion_list';
+import JobRun from './components/job_run';
+import JobTemplates from './containers/job_templates';
+import Login from './pages/login';
+import loginRequired, {UserIsAuthenticated} from './login/middleware';
+import PageStructure from './components/PageStructure';
 
 // We need to specify the route handler twice
 // to catch the case without option specified

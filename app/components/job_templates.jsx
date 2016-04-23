@@ -3,35 +3,33 @@ import React, { Component, PropTypes } from 'react';
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 import {ReactBootstrapTableStyle} from '../../node_modules/react-bootstrap-table/css/react-bootstrap-table.min.css';
 
-import SettingsStoreHEC from '../hec/settings';
 import {RunJob} from '../jobs/actions';
 import gen_path from '../path_utils';
 
 
-class JobTemplates extends Component {
-
+export default class JobTemplates extends Component {
 
     CopyTemplate = (template_name, e) => {
-        let template = this.props.settings.templates[template_name];
+        let template = this.props.templates[template_name];
         let formatted_template = {'Target-type': template.matcher,
                                   'Target': template.target,
                                   'Function': template.moduleFunction,
                                   'Arguments': template.arguments}
-        this.context.history.pushState({copy_job: formatted_template}, gen_path('/job/run/'), null);
+        // this.context.history.pushState({copy_job: formatted_template}, gen_path('/job/run/'), null);
     }
 
     redoJob = (e) => {
         let job = this.props.job;
-        RunJob(job['Target-type'], job['Target'], job['Function'], job['Arguments'])
-          .then(job_id => {
-            if(job_id) {
-              this.context.history.pushState(null, gen_path(`/job_result/${job_id}`), null);
-            }
-          });
+        // RunJob(job['Target-type'], job['Target'], job['Function'], job['Arguments'])
+        //   .then(job_id => {
+        //     if(job_id) {
+        //       this.context.history.pushState(null, gen_path(`/job_result/${job_id}`), null);
+        //     }
+        //   });
     }
 
     LaunchTemplate = (template_name, e) => {
-        let template = this.props.settings.templates[template_name];
+        let template = this.props.templates[template_name];
         RunJob(template['matcher'], template['target'],
                template['moduleFunction'], [[], template['arguments']])
           .then(job_id => {
@@ -43,11 +41,11 @@ class JobTemplates extends Component {
     }
 
     render() {
-        if(_.size(_.get(this.props.settings, 'templates', {})) == 0) {
+        if(_.size(_.get(this.props, 'templates', {})) == 0) {
             return <div>No template defined, why not starting now?</div>;
         }
 
-        let templates = _.map(_.toPairs(this.props.settings.templates),
+        let templates = _.map(_.toPairs(this.props.templates),
             ([template_name, template_body]) => _.merge({name: template_name}, template_body)
         );
 
@@ -90,9 +88,3 @@ class JobTemplates extends Component {
     }
 }
 JobTemplates.displayName = "JobTemplates";
-JobTemplates.contextTypes = {
-  history: React.PropTypes.object.isRequired
-}
-
-
-export default SettingsStoreHEC(JobTemplates);

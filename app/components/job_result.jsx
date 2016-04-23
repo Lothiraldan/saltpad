@@ -75,7 +75,7 @@ class JobRunnerResult extends React.Component {
         <div>
           <div className="col-lg-12">
             <h1>
-              {job.Function} started {moment.unix(job.StartTime).fromNow()} by {job.User} <JobFollowStar job_id={job.jid} />
+              {job.Function} started {moment.unix(job.StartTime).fromNow()} by {job.User} <JobFollowStar job_id={job.jid} followed_jobs={props.followed_jobs} UnfollowJob={props.UnfollowJob} FollowJob={props.FollowJob}/>
             </h1>
 
             <h2>
@@ -94,29 +94,32 @@ class JobMinionResult extends React.Component {
 
     copyJob = (e) => {
         let job = this.props.job;
-        job['Arguments'] = ArgParser(job['Arguments'])[1];
-        this.context.history.pushState({copy_job: job}, gen_path('/job/run/'), null);
+        // job['Arguments'] = ArgParser(job['Arguments'])[1];
+        this.props.CopyJob(job.jid);
+        // this.context.history.pushState({copy_job: job}, gen_path('/job/run/'), null);
     }
 
     redoJob = (e) => {
         let job = this.props.job;
-        RunJob(job['Target-type'], job['Target'], job['Function'], ArgParser(job['Arguments']))
-          .then(job_id => {
-            if(job_id) {
-              this.context.history.pushState(null, gen_path(`/job_result/${job_id}`), null);
-            }
-          });
+        this.props.RedoJob(job.jid);
+        // RunJob(job['Target-type'], job['Target'], job['Function'], ArgParser(job['Arguments']))
+        //   .then(job_id => {
+        //     if(job_id) {
+        //       // this.context.history.pushState(null, gen_path(`/job_result/${job_id}`), null);
+        //     }
+        //   });
     }
 
     render() {
 
-      let job = this.props.job;
+      let props = this.props;
+      let job = props.job;
 
       return (
         <div>
           <div className="col-lg-12">
             <h1>
-              {job.Function} on {job.Target} started {moment.unix(job.StartTime).fromNow()} by {job.User} <JobFollowStar job_id={job.jid} />
+              {job.Function} on {job.Target} started {moment.unix(job.StartTime).fromNow()} by {job.User} <JobFollowStar job_id={job.jid} followed_jobs={props.followed_jobs} UnfollowJob={props.UnfollowJob} FollowJob={props.FollowJob} />
             </h1>
 
             <h2>
@@ -137,9 +140,6 @@ class JobMinionResult extends React.Component {
       )
     }
 }
-JobMinionResult.contextTypes = {
-  history: React.PropTypes.object.isRequired
-}
 
 class JobResult extends React.Component {
 
@@ -148,9 +148,9 @@ class JobResult extends React.Component {
       let job = this.props.job;
 
       if(_.startsWith(job.Function, 'runner')) {
-        return <JobRunnerResult job={job}/>
+        return <JobRunnerResult job={job} {...this.props} />
       } else {
-        return <JobMinionResult job={job}/>
+        return <JobMinionResult job={job} {...this.props} />
       }
     }
 }
@@ -160,5 +160,5 @@ JobResult.contextTypes = {
   history: React.PropTypes.object.isRequired
 }
 
-export default SingleJobStoreHEC(JobResult, "params.job_id");
+export default JobResult;
 

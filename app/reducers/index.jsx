@@ -5,6 +5,8 @@ import { routerReducer } from 'react-router-redux';
 import UserReducer from './user';
 import MinionsReducer from './minions';
 import JobsReducer from './jobs';
+import FollowedJobsReducer from './followed_jobs';
+import LastJobsReducer from './last_jobs';
 import RealTimeReducer from './real-time';
 
 const rootReducer = combineReducers({
@@ -13,7 +15,9 @@ const rootReducer = combineReducers({
   user: UserReducer,
   realTime: RealTimeReducer,
   minions: MinionsReducer,
-  jobs: JobsReducer
+  jobs: JobsReducer,
+  followed_jobs: FollowedJobsReducer,
+  last_jobs: LastJobsReducer
 });
 
 export default rootReducer;

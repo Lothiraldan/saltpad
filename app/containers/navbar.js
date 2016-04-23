@@ -5,15 +5,11 @@ import {signOutUser} from '../actions/user';
 import _ from 'lodash';
 
 
-function localSignOutUser(dispatch, event) {
-    dispatch(signOutUser());
-}
-
 const mapDispatchToProps = (dispatch) => {
   return {
-   signOutUser: _.curry(localSignOutUser)(dispatch)
-  }
-}
+   signOutUser: (event) => dispatch(signOutUser())
+  };
+};
 
 
 export default connect(null, mapDispatchToProps)(NavBar);

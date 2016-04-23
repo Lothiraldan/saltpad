@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import Login from './login';
 import NavBar from '../containers/navbar';
-import Notification from '../components/notification';
+import Notification from '../containers/notification';
 import Aside from '../containers/aside';
 import SettingsStoreHEC from '../hec/settings';
 import {FatalErrorStoreHEC} from '../errors/hec';
