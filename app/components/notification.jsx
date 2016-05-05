@@ -7,6 +7,7 @@ import {SessionHEC} from '../hec/session';
 import {SingleJobStoreHEC} from '../jobs/hec';
 import {If} from './shared/templates';
 import gen_path from '../path_utils';
+import store from '../store';
 
 class JobRunNotification extends React.Component {
   render() {
@@ -14,6 +15,7 @@ class JobRunNotification extends React.Component {
     const job = this.props.job;
     let MinionsNumber = _.size(job.Minions);
     let ResultNumber = _.size(job.Result);
+    let settings = store.get('settings')
 
     var className = "fa fa-clock-o";
 
@@ -29,7 +31,7 @@ class JobRunNotification extends React.Component {
           </span>
         </div>
         <div className="details">
-          <p><muted>{moment.unix(this.props.job.StartTime).fromNow()}</muted><br/>
+          <p><muted>{moment.unix(this.props.job.StartTime - settings.OFFSET).fromNow()}</muted><br/>
              <Link to={gen_path(`/job_result/${this.props.job.jid}`)}>{this.props.job.Function} on {this.props.job.Target}</Link><br/>
              <i className="fa fa-users"> {ResultNumber}/{MinionsNumber}</i><br/>
              {this.props.job.jid}<br/>

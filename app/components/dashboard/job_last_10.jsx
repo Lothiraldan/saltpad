@@ -4,6 +4,7 @@ import _ from 'lodash';
 import JobsStoreHEC from '../../jobs/hec'
 import moment from 'moment';
 import gen_path from '../../path_utils';
+import store from '../../store';
 
 
 class JobGroupItem extends React.Component {
@@ -11,9 +12,10 @@ class JobGroupItem extends React.Component {
         let job_id = this.props.job_id;
         let job = this.props.job;
         let link = `/job_result/${job_id}`;
+        let settings = store.get('settings')
         return (
           <li key={job_id} className="list-group-item">
-            <span className="badge">{moment.unix(job.StartTime).fromNow()}</span>
+            <span className="badge">{moment.unix(job.StartTime - settings.OFFSET).fromNow()}</span>
             <i className="fa fa-calendar" /> <Link to={gen_path(link)}>[{job_id}] {job.Function} on "{job.Target}"</Link>
           </li>
         )

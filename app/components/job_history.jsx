@@ -6,6 +6,7 @@ import {ReactBootstrapTableStyle} from '../../node_modules/react-bootstrap-table
 import moment from 'moment';
 import { Link } from 'react-router';
 import gen_path from '../path_utils';
+import store from '../store';
 
 class JobHistory extends React.Component {
     render() {
@@ -19,7 +20,8 @@ class JobHistory extends React.Component {
       }
 
       function DateFormatter(job_start_time, job){
-        return moment.unix(job_start_time).calendar();
+        let settings = store.get('settings')
+        return moment.unix(job_start_time - settings.OFFSET).calendar();
       }
 
       function JidOutputLink(jid, job){
