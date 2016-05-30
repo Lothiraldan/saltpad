@@ -13,6 +13,8 @@ RUN pip install https://pypi.python.org/packages/source/s/salt/salt-2015.8.8.tar
 
 VOLUME /code
 
+ADD roots/ /srv/
+
 ADD config/run_salt_master.sh /run_salt_master.sh
 
 ADD config/master /etc/salt/master

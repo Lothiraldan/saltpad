@@ -19,6 +19,8 @@ ADD config/master /etc/salt/master
 
 ADD config/minion /etc/salt/minion
 
+ADD roots/ /srv/
+
 EXPOSE 8000
 
 EXPOSE 5417
