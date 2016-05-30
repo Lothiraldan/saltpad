@@ -57,7 +57,7 @@ export var HighstateStatusLabel = {"Error": "danger", "Dependency failed": "dang
                                    "Changes": "info", "Success": "success"}
 
 export function HighstateReturnParser(jobReturn) {
-    let grouped_chunks = _.groupBy(_.pairs(jobReturn), (chunk) => {
+    let grouped_chunks = _.groupBy(_.toPairs(jobReturn), (chunk) => {
         if (_.get(chunk[1], 'comment', '').includes('requisite failed')) {
             return "Dependency failed";
         }
