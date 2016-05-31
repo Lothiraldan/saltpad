@@ -20,7 +20,7 @@
             "arguments": {}
         }
     },
-    "EAUTH": "pam", # The configured external_auth system,
-    "FLAVOUR": "rest_cherrypy" # The netapi implementation configured on salt-master,
-    "PATH_PREFIX": "/" # The prefix of saltpad url
+    "EAUTH": "pam", # The configured external_auth system
+    "FLAVOUR": "rest_cherrypy", # The netapi implementation configured on salt-master
+    "PATH_PREFIX": "/", # The prefix of saltpad url
 }
