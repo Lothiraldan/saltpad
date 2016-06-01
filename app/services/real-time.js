@@ -63,7 +63,7 @@ export default function connect_real_time() {
     var source = real_time_factory();
 
     source.onerror = function(e) {
-        let errMsg = `Error while connecting to real-time endpoint: ${url}`;
+        let errMsg = `Error while connecting to real-time endpoint: ${e}`;
         PushError(errMsg);
         LogoutUser();
     }
