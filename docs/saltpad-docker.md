@@ -20,7 +20,7 @@ Depending on your setup, these ports may need to be mapped manually (like for ex
 
 It's very similar as for docker alone.
 
-**Don't forget to create the ```settings.json``` file first** question 1? how does one write a settings.json for TWO API_URL s? Question 2? which Dockerfile is this expecting to use? (or in which directory should I be in for this?)
+**Don't forget to create the ```settings.json``` file first** Question 1? how does one write a settings.json for TWO API_URL s? Question 2? Which Dockerfile is this expecting to use? (or in which directory should I be in for this?)
 
 ```
 docker-compose build
@@ -44,13 +44,13 @@ docker-compose run
 
 There is an alternative Docker image that use salt-api stable instead of develop version.
 
-The configuration is the same than the one on develop version, but it can help you test saltpad against a stable version of salt-api. For now, only the rest_cherrypy deployment works against the stable version, so you need to put ```localhost:8000``` for ```API_URL``` and ```/saltpad/``` for ```PATH_PREFIX``` in your file ```settings.json```. You will also need to build saltpad first, using the command ```npm run build```.  Question 3? where in which environment or in which docker container is this to be done? Sorry I find this is jumping about, and I am lost?
+The configuration is the same than the one on develop version, but it can help you test saltpad against a stable version of salt-api. For now, only the rest_cherrypy deployment works against the stable version, so you need to put ```localhost:8000``` for ```API_URL``` and ```/saltpad/``` for ```PATH_PREFIX``` in your file ```settings.json```. You will also need to build saltpad first, using the command ```npm run build```.  Question 3? Where in which environment or in which docker container is this to be done? Sorry I find this is jumping about, and I am lost?
 
-Please refer to the main README for more informations on the subject. Question 4? this does not make sense? maybe content from readme has been moved out? can you actually link to the section you are referring to?
+Please refer to the main README for more informations on the subject. Question 4? This does not make sense? Maybe content from readme has been moved out? Can you actually link to the section you are referring to?
 
 Uncomment the right ```dockerfile``` line in docker-compose.yml (the one actually commented), build the docker images with ```docker-compose build```, launch them with ```docker-compose up``` then access ```http://localhost:8000/saltpad``` to have access to saltpad.
 
-# Saltpad docker image Question 5? which Dockerfile is this section dealing with?
+# Saltpad docker image Question 5? Which Dockerfile is this section dealing with?
 
 The dockerfile will build a docker container to run saltpad in. It will use the file ```settings.json``` to configure
 the container.
@@ -63,7 +63,7 @@ the container.
 
 You can build a saltpad image which will package the current version of the code located on your copy of this repository.
 
-**Don't forget to create the ```settings.json``` file first** Question 6? which API_URL is expected here? 5417 or 8000 and which IP localhost or a containers or both API_URL s like above? Does this need to link or point to a IP on the salt-api container?
+**Don't forget to create the ```settings.json``` file first** Question 6? Which API_URL is expected here? 5417 or 8000 and which IP localhost or a containers or both API_URL s like above? Does this need to link or point to a IP on the salt-api container?
 
 ```
 docker build -t name/saltpad:latest .
