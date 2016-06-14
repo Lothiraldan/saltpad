@@ -5,9 +5,11 @@ ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update && apt-get upgrade -y -o DPkg::Options::=--force-confold
 
+ENV SALT_VERSION=2016.3.0
+
 # Install salt-master deps
 RUN apt-get install -y python-apt procps pciutils python-pip python-dev
-RUN pip install https://pypi.python.org/packages/source/s/salt/salt-2015.8.8.tar.gz#md5=99ce814992f07d661440dfcecbba6262 cherrypy tornado
+RUN pip install salt==$SALT_VERSION cherrypy tornado
 
 # Volume for saltpad deployment with rest_cherrypy
 
