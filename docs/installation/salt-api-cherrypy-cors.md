@@ -1,6 +1,6 @@
 # Salt-api rest_cherrypy, version develop
 
-Saltpad works with rest_tornado version develop in a very classic client/server way.
+Saltpad works with rest_cherrypy version develop in a very classic client/server way.
 
 ## Rest_cherrypy installation
 
