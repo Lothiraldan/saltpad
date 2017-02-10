@@ -1,5 +1,6 @@
 {
     "API_URL": "localhost:5417", # The API URL
+    "API_PATH": "/", # The API path
     "SECURE_HTTP": false, # Is the API protected by HTTPS?
     "templates": { # Templates sample
         "basic": { # Template name
@@ -22,5 +23,5 @@
     },
     "EAUTH": "pam", # The configured external_auth system
     "FLAVOUR": "rest_cherrypy", # The netapi implementation configured on salt-master
-    "PATH_PREFIX": "/", # The prefix of saltpad url
+    "PATH_PREFIX": "/" # The prefix of saltpad url
 }
