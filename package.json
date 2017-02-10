@@ -55,7 +55,7 @@
     "express": "",
     "form-urlencoded": "",
     "html-webpack-plugin": "",
-    "extract-text-webpack-plugin": ">=1.0.1",
+    "extract-text-webpack-plugin": ">=2.0.0-rc.3",
     "cosmos-js": "^0.7.0",
     "yargs": "^3.30.0"
   },
