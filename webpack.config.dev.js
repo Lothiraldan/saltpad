@@ -14,18 +14,18 @@ module.exports = {
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoErrorsPlugin(),
+    new webpack.NoEmitOnErrorsPlugin(),
   ],
   resolve: {
-    extensions: ['', '.js', '.jsx', '.css'],
+    extensions: ['*', '.js', '.jsx', '.css'],
     // Tell webpack to look for required files in bower and node
-    modulesDirectories: ['bower_components', 'node_modules']
+    modules: ['bower_components', 'node_modules']
   },
   module: {
     loaders: [
       {
         test: /\.jsx?$/,
-        loader: 'babel',
+        loader: 'babel-loader',
         include: path.join(__dirname, 'app'),
         query: {
           optional: ['runtime'],
@@ -48,13 +48,13 @@ module.exports = {
       {
         test: /\.css$/, loader: "style-loader!css-loader"
       },
-      { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, loader: "url?limit=10000&minetype=application/font-woff" },
-      { test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/, loader: "url?limit=10000&minetype=application/font-woff" },
-      { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: "url?limit=10000&minetype=application/octet-stream" },
-      { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: "file" },
-      { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: "url?limit=10000&minetype=image/svg+xml" },
-      { test: /\.jpg$/, loader: "file" },
-      { test: /\.png$/, loader: "file" },
+      { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, loader: "url-loader?limit=10000&minetype=application/font-woff" },
+      { test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/, loader: "url-loader?limit=10000&minetype=application/font-woff" },
+      { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: "url-loader?limit=10000&minetype=application/octet-stream" },
+      { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: "file-loader" },
+      { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: "url-loader?limit=10000&minetype=image/svg+xml" },
+      { test: /\.jpg$/, loader: "file-loader" },
+      { test: /\.png$/, loader: "file-loader" },
     ]
   }
 }
