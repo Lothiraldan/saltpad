@@ -1,6 +1,7 @@
 {
     "API_URL": "localhost:5417", # The API URL
     "SECURE_HTTP": false, # Is the API protected by HTTPS?
+    "OFFSET": 0, # This is the offset in epoch(seconds)
     "templates": { # Templates sample
         "basic": { # Template name
             "description": "Basic template", # Template description
