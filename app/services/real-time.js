@@ -36,15 +36,14 @@ function real_time_factory() {
         var url = URI("")
             .host(settings.API_URL)
             .scheme(`${settings.SECURE_HTTP ? 'https' : 'http'}`)
-            .segment(['events'])
+            .segment([settings.API_PATH, 'events'])
             .search({'token': token});
         var source = new EventSource(url);
     } else {
         var url = URI("")
             .host(settings.API_URL)
             .scheme(`${settings.SECURE_HTTP ? 'wss' : 'ws'}`)
-            .segment(['all_events', token]);
-
+            .segment([settings.API_PATH, 'all_events', token]);
         var source = new WebSocket(url);
     }
 

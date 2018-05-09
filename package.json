@@ -55,7 +55,7 @@
     "express": "",
     "form-urlencoded": "",
     "html-webpack-plugin": "",
-    "extract-text-webpack-plugin": ">=1.0.1",
+    "extract-text-webpack-plugin": ">=2.0.0-rc.3",
     "cosmos-js": "^0.7.0",
     "yargs": "^3.30.0"
   },
@@ -63,6 +63,8 @@
     "clean": "rimraf dist && rimraf dist.zip",
     "build:webpack": "NODE_ENV=production ./node_modules/webpack/bin/webpack.js --config webpack.config.prod.js",
     "build": "npm run clean && npm run build:webpack && zip -r dist.zip dist/* && md5sum dist.zip > dist.zip.md5 && sha1sum dist.zip > dist.zip.sha1",
+    "build:webpack:dev": "NODE_ENV=production ./node_modules/webpack/bin/webpack.js --config webpack.config.dev.js",
+    "build:dev": "npm run clean && npm run build:webpack:dev && zip -r dist.zip dist/* && md5sum dist.zip > dist.zip.md5 && sha1sum dist.zip > dist.zip.sha1",
     "start": "node devServer.js",
     "playground": "node devServer.js --env playground",
     "lint": "eslint src"
