@@ -6,6 +6,8 @@ VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "ubuntu/trusty64"
+  # Parallels specific Ubuntu 14.04 Vagrant box
+  #config.vm.box = "parallels/ubuntu-14.04"
 
   config.vm.synced_folder "salt/roots/", "/srv/"
   config.vm.network "forwarded_port", guest: 5000, host: 5050
@@ -14,9 +16,23 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.network "forwarded_port", guest: 80, host: 8080
   config.vm.synced_folder "../", "/opt/saltpad-dev"
 
+  # VirtualBox provider specifics
   config.vm.provider "virtualbox" do |vb|
-    vb.customize ["modifyvm", :id, "--memory", "1024"]
+    vb.memory = 1024
+    vb.cpus = 2
   end
+
+  # Parallels provider specifics
+  #config.vm.provider "parallels" do |prl|
+  #  prl.memory = 1024
+  #  prl.cpus = 2
+  #end
+
+  # VMWare provider specifics
+  #config.vm.provider "vmware_fusion" do |v|
+  #  v.vmx["memsize"] = "1024"
+  #  v.vmx["numvcpus"] = "2"
+  #end
 
   config.vm.provision :salt do |salt|
     salt.install_master = true
